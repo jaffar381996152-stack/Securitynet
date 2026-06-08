@@ -1,0 +1,476 @@
+"use client";
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+
+const CATEGORIES = ["Guide", "News", "Tutorial", "Announcement", "General"];
+
+function slugify(text) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function renderMarkdownPreview(text) {
+  if (!text) return { __html: "" };
+  let html = text
+    .replace(/^(#{1,6})\s+(.*)$/gm, (match, hashes, content) => {
+      const level = hashes.length;
+      if (level === 1) return `<h1 class="text-3xl font-bold mt-6 mb-2">${content}</h1>`;
+      if (level === 2) return `<h2 class="text-2xl font-bold mt-5 mb-2">${content}</h2>`;
+      return `<h3 class="text-xl font-bold mt-4 mb-2">${content}</h3>`;
+    })
+    .replace(/\*\*(.*?)\*\*/gm, '<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/gm, '<a href="$2" class="text-blue-600 underline" target="_blank">$1</a>');
+  return { __html: html };
+}
+
+async function uploadToS3(file) {
+  const ext = file.name.split(".").pop();
+  const key = `posts/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  
+  const res = await fetch(`/api/s3upload?file=${encodeURIComponent(key)}&type=${encodeURIComponent(file.type)}`);
+  const data = await res.json();
+
+  if (!res.ok || !data.success) {
+    alert("S3 Upload Failed: Make sure NEXT_S3_ACCESS_KEY and NEXT_S3_SECRET_KEY are set in your .env.local file! Server said: " + (data.error || "Unknown error"));
+    throw new Error(data.error || "No presigned URL");
+  }
+
+  const presignedUrl = data.data.presignedUrl;
+  const putRes = await fetch(presignedUrl, {
+    method: "PUT",
+    body: file,
+    headers: { "Content-Type": file.type }
+  });
+
+  if (!putRes.ok) {
+    let awsError = "";
+    try { awsError = await putRes.text(); } catch(e) {}
+    alert("AWS S3 Rejected the Upload! Status: " + putRes.status + "\n\nError details from AWS:\n" + awsError);
+    throw new Error("S3 PUT Failed");
+  }
+
+  return presignedUrl.split("?")[0];
+}
+
+function BlockEditor({ block, index, onChange, onDelete, onMoveUp, onMoveDown, isFirst, isLast }) {
+  const fileRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadToS3(file);
+      onChange(index, { ...block, value: url });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="border border-gray-200 rounded-xl p-4 bg-white group">
+      <div className="flex items-center gap-2 mb-3">
+        {/* Type selector */}
+        <select
+          value={block.type}
+          onChange={(e) => onChange(index, { ...block, type: e.target.value, value: "", caption: "" })}
+          className="text-xs border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-[#483AA0]"
+        >
+          <option value="text">Paragraph</option>
+          <option value="heading">Heading</option>
+          <option value="image">Image</option>
+          <option value="raw">Large Text Box</option>
+        </select>
+        <div className="flex gap-1 ml-auto">
+          <button onClick={() => onMoveUp(index)} disabled={isFirst} className="w-6 h-6 text-gray-400 hover:text-gray-700 disabled:opacity-30 text-xs">↑</button>
+          <button onClick={() => onMoveDown(index)} disabled={isLast} className="w-6 h-6 text-gray-400 hover:text-gray-700 disabled:opacity-30 text-xs">↓</button>
+          <button onClick={() => onDelete(index)} className="w-6 h-6 text-red-400 hover:text-red-600 text-xs">✕</button>
+        </div>
+      </div>
+
+      {block.type === "image" ? (
+        <div>
+          {block.value ? (
+            <div className="relative">
+              <img src={block.value} alt="" className="w-full max-h-60 object-cover rounded-lg" />
+              <button
+                onClick={() => onChange(index, { ...block, value: "" })}
+                className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 text-red-500 shadow text-xs"
+              >✕</button>
+            </div>
+          ) : (
+            <div
+              onClick={() => fileRef.current?.click()}
+              className="border-2 border-dashed border-gray-200 rounded-xl h-32 flex flex-col items-center justify-center cursor-pointer hover:border-[#483AA0] transition-colors"
+            >
+              {uploading ? (
+                <span className="text-sm text-gray-400">Uploading...</span>
+              ) : (
+                <>
+                  <span className="text-2xl mb-1">📷</span>
+                  <span className="text-xs text-gray-400">Click to upload image</span>
+                </>
+              )}
+              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+            </div>
+          )}
+          <input
+            type="text"
+            placeholder="Caption (optional)"
+            value={block.caption || ""}
+            onChange={(e) => onChange(index, { ...block, caption: e.target.value })}
+            className="w-full mt-2 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-600 focus:outline-none focus:border-[#483AA0]"
+          />
+        </div>
+      ) : block.type === "heading" ? (
+        <input
+          type="text"
+          placeholder="Heading text..."
+          value={block.value}
+          onChange={(e) => onChange(index, { ...block, value: e.target.value })}
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-lg font-bold text-gray-900 focus:outline-none focus:border-[#483AA0]"
+        />
+      ) : block.type === "raw" ? (
+        <div className="w-full">
+          <textarea
+            placeholder="Paste full length content directly here (Markdown supported)..."
+            value={block.value}
+            onChange={(e) => onChange(index, { ...block, value: e.target.value })}
+            rows={15}
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 bg-gray-50/50 focus:outline-none focus:border-[#483AA0] resize-y"
+          />
+          {block.value && (
+            <div className="mt-4 border-t border-gray-100 pt-4">
+              <span className="text-xs font-semibold text-gray-400 uppercase mb-2 block">Live Public Preview</span>
+              <div 
+                className="prose prose-gray max-w-none text-gray-700 text-sm leading-relaxed whitespace-pre-wrap bg-white border border-gray-100 p-4 rounded-xl"
+                dangerouslySetInnerHTML={renderMarkdownPreview(block.value)} 
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        <textarea
+          placeholder="Write paragraph text..."
+          value={block.value}
+          onChange={(e) => onChange(index, { ...block, value: e.target.value })}
+          rows={4}
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 focus:outline-none focus:border-[#483AA0] resize-y"
+        />
+      )}
+    </div>
+  );
+}
+
+export default function PostEditor({ initialData = null, postId = null }) {
+  const router = useRouter();
+  const coverRef = useRef(null);
+
+  const [title, setTitle] = useState(initialData?.title || "");
+  const [slug, setSlug] = useState(initialData?.slug || "");
+  const [category, setCategory] = useState(initialData?.category || "Guide");
+  const [customCategory, setCustomCategory] = useState(
+    initialData?.category && !CATEGORIES.includes(initialData.category) ? initialData.category : ""
+  );
+  const [excerpt, setExcerpt] = useState(initialData?.excerpt || "");
+  const [coverImage, setCoverImage] = useState(initialData?.coverImage || "");
+  const [coverUploading, setCoverUploading] = useState(false);
+  const [status, setStatus] = useState(initialData?.status || "published");
+  const [publishedAt, setPublishedAt] = useState(
+    initialData?.publishedAt ? initialData.publishedAt.slice(0, 16) : new Date().toISOString().slice(0, 16)
+  );
+  const [content, setContent] = useState(
+    initialData?.content?.length ? initialData.content : [{ type: "text", value: "" }]
+  );
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleTitleChange = (val) => {
+    setTitle(val);
+    if (!initialData) setSlug(slugify(val));
+  };
+
+  const handleCoverUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCoverUploading(true);
+    try {
+      const url = await uploadToS3(file);
+      setCoverImage(url);
+    } finally {
+      setCoverUploading(false);
+    }
+  };
+
+  const addBlock = (type = "text") => {
+    setContent((prev) => [...prev, { type, value: "", caption: "" }]);
+  };
+
+  const updateBlock = (index, updated) => {
+    setContent((prev) => prev.map((b, i) => (i === index ? updated : b)));
+  };
+
+  const deleteBlock = (index) => {
+    setContent((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const moveBlock = (index, direction) => {
+    setContent((prev) => {
+      const arr = [...prev];
+      const target = index + direction;
+      if (target < 0 || target >= arr.length) return arr;
+      [arr[index], arr[target]] = [arr[target], arr[index]];
+      return arr;
+    });
+  };
+
+  const handleSave = async () => {
+    setError("");
+    if (!title.trim() || !slug.trim()) {
+      setError("Title and slug are required.");
+      return;
+    }
+    if (content.every((b) => !b.value.trim())) {
+      setError("Add at least one content block.");
+      return;
+    }
+
+    setSaving(true);
+    const finalCategory = category === "__custom__" ? customCategory : category;
+    const payload = {
+      title: title.trim(),
+      slug: slug.trim(),
+      category: finalCategory,
+      excerpt: excerpt.trim(),
+      coverImage,
+      content: content.filter((b) => b.value.trim() || b.type === "image"),
+      status,
+      publishedAt: new Date(publishedAt).toISOString(),
+    };
+
+    try {
+      const url = postId ? `/api/posts/${postId}` : "/api/posts";
+      const method = postId ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        setError(data.error || "Save failed.");
+      } else {
+        router.push("/dashboard/posts");
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="py-8 max-w-3xl mx-auto">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">{postId ? "Edit Post" : "New Post"}</h1>
+        <div className="flex gap-3">
+          <button
+            onClick={() => router.push("/dashboard/posts")}
+            className="px-4 py-2 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="px-5 py-2 rounded-xl bg-[#483AA0] text-white text-sm font-medium hover:bg-[#372d80] transition-colors disabled:opacity-60"
+          >
+            {saving ? "Saving..." : postId ? "Update Post" : "Publish Post"}
+          </button>
+        </div>
+      </div>
+
+      {error && (
+        <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+          {error}
+        </div>
+      )}
+
+      <div className="space-y-5">
+        {/* Title */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Title *</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => handleTitleChange(e.target.value)}
+            placeholder="Post title..."
+            className="w-full text-xl font-semibold text-gray-900 border-none outline-none placeholder:text-gray-300"
+          />
+          <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
+            <span className="text-xs text-gray-400">Slug:</span>
+            <input
+              type="text"
+              value={slug}
+              onChange={(e) => setSlug(slugify(e.target.value))}
+              className="flex-1 text-xs font-mono text-[#483AA0] border-none outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Meta row */}
+        <div className="grid md:grid-cols-3 gap-4">
+          {/* Category */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Category</label>
+            <select
+              value={CATEGORIES.includes(category) ? category : "__custom__"}
+              onChange={(e) => {
+                if (e.target.value === "__custom__") {
+                  setCategory("__custom__");
+                } else {
+                  setCategory(e.target.value);
+                  setCustomCategory("");
+                }
+              }}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#483AA0]"
+            >
+              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              <option value="__custom__">Custom...</option>
+            </select>
+            {(category === "__custom__" || (!CATEGORIES.includes(category) && category)) && (
+              <input
+                type="text"
+                placeholder="Category name"
+                value={customCategory}
+                onChange={(e) => { setCustomCategory(e.target.value); setCategory("__custom__"); }}
+                className="w-full mt-2 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#483AA0]"
+              />
+            )}
+          </div>
+
+          {/* Status */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Status</label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#483AA0]"
+            >
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+            </select>
+          </div>
+
+          {/* Publish date */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Publish Date</label>
+            <input
+              type="datetime-local"
+              value={publishedAt}
+              onChange={(e) => setPublishedAt(e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#483AA0]"
+            />
+          </div>
+        </div>
+
+        {/* Cover image */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-3">Cover Image</label>
+          {coverImage ? (
+            <div className="relative">
+              <img src={coverImage} alt="Cover" className="w-full max-h-60 object-cover rounded-xl" />
+              <button
+                onClick={() => setCoverImage("")}
+                className="absolute top-2 right-2 bg-white rounded-full px-3 py-1 text-red-500 shadow text-xs font-medium"
+              >
+                Remove
+              </button>
+            </div>
+          ) : (
+            <div
+              onClick={() => coverRef.current?.click()}
+              className="border-2 border-dashed border-gray-200 rounded-xl h-40 flex flex-col items-center justify-center cursor-pointer hover:border-[#483AA0] transition-colors"
+            >
+              {coverUploading ? (
+                <span className="text-sm text-gray-400">Uploading...</span>
+              ) : (
+                <>
+                  <span className="text-3xl mb-2">🖼️</span>
+                  <span className="text-sm text-gray-400">Click to upload cover image</span>
+                  <span className="text-xs text-gray-300 mt-1">JPG, PNG, WebP</span>
+                </>
+              )}
+              <input ref={coverRef} type="file" accept="image/*" className="hidden" onChange={handleCoverUpload} />
+            </div>
+          )}
+        </div>
+
+        {/* Excerpt */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Excerpt</label>
+          <textarea
+            value={excerpt}
+            onChange={(e) => setExcerpt(e.target.value)}
+            placeholder="Short description shown in post cards..."
+            rows={2}
+            className="w-full text-sm text-gray-700 border-none outline-none resize-none placeholder:text-gray-300"
+          />
+        </div>
+
+        {/* Content blocks */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-4">Content</label>
+          <div className="space-y-3">
+            {content.map((block, i) => (
+              <BlockEditor
+                key={i}
+                block={block}
+                index={i}
+                onChange={updateBlock}
+                onDelete={deleteBlock}
+                onMoveUp={(idx) => moveBlock(idx, -1)}
+                onMoveDown={(idx) => moveBlock(idx, 1)}
+                isFirst={i === 0}
+                isLast={i === content.length - 1}
+              />
+            ))}
+          </div>
+
+          {/* Add block buttons */}
+          <div className="flex gap-2 mt-4">
+            <button
+              onClick={() => addBlock("text")}
+              className="flex-1 py-2 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-400 hover:border-[#483AA0] hover:text-[#483AA0] transition-colors"
+            >
+              + Paragraph
+            </button>
+            <button
+              onClick={() => addBlock("heading")}
+              className="flex-1 py-2 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-400 hover:border-[#483AA0] hover:text-[#483AA0] transition-colors font-bold"
+            >
+              + Heading
+            </button>
+            <button
+              onClick={() => addBlock("image")}
+              className="flex-1 py-2 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-400 hover:border-[#483AA0] hover:text-[#483AA0] transition-colors"
+            >
+              + Image
+            </button>
+            <button
+              onClick={() => addBlock("raw")}
+              className="flex-1 py-2 border-2 border-dashed border-[#483AA0]/20 rounded-xl text-sm text-[#483AA0] hover:border-[#483AA0] hover:bg-[#483AA0]/5 transition-colors font-medium"
+            >
+              + Large Box
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
