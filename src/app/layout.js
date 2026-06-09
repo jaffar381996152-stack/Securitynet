@@ -9,6 +9,7 @@ import CustomCursor from "@/components/shell/CustomCursor";
 import UrgencyBar from "@/components/shell/UrgencyBar";
 import StickyPresaleWidget from "@/components/shell/StickyPresaleWidget";
 import MobileBottomBar from "@/components/shell/MobileBottomBar";
+import PresaleCanvas from "@/app/presale/components/PresaleCanvas";
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://securitynet.ai";
 
@@ -63,34 +64,39 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <AppKit>
+          {/* Background canvas — direct body child at z:0, below all z:1 content */}
+          <PresaleCanvas />
           <Preloader />
           <CustomCursor />
           <UrgencyBar />
           <StickyPresaleWidget />
           <MobileBottomBar />
-          <SmoothScrollProvider>
-            <Suspense>
-              {children}
-              <Toaster
-                position="top-right"
-                toastOptions={{
-                  style: {
-                    background: "var(--bg-secondary)",
-                    border: "1px solid var(--border-gold)",
-                    borderRadius: 0,
-                    color: "var(--text-primary)",
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.75rem",
-                    letterSpacing: "0.06em",
-                  },
-                  success: { iconTheme: { primary: "#4A8C6F", secondary: "#0A0A0E" } },
-                  error:   { iconTheme: { primary: "#A85252", secondary: "#0A0A0E" } },
-                }}
-              />
-              <GoogleAnalytics gaId="G-DJF0D3925S" />
-              <GoogleTagManager gtmId="GTM-TZV4KLBP" />
-            </Suspense>
-          </SmoothScrollProvider>
+          {/* z:1 wrapper ensures all page content paints above canvas */}
+          <div style={{ position: "relative", zIndex: 1 }}>
+            <SmoothScrollProvider>
+              <Suspense>
+                {children}
+                <Toaster
+                  position="top-right"
+                  toastOptions={{
+                    style: {
+                      background: "var(--bg-secondary)",
+                      border: "1px solid var(--border-gold)",
+                      borderRadius: 0,
+                      color: "var(--text-primary)",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.75rem",
+                      letterSpacing: "0.06em",
+                    },
+                    success: { iconTheme: { primary: "#4A8C6F", secondary: "#0A0A0E" } },
+                    error:   { iconTheme: { primary: "#A85252", secondary: "#0A0A0E" } },
+                  }}
+                />
+                <GoogleAnalytics gaId="G-DJF0D3925S" />
+                <GoogleTagManager gtmId="GTM-TZV4KLBP" />
+              </Suspense>
+            </SmoothScrollProvider>
+          </div>
         </AppKit>
       </body>
     </html>

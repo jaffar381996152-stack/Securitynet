@@ -574,6 +574,8 @@ w3m-account-button, appkit-account-button {
 }
 .nav-cta:hover { background: var(--gold); color: var(--text-inv); }
 
+@media (min-width: 1024px) { .hamburger-btn { display: none !important; } }
+
 /* =====================================================
    HOW TO BUY — responsive grid
    ===================================================== */

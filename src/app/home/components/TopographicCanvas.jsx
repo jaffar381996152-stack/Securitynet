@@ -100,7 +100,7 @@ export default function TopographicCanvas() {
         width: "100vw",
         height: "100vh",
         pointerEvents: "none",
-        zIndex: -1,
+        zIndex: 0,
         transition: "opacity 0.5s ease",
       }}
       aria-hidden="true"

@@ -6,7 +6,7 @@ const XN_PRICE = 0.20;
 
 export default function StickyPresaleWidget() {
   const [minimized, setMinimized] = useState(false);
-  const [visible, setVisible]     = useState(false);
+  const [visible]                  = useState(true);
   const [usdtAmt, setUsdtAmt]     = useState("");
   const [xnAmt, setXnAmt]         = useState("");
   const [isMobile, setIsMobile]   = useState(false);
@@ -16,17 +16,6 @@ export default function StickyPresaleWidget() {
     const onResize = () => setIsMobile(window.innerWidth < 1024);
     window.addEventListener("resize", onResize, { passive: true });
     return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  useEffect(() => {
-    const hero = document.getElementById("hero");
-    if (!hero) { setVisible(true); return; }
-    const obs = new IntersectionObserver(
-      ([e]) => setVisible(!e.isIntersecting),
-      { threshold: 0.1 }
-    );
-    obs.observe(hero);
-    return () => obs.disconnect();
   }, []);
 
   const handleUsdt = (v) => {

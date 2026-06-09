@@ -1,10 +1,7 @@
 "use client";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import DeclassifyText from "./DeclassifyText";
 import FadeUpSection from "./FadeUpSection";
-
-const TopographicCanvas = dynamic(() => import("./TopographicCanvas"), { ssr: false });
 
 export default function Hero() {
   return (
@@ -18,8 +15,6 @@ export default function Hero() {
         overflow: "hidden",
       }}
     >
-      <TopographicCanvas />
-
       {/* Radial gold glow */}
       <div
         style={{
@@ -74,8 +69,7 @@ export default function Hero() {
             textAlign: "center",
           }}
         >
-          <DeclassifyText text="AI EYES," delay={0.2} />
-          <br />
+          <DeclassifyText text="AI EYES," delay={0.2} />{" "}
           <DeclassifyText
             text="SAFE SKIES."
             delay={0.2}

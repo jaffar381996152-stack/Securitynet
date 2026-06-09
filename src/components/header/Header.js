@@ -148,13 +148,14 @@ export default function Header() {
               href="/presale"
               data-cursor="cta"
               className="hidden lg:inline-flex nav-cta"
+              style={{ border: "1px solid var(--gold)" }}
             >
               BUY XN
             </Link>
 
             {/* Hamburger */}
             <button
-              className="lg:hidden"
+              className="hamburger-btn lg:hidden"
               onClick={() => setOpen(true)}
               aria-label="Open navigation"
               aria-expanded={open}
