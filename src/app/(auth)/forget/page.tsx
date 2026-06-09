@@ -3,10 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
-import { motion, AnimatePresence } from "framer-motion";
 import AuthShell from "../components/AuthShell";
 import { authFieldStyle } from "../components/authFieldStyle";
-import MagneticButton from "@/components/animations/MagneticButton";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -47,33 +45,32 @@ export default function Forget() {
   if (sent) {
     return (
       <AuthShell title="Check Your Email">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.45, ease: [0.34, 1.56, 0.64, 1] }}
-          className="flex flex-col items-center text-center gap-5 py-2"
-        >
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 20, paddingTop: 8 }}>
+          {/* Email icon */}
           <div
-            className="w-16 h-16 rounded-full flex items-center justify-center"
             style={{
-              background: "linear-gradient(135deg, rgba(0,212,255,0.20) 0%, rgba(108,92,231,0.10) 100%)",
-              border: "1px solid rgba(0,212,255,0.35)",
-              boxShadow: "var(--glow-sm)",
+              width: 64,
+              height: 64,
+              border: "1px solid var(--border-gold)",
+              background: "var(--gold-ghost)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="var(--accent-cyan)" strokeWidth="1.8" strokeLinejoin="round" />
-              <path d="M22 6l-10 7L2 6" stroke="var(--accent-cyan)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="var(--gold)" strokeWidth="1.8" strokeLinejoin="round" />
+              <path d="M22 6l-10 7L2 6" stroke="var(--gold)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+          <p style={{ fontFamily: "var(--font-disp)", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65, maxWidth: 300 }}>
             If an account exists for <strong style={{ color: "var(--text-primary)" }}>{email}</strong>,
             we&apos;ve sent a link to reset your password. It expires in 1 hour.
           </p>
-          <Link href="/signin" className="text-xs font-semibold no-underline" style={{ color: "var(--brand-mid)" }}>
-            ← Back to sign in
+          <Link href="/signin" style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--gold)" }}>
+            ← BACK TO SIGN IN
           </Link>
-        </motion.div>
+        </div>
       </AuthShell>
     );
   }
@@ -81,14 +78,14 @@ export default function Forget() {
   return (
     <AuthShell
       title="Forgot Password?"
-      subtitle="Enter your email and we'll send you a link to reset it"
+      subtitle="Enter your email and we'll send a reset link"
       footer={
-        <Link href="/signin" className="font-semibold no-underline" style={{ color: "var(--brand-mid)" }}>
+        <Link href="/signin" style={{ color: "var(--gold)", fontWeight: 600 }}>
           ← Back to sign in
         </Link>
       }
     >
-      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
+      <form onSubmit={onSubmit} noValidate style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         <div>
           <input
             type="email"
@@ -104,35 +101,29 @@ export default function Forget() {
             onBlur={() => setFocused(false)}
             style={authFieldStyle(focused, !!error)}
           />
-          <AnimatePresence>
-            {error && (
-              <motion.p
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.2 }}
-                className="text-xs mt-1.5 px-1"
-                style={{ color: "#EF4444" }}
-              >
-                {error}
-              </motion.p>
-            )}
-          </AnimatePresence>
+          {error && (
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--c-danger)", marginTop: 6, paddingLeft: 4 }}>
+              {error}
+            </p>
+          )}
         </div>
 
-        <MagneticButton type="submit" variant="primary" size="lg" disabled={loading} className="w-full justify-center">
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-primary"
+          style={{ width: "100%", justifyContent: "center", opacity: loading ? 0.7 : 1 }}
+        >
           {loading ? (
-            <>
-              <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" strokeWidth="3" />
-                <path d="M12 2a10 10 0 0110 10" stroke="white" strokeWidth="3" strokeLinecap="round" />
+            <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <svg style={{ animation: "ringRotate 0.8s linear infinite" }} width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="rgba(10,10,14,0.3)" strokeWidth="3" />
+                <path d="M12 2a10 10 0 0110 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
               </svg>
-              Sending…
-            </>
-          ) : (
-            "Send Reset Link"
-          )}
-        </MagneticButton>
+              SENDING…
+            </span>
+          ) : "SEND RESET LINK"}
+        </button>
       </form>
     </AuthShell>
   );

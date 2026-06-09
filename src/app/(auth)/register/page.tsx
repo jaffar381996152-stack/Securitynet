@@ -5,30 +5,18 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { motion, AnimatePresence } from "framer-motion";
 import AuthShell from "../components/AuthShell";
 import { authFieldStyle } from "../components/authFieldStyle";
-import MagneticButton from "@/components/animations/MagneticButton";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const EMPTY = { firstname: "", lastname: "", email: "", password: "" };
 
-const errorMotion = {
-  initial: { opacity: 0, y: -4 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -4 },
-  transition: { duration: 0.2 },
-};
-
 function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
   return (
-    <AnimatePresence>
-      {message && (
-        <motion.p {...errorMotion} className="text-xs mt-1.5 px-1" style={{ color: "#EF4444" }}>
-          {message}
-        </motion.p>
-      )}
-    </AnimatePresence>
+    <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--c-danger)", marginTop: 6, paddingLeft: 4 }}>
+      {message}
+    </p>
   );
 }
 
@@ -79,19 +67,19 @@ export default function Register() {
 
   return (
     <AuthShell
-      title="Create Your Account"
+      title="Create Account"
       subtitle="Join SecurityNet.ai to track the XN presale and more"
       footer={
         <>
           Already have an account?{" "}
-          <Link href="/signin" className="font-semibold no-underline" style={{ color: "var(--brand-mid)" }}>
+          <Link href="/signin" style={{ color: "var(--gold)", fontWeight: 600 }}>
             Sign in
           </Link>
         </>
       }
     >
-      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
-        <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} noValidate style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
           <div>
             <input
               type="text"
@@ -138,12 +126,12 @@ export default function Register() {
         </div>
 
         <div>
-          <div className="relative">
+          <div style={{ position: "relative" }}>
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               autoComplete="new-password"
-              placeholder="Password"
+              placeholder="Password (min 6 characters)"
               value={user.password}
               onChange={handleChange}
               onFocus={() => setFocused("password")}
@@ -154,8 +142,15 @@ export default function Register() {
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? "Hide password" : "Show password"}
-              className="absolute inset-y-0 right-0 flex items-center pr-3.5"
-              style={{ color: "var(--text-muted)" }}
+              style={{
+                position: "absolute",
+                inset: "0 0 0 auto",
+                display: "flex",
+                alignItems: "center",
+                paddingRight: 14,
+                color: "var(--text-muted)",
+                cursor: "pointer",
+              }}
             >
               {showPassword ? (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -173,19 +168,22 @@ export default function Register() {
           <FieldError message={errors.password} />
         </div>
 
-        <MagneticButton type="submit" variant="primary" size="lg" disabled={loading} className="w-full justify-center">
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-primary"
+          style={{ width: "100%", justifyContent: "center", opacity: loading ? 0.7 : 1 }}
+        >
           {loading ? (
-            <>
-              <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" strokeWidth="3" />
-                <path d="M12 2a10 10 0 0110 10" stroke="white" strokeWidth="3" strokeLinecap="round" />
+            <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <svg style={{ animation: "ringRotate 0.8s linear infinite" }} width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="rgba(10,10,14,0.3)" strokeWidth="3" />
+                <path d="M12 2a10 10 0 0110 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
               </svg>
-              Creating account…
-            </>
-          ) : (
-            "Sign Up"
-          )}
-        </MagneticButton>
+              CREATING ACCOUNT…
+            </span>
+          ) : "CREATE ACCOUNT"}
+        </button>
       </form>
     </AuthShell>
   );

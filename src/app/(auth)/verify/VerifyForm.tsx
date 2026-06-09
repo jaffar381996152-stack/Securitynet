@@ -5,27 +5,15 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
-import { motion, AnimatePresence } from "framer-motion";
 import AuthShell from "../components/AuthShell";
 import { authFieldStyle } from "../components/authFieldStyle";
-import MagneticButton from "@/components/animations/MagneticButton";
-
-const errorMotion = {
-  initial: { opacity: 0, y: -4 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -4 },
-  transition: { duration: 0.2 },
-};
 
 function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
   return (
-    <AnimatePresence>
-      {message && (
-        <motion.p {...errorMotion} className="text-xs mt-1.5 px-1" style={{ color: "#EF4444" }}>
-          {message}
-        </motion.p>
-      )}
-    </AnimatePresence>
+    <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--c-danger)", marginTop: 6, paddingLeft: 4 }}>
+      {message}
+    </p>
   );
 }
 
@@ -35,8 +23,15 @@ function PasswordToggle({ shown, onToggle }: { shown: boolean; onToggle: () => v
       type="button"
       onClick={onToggle}
       aria-label={shown ? "Hide password" : "Show password"}
-      className="absolute inset-y-0 right-0 flex items-center pr-3.5"
-      style={{ color: "var(--text-muted)" }}
+      style={{
+        position: "absolute",
+        inset: "0 0 0 auto",
+        display: "flex",
+        alignItems: "center",
+        paddingRight: 14,
+        color: "var(--text-muted)",
+        cursor: "pointer",
+      }}
     >
       {shown ? (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -69,13 +64,13 @@ export default function VerifyForm() {
   if (!key) {
     return (
       <AuthShell title="Invalid Reset Link">
-        <div className="flex flex-col items-center text-center gap-5 py-2">
-          <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 20, paddingTop: 8 }}>
+          <p style={{ fontFamily: "var(--font-disp)", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65 }}>
             This password reset link is missing its token. It may have been copied incorrectly —
             request a fresh link and try again.
           </p>
-          <Link href="/forget" className="text-xs font-semibold no-underline" style={{ color: "var(--brand-mid)" }}>
-            Request a new link →
+          <Link href="/forget" style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--gold)" }}>
+            REQUEST A NEW LINK →
           </Link>
         </div>
       </AuthShell>
@@ -85,40 +80,34 @@ export default function VerifyForm() {
   if (done) {
     return (
       <AuthShell title="Password Updated">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.45, ease: [0.34, 1.56, 0.64, 1] }}
-          className="flex flex-col items-center text-center gap-5 py-2"
-        >
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 20, paddingTop: 8 }}>
+          {/* Success icon */}
           <div
-            className="w-16 h-16 rounded-full flex items-center justify-center"
             style={{
-              background: "linear-gradient(135deg, rgba(0,200,83,0.20) 0%, rgba(0,200,83,0.10) 100%)",
-              border: "1px solid rgba(0,200,83,0.40)",
-              boxShadow: "0 0 28px rgba(0,200,83,0.15)",
+              width: 64,
+              height: 64,
+              border: "1px solid var(--c-success)",
+              background: "rgba(74,140,111,0.08)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <motion.svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-              <motion.path
-                d="M5 13l4 4L19 7"
-                stroke="#00C853"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-              />
-            </motion.svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path d="M5 13l4 4L19 7" stroke="var(--c-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </div>
-          <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+          <p style={{ fontFamily: "var(--font-disp)", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65 }}>
             Your password has been updated. You can now sign in with your new password.
           </p>
-          <MagneticButton variant="primary" size="md" onClick={() => router.push("/signin")}>
-            Continue to sign in
-          </MagneticButton>
-        </motion.div>
+          <button
+            onClick={() => router.push("/signin")}
+            className="btn-primary"
+            style={{ minWidth: 180, justifyContent: "center" }}
+          >
+            CONTINUE TO SIGN IN
+          </button>
+        </div>
       </AuthShell>
     );
   }
@@ -158,10 +147,10 @@ export default function VerifyForm() {
   };
 
   return (
-    <AuthShell title="Set a New Password" subtitle="Choose a new password for your account">
-      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
+    <AuthShell title="Set New Password" subtitle="Choose a new password for your account">
+      <form onSubmit={onSubmit} noValidate style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         <div>
-          <div className="relative">
+          <div style={{ position: "relative" }}>
             <input
               type={showPassword ? "text" : "password"}
               name="password"
@@ -182,7 +171,7 @@ export default function VerifyForm() {
         </div>
 
         <div>
-          <div className="relative">
+          <div style={{ position: "relative" }}>
             <input
               type={showPassword ? "text" : "password"}
               name="confirm"
@@ -201,19 +190,22 @@ export default function VerifyForm() {
           <FieldError message={errors.confirm} />
         </div>
 
-        <MagneticButton type="submit" variant="primary" size="lg" disabled={loading} className="w-full justify-center">
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-primary"
+          style={{ width: "100%", justifyContent: "center", opacity: loading ? 0.7 : 1 }}
+        >
           {loading ? (
-            <>
-              <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" strokeWidth="3" />
-                <path d="M12 2a10 10 0 0110 10" stroke="white" strokeWidth="3" strokeLinecap="round" />
+            <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <svg style={{ animation: "ringRotate 0.8s linear infinite" }} width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="rgba(10,10,14,0.3)" strokeWidth="3" />
+                <path d="M12 2a10 10 0 0110 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
               </svg>
-              Updating…
-            </>
-          ) : (
-            "Update Password"
-          )}
-        </MagneticButton>
+              UPDATING…
+            </span>
+          ) : "UPDATE PASSWORD"}
+        </button>
       </form>
     </AuthShell>
   );

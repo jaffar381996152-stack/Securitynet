@@ -1,61 +1,119 @@
 "use client";
-
-import { motion } from "framer-motion";
 import Link from "next/link";
-import Logo from "@/components/brand/Logo";
-import LiquidGlassCard from "@/components/animations/LiquidGlassCard";
 
-const rise = (delay = 0) => ({
-  initial: { opacity: 0, y: 18 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.55, delay, ease: [0.25, 0.46, 0.45, 0.94] },
-});
-
-/**
- * Shared centred-card frame for the auth route group (sign in, register,
- * forgot/reset password) — keeps the glassmorphism shell, logo and motion
- * consistent while each page supplies its own form as `children`.
- */
 export default function AuthShell({ title, subtitle = null, children = null, footer = null }) {
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 py-20 sm:py-24">
-      <div className="w-full max-w-[440px]">
-        <motion.div {...rise(0)} className="flex justify-center mb-8">
-          <Link href="/" aria-label="SecurityNet.ai home" className="no-underline">
-            <Logo size={46} />
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "clamp(48px,8vw,96px) var(--gut)",
+        background: "var(--bg-primary)",
+        position: "relative",
+      }}
+    >
+      {/* Radial glow */}
+      <div
+        style={{
+          position: "absolute",
+          top: "40%",
+          left: "50%",
+          transform: "translate(-50%,-50%)",
+          width: "60vw",
+          height: "60vw",
+          maxWidth: 700,
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse,rgba(212,175,110,0.05) 0%,transparent 65%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div style={{ width: "100%", maxWidth: 460, position: "relative", zIndex: 1 }}>
+        {/* Logo */}
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <Link
+            href="/"
+            style={{
+              fontFamily: "var(--font-disp)",
+              fontWeight: 700,
+              fontSize: 18,
+              letterSpacing: "0.14em",
+              color: "var(--gold)",
+              textTransform: "uppercase",
+            }}
+          >
+            SECURITYNET.AI
           </Link>
-        </motion.div>
+        </div>
 
-        <LiquidGlassCard hover={false} className="w-full">
-          <div className="p-7 sm:p-9">
-            <motion.div {...rise(0.08)}>
-              <h1
-                className="font-sora text-2xl font-bold text-center tracking-tight"
-                style={{ color: "var(--text-primary)" }}
+        {/* Card */}
+        <div
+          style={{
+            background: "var(--bg-secondary)",
+            border: "1px solid var(--border-gold)",
+            padding: "clamp(28px,5vw,48px)",
+          }}
+        >
+          {/* Card header */}
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 9,
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "var(--text-muted)",
+                marginBottom: 12,
+              }}
+            >
+              SECURE ACCESS · AUTHENTICATION REQUIRED
+            </div>
+
+            <h1
+              style={{
+                fontFamily: "var(--font-disp)",
+                fontWeight: 700,
+                fontSize: "clamp(22px,3vw,30px)",
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+                color: "var(--text-primary)",
+                marginBottom: subtitle ? 10 : 0,
+              }}
+            >
+              {title}
+            </h1>
+
+            {subtitle && (
+              <p
+                style={{
+                  fontFamily: "var(--font-disp)",
+                  fontSize: 14,
+                  color: "var(--text-muted)",
+                  lineHeight: 1.5,
+                }}
               >
-                {title}
-              </h1>
-              {subtitle && (
-                <p className="text-sm text-center mt-2 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                  {subtitle}
-                </p>
-              )}
-            </motion.div>
-
-            <motion.div {...rise(0.16)} className="mt-7">
-              {children}
-            </motion.div>
+                {subtitle}
+              </p>
+            )}
           </div>
-        </LiquidGlassCard>
+
+          {children}
+        </div>
 
         {footer && (
-          <motion.p
-            {...rise(0.24)}
-            className="text-xs text-center mt-6"
-            style={{ color: "var(--text-muted)" }}
+          <p
+            style={{
+              fontFamily: "var(--font-disp)",
+              fontSize: 13,
+              textAlign: "center",
+              marginTop: 20,
+              color: "var(--text-muted)",
+            }}
           >
             {footer}
-          </motion.p>
+          </p>
         )}
       </div>
     </div>
