@@ -10,50 +10,21 @@ const CONTRACT_ADDRESS =
 const USDT_NETWORKS = settings.USDT_NETWORKS;
 const XN_PRICE = 0.20;
 
-// ─── Chain logos ─────────────────────────────────────────────────────────────
+const QUICK_AMOUNTS = [50, 100, 250, 500, 1000];
 
-const BscLogo = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="12" fill="#F0B90B" />
-    <path d="M12 4.5L9.75 6.75L12 9L14.25 6.75L12 4.5Z" fill="white" />
-    <path d="M7.5 9L5.25 11.25L7.5 13.5L9.75 11.25L7.5 9Z" fill="white" />
-    <path d="M16.5 9L14.25 11.25L16.5 13.5L18.75 11.25L16.5 9Z" fill="white" />
-    <path d="M12 9L9.75 11.25L12 13.5L14.25 11.25L12 9Z" fill="white" />
-    <path d="M12 13.5L9.75 15.75L12 18L14.25 15.75L12 13.5Z" fill="white" />
-  </svg>
-);
-const EthLogo = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="12" fill="#627EEA" />
-    <path d="M12 4.5V10.275L16.875 12.45L12 4.5Z" fill="white" fillOpacity="0.6" />
-    <path d="M12 4.5L7.125 12.45L12 10.275V4.5Z" fill="white" />
-    <path d="M12 15.975V19.5L16.878 13.35L12 15.975Z" fill="white" fillOpacity="0.6" />
-    <path d="M12 19.5V15.974L7.125 13.35L12 19.5Z" fill="white" />
-    <path d="M12 15.075L16.875 12.45L12 10.277V15.075Z" fill="white" fillOpacity="0.2" />
-    <path d="M7.125 12.45L12 15.075V10.277L7.125 12.45Z" fill="white" fillOpacity="0.6" />
-  </svg>
-);
-const TronLogo = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="12" fill="#EF0027" />
-    <path d="M17.5 9.5L12 5L6 9.5L8.5 18L12 19.5L15.5 18L17.5 9.5Z" fill="white" fillOpacity="0.15" />
-    <path d="M12 5L17.5 9.5L15.5 10.5L12 7.5V5Z" fill="white" />
-    <path d="M12 5L6 9.5L8.5 10.5L12 7.5V5Z" fill="white" fillOpacity="0.7" />
-    <path d="M8.5 10.5L12 19.5V12L8.5 10.5Z" fill="white" fillOpacity="0.7" />
-    <path d="M15.5 10.5L12 12V19.5L15.5 10.5Z" fill="white" />
-    <path d="M8.5 10.5L15.5 10.5L12 12L8.5 10.5Z" fill="white" fillOpacity="0.5" />
-  </svg>
-);
-
-const NETWORK_OPTIONS = [
-  { key: "BSC",  label: "BNB Chain", sub: "BEP-20", Icon: BscLogo,  recommended: true },
-  { key: "ETH",  label: "Ethereum",  sub: "ERC-20", Icon: EthLogo,  recommended: false },
-  { key: "TRON", label: "Tron",      sub: "TRC-20", Icon: TronLogo, recommended: false },
+const IMPORT_STEPS = [
+  "Open MetaMask or Trust Wallet and tap 'Import Token'",
+  "Select 'Custom Token' and paste the contract address",
+  "Contract: 0x917D93261B6b232F6b8b643d65b48928D1c85FFc",
+  "Token symbol will auto-fill as XN · Decimals: 18",
+  "Tap 'Add Token' — your XN balance will appear",
 ];
 
-const QUICK_AMOUNTS = [50, 100, 500, 1000];
-
-// ─── Main component ───────────────────────────────────────────────────────────
+const NETWORK_CARDS = [
+  { key: "BSC",  name: "BEP-20", desc: "Binance Smart Chain — fastest & lowest fees", recommended: true  },
+  { key: "ETH",  name: "ERC-20", desc: "Ethereum — widely supported",                recommended: false },
+  { key: "TRON", name: "TRC-20", desc: "Tron — fast & low cost",                     recommended: false },
+];
 
 export default function DigitalGold() {
   const { address, isConnected } = useAppKitAccount();
@@ -65,11 +36,12 @@ export default function DigitalGold() {
   const [xnAmount, setXnAmount]               = useState((15 / XN_PRICE).toFixed(2));
   const [userTokenBalance, setUserTokenBalance] = useState(null);
 
-  const [verified, setVerified]   = useState(null);
-  const [burstKey, setBurstKey]   = useState(0);
+  const [verified, setVerified]       = useState(null);
+  const [burstKey, setBurstKey]       = useState(0);
   const [tronAddress, setTronAddress] = useState("");
-  const [copied, setCopied]       = useState(false);
-  const [scanning, setScanning]   = useState(false);
+  const [copied, setCopied]           = useState(false);
+  const [scanning, setScanning]       = useState(false);
+  const [importOpen, setImportOpen]   = useState(false);
 
   const pollIntervalRef = useRef(null);
   const scannerRef      = useRef(null);
@@ -177,35 +149,24 @@ export default function DigitalGold() {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div
-      style={{
-        background: "var(--bg-secondary)",
-        border: "1px solid var(--border-gold)",
-      }}
-    >
+    <div style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-gold)" }}>
+
       {/* Widget header */}
       <div
         style={{
-          padding: "20px 24px",
-          borderBottom: "1px solid var(--border-sub)",
+          padding: "18px 24px",
+          borderBottom: "1px solid var(--border-gold)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
         }}
       >
-        <div>
-          <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 4 }}>
-            BUY XN TOKEN
-          </div>
-          <div style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 15, color: "var(--text-primary)" }}>
-            1 XN = {XN_PRICE} USDT
-          </div>
-        </div>
-        {isConnected && (
-          <div className="badge badge-active">
-            WALLET CONNECTED
-          </div>
-        )}
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)" }}>
+          PURCHASE XN TOKENS
+        </span>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)" }}>
+          STAGE 3 · $0.20 USDT
+        </span>
       </div>
 
       <div style={{ padding: "24px" }}>
@@ -215,15 +176,10 @@ export default function DigitalGold() {
           <div style={{ textAlign: "center", padding: "32px 0" }}>
             <div
               style={{
-                width: 64,
-                height: 64,
-                border: "2px solid var(--c-success)",
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                margin: "0 auto 20px",
-                background: "rgba(74,140,111,0.1)",
+                width: 64, height: 64,
+                border: "2px solid var(--c-success)", borderRadius: "50%",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                margin: "0 auto 20px", background: "rgba(74,140,111,0.1)",
               }}
             >
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -256,53 +212,26 @@ export default function DigitalGold() {
 
             {/* Step 1: Network */}
             <div>
-              <WidgetLabel>STEP 1 · SELECT NETWORK</WidgetLabel>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-                {NETWORK_OPTIONS.map((net) => {
-                  const selected = selectedNetwork === net.key;
+              <StepLabel>STEP 1 — SELECT PAYMENT NETWORK</StepLabel>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                {NETWORK_CARDS.map((net) => {
+                  const active = selectedNetwork === net.key;
                   return (
                     <button
                       key={net.key}
                       onClick={() => handleNetworkChange(net.key)}
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        gap: 8,
-                        padding: "14px 8px",
-                        border: selected ? "1px solid var(--gold)" : "1px solid var(--border-sub)",
-                        background: selected ? "var(--gold-ghost)" : "var(--bg-tertiary)",
-                        cursor: "pointer",
-                        transition: "all 0.15s",
-                        position: "relative",
-                      }}
+                      className={active ? "net-card net-card-active" : "net-card"}
                     >
-                      {net.recommended && (
-                        <span
-                          style={{
-                            position: "absolute",
-                            top: -1,
-                            left: -1,
-                            right: -1,
-                            fontFamily: "var(--font-mono)",
-                            fontSize: 8,
-                            letterSpacing: "0.12em",
-                            textTransform: "uppercase",
-                            background: "var(--gold)",
-                            color: "var(--text-inv)",
-                            padding: "2px 0",
-                            textAlign: "center",
-                          }}
-                        >
-                          RECOMMENDED
-                        </span>
-                      )}
-                      <div style={{ marginTop: net.recommended ? 10 : 0 }}>
-                        <net.Icon />
+                      <div>
+                        <div className="net-card-name">{net.name}</div>
+                        <div className="net-card-desc">{net.desc}</div>
                       </div>
-                      <span style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em", color: selected ? "var(--gold)" : "var(--text-muted)" }}>
-                        {net.sub}
-                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                        {net.recommended && <span className="net-rec">RECOMMENDED</span>}
+                        <div className="net-check">
+                          {active && <div className="net-check-inner" />}
+                        </div>
+                      </div>
                     </button>
                   );
                 })}
@@ -311,26 +240,42 @@ export default function DigitalGold() {
 
             {/* Step 2: Wallet */}
             <div>
-              <WidgetLabel>STEP 2 · CONNECT WALLET</WidgetLabel>
+              <StepLabel>STEP 2 — CONNECT YOUR WALLET</StepLabel>
               {!isConnected ? (
                 <div>
-                  <appkit-button />
-                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", color: "var(--text-muted)", marginTop: 10 }}>
-                    SUPPORTS METAMASK, TRUST WALLET, WALLETCONNECT +30 MORE
-                  </p>
+                  <button
+                    onClick={() => open()}
+                    className="btn-ghost"
+                    style={{ width: "100%", height: 52, justifyContent: "center", marginBottom: 10 }}
+                  >
+                    CONNECT WALLET
+                  </button>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {["MetaMask", "Coinbase", "Trust", "WalletConnect"].map((w) => (
+                      <span key={w} className="wallet-logo-tag">{w}</span>
+                    ))}
+                  </div>
                 </div>
               ) : (
                 <div style={{ border: "1px solid rgba(74,140,111,0.3)", background: "rgba(74,140,111,0.06)", padding: "12px 16px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--c-success)" }}>CONNECTED</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--c-success)" }}>
+                      CONNECTED
+                    </span>
                     <div style={{ display: "flex", gap: 12 }}>
-                      <button onClick={() => open({ view: "Account" })} style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", cursor: "pointer" }}>CHANGE</button>
-                      <button onClick={() => disconnect()} style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--c-danger)", cursor: "pointer" }}>DISCONNECT</button>
+                      <button onClick={() => open({ view: "Account" })} style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", cursor: "pointer", background: "none", border: "none" }}>
+                        CHANGE
+                      </button>
+                      <button onClick={() => disconnect()} style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--c-danger)", cursor: "pointer", background: "none", border: "none" }}>
+                        DISCONNECT
+                      </button>
                     </div>
                   </div>
                   <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-sec)", wordBreak: "break-all" }}>{address}</p>
                   {userTokenBalance !== null && (
-                    <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--c-success)", marginTop: 6 }}>XN BALANCE: {userTokenBalance} XN</p>
+                    <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--c-success)", marginTop: 6 }}>
+                      XN BALANCE: {userTokenBalance} XN
+                    </p>
                   )}
                 </div>
               )}
@@ -339,7 +284,7 @@ export default function DigitalGold() {
             {/* TRON sender address */}
             {selectedNetwork === "TRON" && (
               <div>
-                <WidgetLabel>YOUR TRON SENDER ADDRESS</WidgetLabel>
+                <StepLabel>YOUR TRON SENDER ADDRESS</StepLabel>
                 <p style={{ fontFamily: "var(--font-disp)", fontSize: 12, color: "var(--text-muted)", marginBottom: 10 }}>
                   Enter the TRON wallet you will send USDT <span style={{ color: "var(--c-danger)" }}>from</span>:
                 </p>
@@ -350,14 +295,9 @@ export default function DigitalGold() {
                     value={tronAddress}
                     onChange={(e) => setTronAddress(e.target.value.trim())}
                     style={{
-                      flex: 1,
-                      background: "var(--bg-tertiary)",
-                      border: "1px solid var(--border-sub)",
-                      padding: "10px 12px",
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 11,
-                      color: "var(--text-primary)",
-                      outline: "none",
+                      flex: 1, background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)",
+                      padding: "10px 12px", fontFamily: "var(--font-mono)", fontSize: 11,
+                      color: "var(--text-primary)", outline: "none",
                     }}
                     onFocus={(e) => (e.target.style.borderColor = "var(--gold)")}
                     onBlur={(e) => (e.target.style.borderColor = "var(--border-sub)")}
@@ -372,13 +312,8 @@ export default function DigitalGold() {
                       padding: "0 12px",
                       background: scanning ? "rgba(168,82,82,0.1)" : "var(--gold-ghost)",
                       border: scanning ? "1px solid var(--c-danger)" : "1px solid var(--border-gold)",
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 9,
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase",
-                      color: scanning ? "var(--c-danger)" : "var(--gold)",
-                      cursor: "pointer",
-                      whiteSpace: "nowrap",
+                      fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase",
+                      color: scanning ? "var(--c-danger)" : "var(--gold)", cursor: "pointer", whiteSpace: "nowrap",
                     }}
                   >{scanning ? "STOP" : "SCAN"}</button>
                 </div>
@@ -392,24 +327,21 @@ export default function DigitalGold() {
 
             {/* Step 3: Amount */}
             <div>
-              <WidgetLabel>STEP 3 · ENTER AMOUNT</WidgetLabel>
-              {/* Quick select */}
+              <StepLabel>STEP 3 — ENTER AMOUNT</StepLabel>
+
+              {/* Quick-select */}
               <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
                 {QUICK_AMOUNTS.map((amt) => (
                   <button
                     key={amt}
                     onClick={() => handleUsdtChange(amt)}
                     style={{
-                      flex: 1,
-                      padding: "6px 0",
+                      flex: 1, padding: "6px 0",
                       background: usdtAmount == amt ? "var(--gold)" : "var(--bg-tertiary)",
                       border: usdtAmount == amt ? "1px solid var(--gold)" : "1px solid var(--border-sub)",
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 10,
-                      letterSpacing: "0.1em",
+                      fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.1em",
                       color: usdtAmount == amt ? "var(--text-inv)" : "var(--text-muted)",
-                      cursor: "pointer",
-                      transition: "all 0.15s",
+                      cursor: "pointer", transition: "all 0.15s",
                     }}
                   >
                     ${amt}
@@ -417,44 +349,68 @@ export default function DigitalGold() {
                 ))}
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                {/* USDT input */}
-                <div>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 6 }}>YOU SEND (USDT)</div>
-                  <div style={{ display: "flex", alignItems: "center", background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)", padding: "10px 12px" }}>
-                    <input
-                      type="number"
-                      value={usdtAmount}
-                      min={10}
-                      max={10000}
-                      onChange={(e) => handleUsdtChange(e.target.value)}
-                      style={{ flex: 1, background: "none", border: "none", outline: "none", fontFamily: "var(--font-mono)", fontSize: 14, color: "var(--text-primary)", width: "100%" }}
-                    />
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.1em" }}>USDT</span>
-                  </div>
-                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", marginTop: 4, letterSpacing: "0.1em" }}>MIN: 10 USDT</p>
-                </div>
+              {/* USDT input */}
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 6 }}>
+                YOU SEND
+              </div>
+              <div style={{ position: "relative", marginBottom: 4 }}>
+                <input
+                  type="number"
+                  value={usdtAmount}
+                  min={10}
+                  max={10000}
+                  onChange={(e) => handleUsdtChange(e.target.value)}
+                  style={{
+                    width: "100%", height: 64,
+                    background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)",
+                    padding: "0 60px 0 18px",
+                    fontFamily: "var(--font-mono)", fontSize: 24, color: "var(--text-primary)", outline: "none",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--gold)")}
+                  onBlur={(e) => (e.target.style.borderColor = "var(--border-sub)")}
+                />
+                <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-muted)", pointerEvents: "none" }}>
+                  USDT
+                </span>
+              </div>
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.1em", marginBottom: 10 }}>
+                MIN: 10 USDT
+              </p>
 
-                {/* XN output */}
-                <div>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 6 }}>YOU RECEIVE (XN)</div>
-                  <div style={{ display: "flex", alignItems: "center", background: "var(--bg-tertiary)", border: "1px solid var(--border-gold)", padding: "10px 12px" }}>
-                    <input
-                      type="number"
-                      value={xnAmount}
-                      onChange={(e) => handleXnChange(e.target.value)}
-                      style={{ flex: 1, background: "none", border: "none", outline: "none", fontFamily: "var(--font-mono)", fontSize: 14, color: "var(--gold)", width: "100%" }}
-                    />
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--gold)", letterSpacing: "0.1em" }}>XN</span>
-                  </div>
-                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", marginTop: 4, textAlign: "right", letterSpacing: "0.1em" }}>0.20 USDT = 1 XN</p>
-                </div>
+              {/* Rate line */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                <div style={{ flex: 1, height: 1, background: "var(--border-sub)" }} />
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.12em", color: "var(--gold)", whiteSpace: "nowrap" }}>
+                  1 XN = 0.20 USDT
+                </span>
+                <div style={{ flex: 1, height: 1, background: "var(--border-sub)" }} />
+              </div>
+
+              {/* XN output */}
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 6 }}>
+                YOU RECEIVE
+              </div>
+              <div style={{ position: "relative" }}>
+                <input
+                  type="number"
+                  value={xnAmount}
+                  onChange={(e) => handleXnChange(e.target.value)}
+                  style={{
+                    width: "100%", height: 64,
+                    background: "var(--bg-tertiary)", border: "1px solid var(--border-gold)",
+                    padding: "0 50px 0 18px",
+                    fontFamily: "var(--font-mono)", fontSize: 24, color: "var(--gold)", outline: "none",
+                  }}
+                />
+                <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--gold)", pointerEvents: "none" }}>
+                  XN
+                </span>
               </div>
             </div>
 
-            {/* Step 4: Contract address + authorize */}
+            {/* Step 4: Send & Confirm */}
             <div>
-              <WidgetLabel>STEP 4 · SEND & AUTHORIZE</WidgetLabel>
+              <StepLabel>STEP 4 — SEND &amp; CONFIRM</StepLabel>
 
               {currentNetwork?.depositAddress ? (
                 <>
@@ -465,13 +421,9 @@ export default function DigitalGold() {
                   {/* Address box */}
                   <div
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      background: "var(--bg-tertiary)",
-                      border: "1px solid var(--border-gold)",
-                      padding: "14px 16px",
-                      marginBottom: 12,
+                      display: "flex", alignItems: "center", gap: 10,
+                      background: "var(--bg-tertiary)", border: "1px solid var(--border-gold)",
+                      padding: "14px 16px", marginBottom: 12,
                     }}
                   >
                     <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-sec)", flex: 1, wordBreak: "break-all", letterSpacing: "0.04em" }}>
@@ -483,15 +435,9 @@ export default function DigitalGold() {
                         padding: "8px 16px",
                         background: copied ? "rgba(74,140,111,0.15)" : "var(--gold)",
                         border: copied ? "1px solid var(--c-success)" : "none",
-                        fontFamily: "var(--font-disp)",
-                        fontWeight: 700,
-                        fontSize: 11,
-                        letterSpacing: "0.15em",
-                        textTransform: "uppercase",
-                        color: copied ? "var(--c-success)" : "var(--text-inv)",
-                        cursor: "pointer",
-                        flexShrink: 0,
-                        transition: "all 0.2s",
+                        fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 11, letterSpacing: "0.15em",
+                        textTransform: "uppercase", color: copied ? "var(--c-success)" : "var(--text-inv)",
+                        cursor: "pointer", flexShrink: 0, transition: "all 0.2s",
                       }}
                     >
                       {copied ? "✓ COPIED" : "COPY"}
@@ -507,15 +453,15 @@ export default function DigitalGold() {
 
                   {/* Authorize button */}
                   <button
-                    className="btn-primary"
+                    className="btn-primary authorize-btn"
                     style={{ width: "100%", justifyContent: "center" }}
                     onClick={() => copyToClipboard(currentNetwork.depositAddress)}
                     data-cursor="cta"
                   >
-                    AUTHORIZE TRANSFER →
+                    AUTHORIZE TRANSFER
                   </button>
 
-                  {/* Listening indicator */}
+                  {/* Payment listener indicator */}
                   {isConnected && (
                     <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12, padding: "10px 14px", border: "1px solid rgba(74,140,111,0.2)", background: "rgba(74,140,111,0.04)" }}>
                       <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--c-success)", display: "inline-block", animation: "ubPulse 1.8s ease-in-out infinite" }} />
@@ -541,22 +487,32 @@ export default function DigitalGold() {
         )}
       </div>
 
-      {/* Widget footer */}
-      <div style={{ padding: "14px 24px", borderTop: "1px solid var(--border-sub)", background: "var(--bg-tertiary)" }}>
-        <a
-          href="/news/how-to-add-a-xn-token"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-link"
+      {/* Import collapsible */}
+      <div style={{ borderTop: "1px solid var(--border-sub)" }}>
+        <button
+          className="import-toggle"
+          onClick={() => setImportOpen(!importOpen)}
         >
-          HOW TO IMPORT XN TOKENS →
-        </a>
+          <span>HOW TO ADD XN TO YOUR WALLET</span>
+          <span style={{ transform: importOpen ? "rotate(180deg)" : "none", transition: "transform 0.3s" }}>▼</span>
+        </button>
+        <div style={{ maxHeight: importOpen ? 280 : 0, overflow: "hidden", transition: "max-height 0.35s cubic-bezier(0.16,1,0.3,1)" }}>
+          <div style={{ padding: "0 24px 20px" }}>
+            {IMPORT_STEPS.map((step, i) => (
+              <div key={i} className="import-step">
+                <span className="import-num">0{i + 1}</span>
+                <span>{step}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+
     </div>
   );
 }
 
-function WidgetLabel({ children }) {
+function StepLabel({ children }) {
   return (
     <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 12 }}>
       {children}

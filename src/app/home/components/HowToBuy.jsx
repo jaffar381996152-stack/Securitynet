@@ -3,10 +3,52 @@ import Link from "next/link";
 import FadeUpSection from "./FadeUpSection";
 
 const STEPS = [
-  { num: "01", title: "CONNECT WALLET", desc: "Connect your MetaMask, Trust Wallet, or any WalletConnect-compatible wallet to the presale platform." },
-  { num: "02", title: "CHOOSE NETWORK", desc: "Select BEP-20 (BSC), ERC-20 (Ethereum), or TRC-20 (Tron) — buy with USDT on your preferred chain." },
-  { num: "03", title: "ENTER AMOUNT", desc: "Enter the USDT amount you wish to invest. Minimum purchase is $10 USDT. The XN equivalent is calculated at $0.20." },
-  { num: "04", title: "RECEIVE XN", desc: "Send USDT to the contract address and authorize. XN tokens will be distributed to your wallet after presale close." },
+  {
+    num: "01",
+    title: "Connect Your Wallet",
+    desc: "Install MetaMask, Coinbase Wallet, or Trust Wallet. Ensure it supports BEP-20, ERC-20, or TRC-20 tokens.",
+    icon: (
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="5" width="20" height="14" rx="2" />
+        <path d="M16 12h.01" />
+        <path d="M2 10h20" />
+      </svg>
+    ),
+  },
+  {
+    num: "02",
+    title: "Select Network",
+    desc: "Choose your preferred network — BEP-20 (Binance Smart Chain), ERC-20 (Ethereum), or TRC-20 (Tron). Fund with USDT.",
+    icon: (
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2" />
+        <polyline points="2 17 12 22 22 17" />
+        <polyline points="2 12 12 17 22 12" />
+      </svg>
+    ),
+  },
+  {
+    num: "03",
+    title: "Send USDT",
+    desc: "Enter your USDT amount (minimum $10) and send to the official contract address. Double-check the address before confirming.",
+    icon: (
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 12h14" />
+        <path d="M12 5l7 7-7 7" />
+      </svg>
+    ),
+  },
+  {
+    num: "04",
+    title: "Receive XN Tokens",
+    desc: "XN tokens arrive in your wallet within 2 minutes of confirmation. Import the contract address to view your balance immediately.",
+    icon: (
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <path d="M9 12l2 2 4-4" />
+      </svg>
+    ),
+  },
 ];
 
 export default function HowToBuy() {
@@ -14,110 +56,88 @@ export default function HowToBuy() {
     <section className="section-py" style={{ background: "var(--bg-secondary)", borderTop: "1px solid var(--border-sub)" }}>
       <div className="container">
         <FadeUpSection style={{ textAlign: "center", marginBottom: 56 }}>
-          <span className="eyebrow" style={{ marginBottom: 12 }}>PURCHASE GUIDE</span>
+          <span className="eyebrow" style={{ marginBottom: 12 }}>HOW TO BUY</span>
           <h2 className="disp-title" style={{ fontSize: "var(--lg-size)" }}>
-            HOW TO BUY <span style={{ color: "var(--gold)" }}>XN</span>
+            FOUR STEPS TO <span style={{ color: "var(--gold)" }}>SECURE YOUR XN</span>
           </h2>
         </FadeUpSection>
 
-        {/* Steps grid with connector line */}
-        <div style={{ position: "relative" }}>
-          {/* Horizontal dashed line (desktop only) */}
-          <div
-            className="hidden lg:block"
-            style={{
-              position: "absolute",
-              top: 32,
-              left: "calc(12.5% + 20px)",
-              right: "calc(12.5% + 20px)",
-              height: 1,
-              borderTop: "1px dashed rgba(212,175,110,0.25)",
-              zIndex: 0,
-            }}
-          >
-            {/* Traveling dot */}
+        {/* 1px-gap grid — the gap itself acts as dividers */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 1,
+            background: "var(--border-sub)",
+            marginBottom: 48,
+          }}
+        >
+          {STEPS.map((step) => (
             <div
+              key={step.num}
               style={{
-                position: "absolute",
-                top: -3,
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: "var(--gold)",
-                animation: "travelDot 4s ease-in-out infinite",
+                background: "var(--bg-secondary)",
+                padding: "28px 24px",
+                position: "relative",
               }}
-            />
-          </div>
+            >
+              {/* Faint step number — top-right */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 20,
+                  right: 20,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 48,
+                  fontWeight: 700,
+                  color: "rgba(212,175,110,0.12)",
+                  lineHeight: 1,
+                  userSelect: "none",
+                  pointerEvents: "none",
+                }}
+              >
+                {step.num}
+              </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px,1fr))",
-              gap: "clamp(16px,2vw,24px)",
-              position: "relative",
-              zIndex: 1,
-            }}
-          >
-            {STEPS.map((step, i) => (
-              <FadeUpSection key={step.num} delay={i * 0.1}>
-                <div
-                  style={{
-                    background: "var(--bg-tertiary)",
-                    border: "1px solid var(--border-sub)",
-                    padding: "clamp(20px,3vw,32px)",
-                    transition: "border-color 0.2s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--border-gold)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border-sub)")}
-                >
-                  {/* Step number */}
-                  <div
-                    style={{
-                      fontFamily: "var(--font-disp)",
-                      fontWeight: 900,
-                      fontSize: 48,
-                      color: "var(--gold)",
-                      lineHeight: 1,
-                      marginBottom: 20,
-                      opacity: 0.8,
-                    }}
-                  >
-                    {step.num}
-                  </div>
+              {/* Icon */}
+              <div style={{ marginBottom: 20 }}>
+                {step.icon}
+              </div>
 
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-disp)",
-                      fontWeight: 700,
-                      fontSize: 18,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                      color: "var(--text-primary)",
-                      marginBottom: 12,
-                    }}
-                  >
-                    {step.title}
-                  </h3>
+              {/* Title */}
+              <h3
+                style={{
+                  fontFamily: "var(--font-disp)",
+                  fontWeight: 700,
+                  fontSize: 18,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  color: "var(--text-primary)",
+                  marginBottom: 12,
+                  lineHeight: 1.2,
+                }}
+              >
+                {step.title}
+              </h3>
 
-                  <p
-                    style={{
-                      fontFamily: "var(--font-disp)",
-                      fontSize: 14,
-                      color: "var(--text-muted)",
-                      lineHeight: 1.65,
-                    }}
-                  >
-                    {step.desc}
-                  </p>
-                </div>
-              </FadeUpSection>
-            ))}
-          </div>
+              {/* Body */}
+              <p
+                style={{
+                  fontFamily: "var(--font-disp)",
+                  fontSize: 14,
+                  color: "var(--text-muted)",
+                  lineHeight: 1.7,
+                }}
+              >
+                {step.desc}
+              </p>
+            </div>
+          ))}
         </div>
 
-        <FadeUpSection delay={0.4} style={{ textAlign: "center", marginTop: 40 }}>
-          <Link href="/presale" className="btn-primary" data-cursor="cta">
-            START BUYING XN →
+        <FadeUpSection delay={0.4} style={{ textAlign: "center" }}>
+          <Link href="/presale" className="btn-ghost" data-cursor="cta">
+            READY TO BEGIN? →
           </Link>
         </FadeUpSection>
       </div>

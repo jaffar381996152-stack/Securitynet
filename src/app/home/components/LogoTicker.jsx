@@ -1,10 +1,9 @@
-const BRANDS = [
-  "FORBES", "COINDESK", "BLOOMBERG", "REUTERS", "TECHCRUNCH",
-  "COINTELEGRAPH", "DECRYPT", "WIRED", "FORTUNE", "THE BLOCK",
-];
+"use client";
+const ROW1 = ["CoinTelegraph", "Decrypt", "CoinDesk", "The Block", "Binance", "CryptoSlate", "BeInCrypto", "NewsBTC"];
+const ROW2 = ["DappRadar", "BSCScan", "CoinMarketCap", "CoinGecko", "Etherscan", "DefiLlama", "TokenInsight", "Messari"];
 
-function TickerRow({ dir = "left", speed = 30 }) {
-  const items = [...BRANDS, ...BRANDS]; // duplicate for seamless loop
+function TickerRow({ brands, dir = "left", speed = 28 }) {
+  const items = [...brands, ...brands];
   const animName = dir === "left" ? "tickerLeft" : "tickerRight";
 
   return (
@@ -12,7 +11,7 @@ function TickerRow({ dir = "left", speed = 30 }) {
       <div
         style={{
           display: "flex",
-          gap: 48,
+          gap: 0,
           whiteSpace: "nowrap",
           animation: `${animName} ${speed}s linear infinite`,
           willChange: "transform",
@@ -22,15 +21,30 @@ function TickerRow({ dir = "left", speed = 30 }) {
           <span
             key={i}
             style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 160,
+              height: 48,
               fontFamily: "var(--font-disp)",
               fontWeight: 700,
-              fontSize: 20,
-              letterSpacing: "0.2em",
+              fontSize: 15,
+              letterSpacing: "0.12em",
               textTransform: "uppercase",
               color: "var(--text-muted)",
-              opacity: 0.45,
+              opacity: 0.4,
               flexShrink: 0,
               userSelect: "none",
+              cursor: "default",
+              transition: "opacity 0.2s, color 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.opacity = "1";
+              e.currentTarget.style.color = "var(--gold)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.opacity = "0.4";
+              e.currentTarget.style.color = "var(--text-muted)";
             }}
           >
             {b}
@@ -43,7 +57,7 @@ function TickerRow({ dir = "left", speed = 30 }) {
         style={{
           position: "absolute",
           inset: 0,
-          background: "linear-gradient(90deg,var(--bg-tertiary) 0%,transparent 12%,transparent 88%,var(--bg-tertiary) 100%)",
+          background: "linear-gradient(90deg,var(--bg-tertiary) 0%,transparent 10%,transparent 90%,var(--bg-tertiary) 100%)",
           pointerEvents: "none",
         }}
       />
@@ -62,11 +76,11 @@ export default function LogoTicker() {
       }}
     >
       <div style={{ marginBottom: 10, textAlign: "center" }}>
-        <span className="eyebrow" style={{ marginBottom: 16 }}>AS SEEN IN</span>
+        <span className="eyebrow" style={{ marginBottom: 16 }}>AS FEATURED IN / POWERED BY</span>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <TickerRow dir="left"  speed={28} />
-        <TickerRow dir="right" speed={22} />
+        <TickerRow brands={ROW1} dir="left"  speed={22} />
+        <TickerRow brands={ROW2} dir="right" speed={26} />
       </div>
     </section>
   );

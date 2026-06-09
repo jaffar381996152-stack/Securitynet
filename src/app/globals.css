@@ -390,3 +390,162 @@ w3m-account-button, appkit-account-button {
   transition: background-position 0.5s ease;
 }
 .btn-shimmer:hover::after { background-position: -100% 0; }
+
+/* =====================================================
+   AUTHORIZE BUTTON SHIMMER
+   ===================================================== */
+.authorize-btn { position: relative; overflow: hidden; }
+.authorize-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.15) 50%,transparent 70%);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  transition: background-position 0.5s ease;
+  pointer-events: none;
+}
+.authorize-btn:hover::after { background-position: -100% 0; }
+
+/* =====================================================
+   NETWORK CARDS (erctoken widget)
+   ===================================================== */
+.net-card {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid var(--border-sub);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: left;
+}
+.net-card:hover { border-color: var(--border-gold); }
+.net-card-active { border-color: var(--gold) !important; background: var(--gold-ghost) !important; }
+.net-card-name {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+.net-card-active .net-card-name { color: var(--gold); }
+.net-card-desc {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.net-rec {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--gold);
+  color: var(--text-inv);
+  padding: 2px 6px;
+}
+.net-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+.net-check-inner {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+/* =====================================================
+   WALLET LOGO TAG
+   ===================================================== */
+.wallet-logo-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid var(--border-sub);
+  padding: 3px 8px;
+}
+
+/* =====================================================
+   IMPORT COLLAPSIBLE
+   ===================================================== */
+.import-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color 0.2s;
+}
+.import-toggle:hover { color: var(--gold); }
+.import-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  border-bottom: 1px solid var(--border-sub);
+}
+.import-step:last-child { border-bottom: none; }
+.import-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gold);
+  flex-shrink: 0;
+  min-width: 22px;
+  font-weight: 500;
+}
+
+/* =====================================================
+   FOOTER GRID RESPONSIVE
+   ===================================================== */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+  gap: 48px;
+}
+@media (max-width: 1023px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+@media (max-width: 599px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+}
+
+/* =====================================================
+   MOBILE BOTTOM BAR BODY PADDING
+   ===================================================== */
+@media (max-width: 1023px) {
+  body { padding-bottom: 60px; }
+}
+
+/* =====================================================
+   ADDITIONAL ANIMATION KEYFRAMES
+   ===================================================== */
+@keyframes proofScroll { 0% { transform:translateX(0) } 100% { transform:translateX(-50%) } }
+@keyframes streamFlow  { 0% { stroke-dashoffset:0 } 100% { stroke-dashoffset:-240 } }
+@keyframes counterUp   { from { opacity:0;transform:translateY(10px) } to { opacity:1;transform:translateY(0) } }
+
+/* techPulse targets SVG circle r attribute — CSS animation on SVG presentation attributes */
+@keyframes techPulseOpacity { 0%,100% { opacity:0.5 } 50% { opacity:0.2 } }

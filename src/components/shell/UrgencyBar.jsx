@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
 
-const STAGE_NUM     = 1;
-const STAGE_TOTAL   = 5;
-const STAGE_SOLD    = 38;   // percentage
-const TOKEN_PRICE   = "$0.20";
+const STAGE_NUM   = 3;
+const STAGE_TOTAL = 5;
+const STAGE_SOLD  = 78;
+const TOKEN_PRICE = "$0.20";
 
 export default function UrgencyBar() {
   return (
@@ -49,14 +49,14 @@ export default function UrgencyBar() {
               animation: "ubPulse 1.8s ease-in-out infinite",
             }}
           />
-          LIVE
+          PRESALE LIVE
         </span>
 
         <span style={{ color: "rgba(212,175,110,0.3)" }}>│</span>
 
         <span>
           STAGE{" "}
-          <span style={{ color: "#D4AF6E" }}>{STAGE_NUM}</span> OF {STAGE_TOTAL}
+          <span style={{ color: "#D4AF6E" }}>{STAGE_NUM}</span> OF {STAGE_TOTAL} ACTIVE
         </span>
 
         <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -82,13 +82,13 @@ export default function UrgencyBar() {
               }}
             />
           </span>
-          <span style={{ color: "#D4AF6E" }}>{STAGE_SOLD}% SOLD</span>
+          <span style={{ color: "#D4AF6E" }}>{STAGE_SOLD}% FILLED</span>
         </span>
 
         <span style={{ color: "rgba(212,175,110,0.3)" }}>│</span>
 
         <span>
-          PRICE{" "}
+          1 XN ={" "}
           <span style={{ color: "#D4AF6E" }}>{TOKEN_PRICE} USDT</span>
         </span>
 
@@ -106,7 +106,7 @@ export default function UrgencyBar() {
           onMouseEnter={(e) => (e.currentTarget.style.color = "#E8C882")}
           onMouseLeave={(e) => (e.currentTarget.style.color = "#D4AF6E")}
         >
-          BUY NOW →
+          BUY XN →
         </Link>
       </div>
 
@@ -119,7 +119,7 @@ export default function UrgencyBar() {
           style={{
             display: "flex",
             whiteSpace: "nowrap",
-            animation: "tickerScroll 18s linear infinite",
+            animation: "tickerScroll 28s linear infinite",
             fontFamily: "'JetBrains Mono','Courier New',monospace",
             fontSize: 9,
             letterSpacing: "0.16em",
@@ -127,11 +127,11 @@ export default function UrgencyBar() {
             color: "rgba(240,237,232,0.6)",
           }}
         >
-          {[...Array(3)].map((_, i) => (
+          {[...Array(2)].map((_, i) => (
             <span key={i} style={{ paddingRight: 48 }}>
-              ● STAGE {STAGE_NUM}/{STAGE_TOTAL} &nbsp;·&nbsp; {STAGE_SOLD}% SOLD &nbsp;·&nbsp;
+              ● PRESALE LIVE &nbsp;·&nbsp; STAGE {STAGE_NUM} ACTIVE &nbsp;·&nbsp; 1 XN ={" "}
               <span style={{ color: "#D4AF6E" }}>{TOKEN_PRICE} USDT</span>
-              &nbsp;·&nbsp; BUY NOW →
+              &nbsp;·&nbsp; {STAGE_SOLD}% FILLED &nbsp;·&nbsp; 18,240 XN REMAINING &nbsp;·&nbsp; LISTING PRICE $0.80 USDT &nbsp;·&nbsp; 4× POTENTIAL ROI
             </span>
           ))}
         </div>

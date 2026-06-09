@@ -1,43 +1,75 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import FadeUpSection from "./FadeUpSection";
 
 const MILESTONES = [
   {
-    quarter: "Q1 2025",
-    title:   "FOUNDATION",
+    quarter: "Q1–Q2 2025",
+    title:   "Genesis & Deployment",
     status:  "complete",
-    items: ["Platform architecture finalized", "Smart contract development & audit", "Core AI surveillance module v1", "Team assembly & legal structure"],
-  },
-  {
-    quarter: "Q2 2025",
-    title:   "PRESALE LAUNCH",
-    status:  "active",
-    items: ["XN token presale Stage 1 open", "Community growth to 50K+ members", "Reown / AppKit wallet integration", "Beta platform launch for early backers"],
+    items: [
+      "Project inception + whitepaper V1",
+      "Smart contract dev & audit",
+      "Token deployment on BNB Chain",
+      "Website + community setup",
+      "Presale Stage 1 opened ($0.10 USDT)",
+    ],
   },
   {
     quarter: "Q3 2025",
-    title:   "PLATFORM BETA",
-    status:  "upcoming",
-    items: ["Full AI surveillance deployment", "Exchange listing applications", "Strategic partnership announcements", "Mobile app beta release"],
+    title:   "Growth & Presale Expansion",
+    status:  "complete",
+    items: [
+      "Stage 2 launched ($0.15 USDT)",
+      "Community growth to 8,000+ members",
+      "Whitepaper V2 publication",
+      "Multi-chain USDT support added",
+    ],
   },
   {
-    quarter: "Q4 2025",
-    title:   "MAINNET LAUNCH",
+    quarter: "Q4 2025–Q1 2026",
+    title:   "Presale Stage 3 & Listings Prep",
+    status:  "active",
+    items: [
+      "Stage 3 active ($0.20 USDT) — currently live",
+      "Stage 4 & 5 prep ($0.35/$0.55)",
+      "CEX listing applications submitted",
+      "Security audit V2 underway",
+      "Marketing & KOL partnerships",
+    ],
+  },
+  {
+    quarter: "Q2 2026",
+    title:   "Token Generation Event",
     status:  "upcoming",
-    items: ["XN token DEX/CEX listing", "Governance portal launch", "Enterprise sales pipeline opens", "Global expansion to 10+ markets"],
+    items: [
+      "XN listed on Tier-1 & Tier-2 CEXs",
+      "DEX liquidity pools launched",
+      "Token unlock + vesting begin",
+      "Staking rewards program live",
+    ],
+  },
+  {
+    quarter: "Q3–Q4 2026",
+    title:   "Platform & AI Product Launch",
+    status:  "upcoming",
+    items: [
+      "SecurityNet AI platform beta",
+      "Enterprise partnership program",
+      "AI security SDK released",
+      "Ecosystem grant program opens",
+    ],
   },
 ];
 
 const STATUS_STYLES = {
-  complete: { label: "COMPLETE",  color: "var(--c-success)",  borderColor: "rgba(74,140,111,0.4)",  bg: "rgba(74,140,111,0.08)" },
-  active:   { label: "ACTIVE",    color: "var(--gold)",        borderColor: "var(--border-gold)",    bg: "var(--gold-ghost)" },
-  upcoming: { label: "UPCOMING",  color: "var(--text-muted)",  borderColor: "var(--border-sub)",     bg: "transparent" },
+  complete: { label: "COMPLETED ✓", color: "var(--c-success)",  borderColor: "rgba(74,140,111,0.4)",  bg: "rgba(74,140,111,0.08)" },
+  active:   { label: "ACTIVE NOW",  color: "var(--gold)",        borderColor: "var(--border-gold)",    bg: "var(--gold-ghost)" },
+  upcoming: { label: "UPCOMING",    color: "var(--text-muted)",  borderColor: "var(--border-sub)",     bg: "transparent" },
 };
 
 export default function Roadmap() {
-  const lineRef = useRef(null);
-  const [lineH, setLineH] = useState(0);
+  const lineRef    = useRef(null);
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -97,7 +129,6 @@ export default function Roadmap() {
                 inset: 0,
                 background: "linear-gradient(to bottom, var(--gold), var(--gold-dim))",
                 transformOrigin: "top center",
-                scaleY: 0,
               }}
             />
           </div>
@@ -118,13 +149,12 @@ export default function Roadmap() {
                     }}
                     className="hidden md:grid"
                   >
-                    {/* Left content (even) or spacer (odd) */}
                     <div style={{ textAlign: isLeft ? "right" : "left" }}>
                       {isLeft && <MilestoneCard m={m} s={s} align="right" />}
                     </div>
 
                     {/* Center dot */}
-                    <div style={{ display: "flex", justifyContent: "center", paddingTop: 16 }}>
+                    <div style={{ display: "flex", justifyContent: "center", paddingTop: 18 }}>
                       <div
                         style={{
                           width: 12,
@@ -134,11 +164,12 @@ export default function Roadmap() {
                           background: m.status === "active" ? s.color : "var(--bg-primary)",
                           zIndex: 1,
                           position: "relative",
+                          boxShadow: m.status === "active" ? `0 0 0 4px rgba(212,175,110,0.2)` : "none",
+                          animation: m.status === "active" ? "ubPulse 2s ease-in-out infinite" : "none",
                         }}
                       />
                     </div>
 
-                    {/* Right content (odd) or spacer (even) */}
                     <div>
                       {!isLeft && <MilestoneCard m={m} s={s} align="left" />}
                     </div>
@@ -205,7 +236,7 @@ function MilestoneCard({ m, s, align }) {
         style={{
           fontFamily: "var(--font-disp)",
           fontWeight: 700,
-          fontSize: 20,
+          fontSize: 18,
           textTransform: "uppercase",
           letterSpacing: "0.06em",
           color: "var(--text-primary)",
@@ -227,11 +258,11 @@ function MilestoneCard({ m, s, align }) {
             }}
           >
             {align === "right" && (
-              <span style={{ fontFamily: "var(--font-disp)", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.5, flex: 1 }}>{item}</span>
+              <span style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-muted)", lineHeight: 1.5, flex: 1 }}>{item}</span>
             )}
-            <span style={{ width: 4, height: 4, borderRadius: "50%", background: s.color, flexShrink: 0, marginTop: 7 }} />
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--gold-dim)", flexShrink: 0, marginTop: 4 }}>—</span>
             {align === "left" && (
-              <span style={{ fontFamily: "var(--font-disp)", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.5 }}>{item}</span>
+              <span style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-muted)", lineHeight: 1.5 }}>{item}</span>
             )}
           </li>
         ))}

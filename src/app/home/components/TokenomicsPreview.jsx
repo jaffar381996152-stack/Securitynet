@@ -3,27 +3,27 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 const SEGMENTS = [
-  { label: "PRESALE",   pct: 30, color: "#D4AF6E" },
-  { label: "PUBLIC",    pct: 25, color: "#E8C882" },
-  { label: "ECOSYSTEM", pct: 20, color: "#A88A52" },
-  { label: "TEAM",      pct: 15, color: "rgba(212,175,110,0.45)" },
-  { label: "RESERVE",   pct: 10, color: "rgba(212,175,110,0.25)" },
+  { label: "PRESALE",   pct: 40, color: "#D4AF6E" },
+  { label: "ECOSYSTEM", pct: 20, color: "#6B7A6B" },
+  { label: "TREASURY",  pct: 15, color: "#4A5A4A" },
+  { label: "TEAM",      pct: 10, color: "#3A4A3A" },
+  { label: "LIQUIDITY", pct: 8,  color: "#2E3E2E" },
+  { label: "MARKETING", pct: 7,  color: "#262E26" },
 ];
 
-const TOTAL_SUPPLY = "1,000,000,000";
-const R = 80;
+const R    = 85;
 const CIRC = 2 * Math.PI * R;
-const CX = 120;
-const CY = 120;
+const CX   = 130;
+const CY   = 130;
 
 function DonutChart({ animated }) {
   let cumPct = 0;
-  const gap = 2; // degrees gap between segments
+  const gap  = 1.5; // degree gap
 
   return (
-    <svg width={240} height={240} viewBox="0 0 240 240" style={{ overflow: "visible" }}>
-      {/* Background circle */}
-      <circle cx={CX} cy={CY} r={R} fill="none" stroke="var(--border-sub)" strokeWidth={28} />
+    <svg width={260} height={260} viewBox="0 0 260 260" style={{ overflow: "visible" }}>
+      {/* Background track */}
+      <circle cx={CX} cy={CY} r={R} fill="none" stroke="rgba(212,175,110,0.08)" strokeWidth={28} />
 
       {SEGMENTS.map((seg, i) => {
         const startAngle = cumPct / 100 * 360 - 90;
@@ -55,11 +55,11 @@ function DonutChart({ animated }) {
       })}
 
       {/* Center label */}
-      <text x={CX} y={CY - 8} textAnchor="middle" fill="var(--text-primary)" style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 18 }}>
-        1B XN
+      <text x={CX} y={CY - 8} textAnchor="middle" fill="#D4AF6E" style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 26 }}>
+        XN
       </text>
-      <text x={CX} y={CY + 12} textAnchor="middle" fill="var(--text-muted)" style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em" }}>
-        TOTAL SUPPLY
+      <text x={CX} y={CY + 10} textAnchor="middle" fill="rgba(240,237,232,0.4)" style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em" }}>
+        TOKEN
       </text>
     </svg>
   );

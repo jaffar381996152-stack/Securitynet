@@ -4,40 +4,44 @@ import FadeUpSection from "./FadeUpSection";
 
 const QUESTIONS = [
   {
-    q: "What is the XN token?",
-    a: "XN is the utility and governance token of the Securitynet ecosystem. It powers access to premium AI surveillance features, protocol governance voting, staking rewards, and cross-border data marketplace transactions.",
+    q: "What is XN token and what is it used for?",
+    a: "XN is a BEP-20 utility token that powers the SecurityNet.ai ecosystem. XN is used to pay for platform services, access real-time intelligence feeds, participate in governance, and earn staking rewards.",
   },
   {
-    q: "How do I buy XN during the presale?",
-    a: "Connect a compatible wallet (MetaMask, Trust Wallet, WalletConnect), choose your network (BSC, Ethereum, or Tron), send USDT to the presale contract address, and XN tokens will be distributed to your wallet after the presale closes.",
+    q: "How do I connect my wallet to purchase XN?",
+    a: "Visit the presale page and click 'Connect Wallet.' Supported wallets include MetaMask, Coinbase Wallet, Trust Wallet, and WalletConnect-compatible wallets. Once connected, select your network and enter the amount you wish to purchase.",
   },
   {
-    q: "Which blockchain networks are supported?",
-    a: "The presale accepts USDT on three networks: BEP-20 on Binance Smart Chain (recommended — lowest fees), ERC-20 on Ethereum, and TRC-20 on Tron.",
+    q: "Which networks and wallets are supported?",
+    a: "We support BEP-20 (Binance Smart Chain), ERC-20 (Ethereum), and TRC-20 (Tron) for USDT payments. MetaMask, Coinbase Wallet, Trust Wallet, and any WalletConnect-compatible wallet are accepted.",
   },
   {
-    q: "When does the presale end?",
-    a: "Stage 1 is currently active at $0.20 per XN. Once the stage allocation is filled, Stage 2 opens at $0.26. The presale continues across 5 stages until the public listing.",
+    q: "What is the minimum purchase amount?",
+    a: "The minimum purchase amount is $10 USDT, which equals 50 XN at the current Stage 3 price of $0.20 USDT per token. There is no maximum purchase limit.",
   },
   {
-    q: "What is the listing price?",
-    a: "The planned exchange listing price is $0.80 per XN — a 4× return from the Stage 1 presale price of $0.20. Early participants secure the best possible entry.",
+    q: "When will XN be listed on exchanges?",
+    a: "XN is targeted for exchange listing in Q2 2026. Applications have been submitted to Tier-1 and Tier-2 centralized exchanges. The listing price is set at $0.80 USDT — a 4× return on Stage 3 participants.",
+  },
+  {
+    q: "How do I import XN to my wallet after purchase?",
+    a: "In MetaMask or Trust Wallet, go to 'Import Token' and enter the XN contract address: 0x917D93261B6b232F6b8b643d65b48928D1c85FFc. Token symbol: XN. Decimals: 18.",
   },
   {
     q: "Is the smart contract audited?",
-    a: "Yes. The XN token smart contract has been audited by a third-party blockchain security firm. The audit report is available in the whitepaper and on-chain.",
+    a: "Yes. The XN smart contract has been independently audited by a leading blockchain security firm. The full audit report is available in the whitepaper. A second audit is currently underway ahead of the Token Generation Event.",
+  },
+  {
+    q: "What happens if I miss the current presale stage?",
+    a: "Each presale stage closes permanently once filled. If Stage 3 closes, Stage 4 will open at $0.35 USDT per XN. There are 5 stages in total, with the final presale price at $0.55 USDT before the public listing at $0.80 USDT.",
   },
 ];
 
-function FAQItem({ item, index }) {
+function FAQItem({ item }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div
-      style={{
-        borderBottom: "1px solid var(--border-sub)",
-      }}
-    >
+    <div style={{ borderBottom: "1px solid var(--border-sub)" }}>
       <button
         onClick={() => setOpen(!open)}
         style={{
@@ -86,7 +90,7 @@ function FAQItem({ item, index }) {
       <div
         style={{
           overflow: "hidden",
-          maxHeight: open ? 200 : 0,
+          maxHeight: open ? 240 : 0,
           transition: "max-height 0.35s cubic-bezier(0.16,1,0.3,1)",
         }}
       >
@@ -111,16 +115,16 @@ export default function FAQ() {
     <section className="section-py" style={{ background: "var(--bg-primary)", borderTop: "1px solid var(--border-sub)" }}>
       <div className="container-narrow">
         <FadeUpSection style={{ marginBottom: 48 }}>
-          <span className="eyebrow" style={{ marginBottom: 12 }}>COMMON QUESTIONS</span>
+          <span className="eyebrow" style={{ marginBottom: 12 }}>CLASSIFIED — FREQUENTLY ASKED</span>
           <h2 className="disp-title" style={{ fontSize: "var(--lg-size)" }}>
-            FREQUENTLY ASKED
+            INTELLIGENCE BRIEF
           </h2>
         </FadeUpSection>
 
         <div>
           {QUESTIONS.map((item, i) => (
-            <FadeUpSection key={i} delay={i * 0.06}>
-              <FAQItem item={item} index={i} />
+            <FadeUpSection key={i} delay={i * 0.05}>
+              <FAQItem item={item} />
             </FadeUpSection>
           ))}
         </div>

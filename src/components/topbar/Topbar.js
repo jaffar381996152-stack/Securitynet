@@ -1,3 +1,4 @@
+"use client";
 import React, { Fragment } from "react";
 import DropdownUser from "../dropdownuser/DropdownUser";
 import { MenuIcon } from "../../../public/icons/icons";

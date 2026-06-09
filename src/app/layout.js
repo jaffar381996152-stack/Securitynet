@@ -7,6 +7,8 @@ import SmoothScrollProvider from "@/components/animations/SmoothScrollProvider";
 import Preloader from "@/components/shell/Preloader";
 import CustomCursor from "@/components/shell/CustomCursor";
 import UrgencyBar from "@/components/shell/UrgencyBar";
+import StickyPresaleWidget from "@/components/shell/StickyPresaleWidget";
+import MobileBottomBar from "@/components/shell/MobileBottomBar";
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://securitynet.ai";
 
@@ -64,6 +66,8 @@ export default function RootLayout({ children }) {
           <Preloader />
           <CustomCursor />
           <UrgencyBar />
+          <StickyPresaleWidget />
+          <MobileBottomBar />
           <SmoothScrollProvider>
             <Suspense>
               {children}

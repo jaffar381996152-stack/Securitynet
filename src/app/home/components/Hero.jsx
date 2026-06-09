@@ -9,6 +9,7 @@ const TopographicCanvas = dynamic(() => import("./TopographicCanvas"), { ssr: fa
 export default function Hero() {
   return (
     <section
+      id="hero"
       style={{
         position: "relative",
         minHeight: "100svh",
@@ -51,7 +52,7 @@ export default function Hero() {
         <FadeUpSection>
           <div className="badge" style={{ marginBottom: 28 }}>
             <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--c-success)", display: "inline-block", animation: "ubPulse 1.8s ease-in-out infinite" }} />
-            CLASSIFIED · STAGE 01 ACTIVE
+            XN TOKEN PRESALE · STAGE 3 ACTIVE
           </div>
         </FadeUpSection>
 
@@ -69,17 +70,11 @@ export default function Hero() {
             marginBottom: 28,
           }}
         >
-          <DeclassifyText text="INTELLIGENCE‑GRADE" delay={0.2} />
+          <DeclassifyText text="AI EYES," delay={0.2} />
           <br />
           <DeclassifyText
-            text="SECURITY,"
+            text="SAFE SKIES."
             delay={0.5}
-            style={{ color: "var(--text-primary)" }}
-          />
-          {" "}
-          <DeclassifyText
-            text="TOKENIZED."
-            delay={0.8}
             style={{ color: "var(--gold)" }}
           />
         </h1>
@@ -88,26 +83,43 @@ export default function Hero() {
         <FadeUpSection delay={1.0}>
           <p
             style={{
-              fontFamily: "var(--font-ed)",
-              fontStyle: "italic",
-              fontSize: "var(--ed-size)",
+              fontFamily: "var(--font-disp)",
+              fontSize: "clamp(16px,2vw,20px)",
+              fontWeight: 400,
               color: "var(--text-sec)",
-              maxWidth: 560,
+              maxWidth: 520,
               lineHeight: 1.65,
               marginBottom: 44,
             }}
           >
-            AI-powered surveillance infrastructure meets decentralized finance — own a stake in the future of security intelligence through the XN token.
+            Fueled by blockchain. Powered by AI. Secured by design.
           </p>
         </FadeUpSection>
 
         {/* CTAs */}
-        <FadeUpSection delay={1.1} style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 60 }}>
+        <FadeUpSection delay={1.1} style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 60 }}>
           <Link href="/presale" className="btn-primary" data-cursor="cta">
-            JOIN THE PRESALE →
+            AUTHORIZE PURCHASE — BUY XN
           </Link>
-          <Link href="/whitepaper" className="btn-ghost">
-            VIEW WHITEPAPER
+          <Link
+            href="/whitepaper"
+            style={{
+              fontFamily: "var(--font-disp)",
+              fontWeight: 600,
+              fontSize: 13,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: "var(--text-sec)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "color 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-sec)")}
+          >
+            Read Whitepaper
+            <span style={{ color: "var(--gold)" }}>→</span>
           </Link>
         </FadeUpSection>
 
@@ -117,23 +129,55 @@ export default function Hero() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "clamp(16px,3vw,32px)",
               flexWrap: "wrap",
-              fontFamily: "var(--font-mono)",
-              fontSize: 10,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "var(--text-muted)",
             }}
           >
             {[
-              { label: "AUDITED", dot: "var(--c-success)" },
-              { label: "KYC VERIFIED", dot: "var(--gold)" },
-              { label: "MULTISIG SECURED", dot: "var(--gold)" },
-              { label: "LICENSED ENTITY", dot: "var(--gold)" },
+              {
+                label: "Smart Contract Audited",
+                svg: (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="M9 12l2 2 4-4" />
+                  </svg>
+                ),
+              },
+              {
+                label: "Non-Custodial Wallet",
+                svg: (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                ),
+              },
+              {
+                label: "BEP-20 · ERC-20 · TRC-20",
+                svg: (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                ),
+              },
             ].map((item, i) => (
-              <span key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 4, height: 4, borderRadius: "50%", background: item.dot }} />
+              <span
+                key={i}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "0 24px",
+                  borderRight: i < 2 ? "1px solid var(--border-sub)" : "none",
+                  paddingLeft: i === 0 ? 0 : 24,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 10,
+                  letterSpacing: "0.16em",
+                  textTransform: "uppercase",
+                  color: "var(--text-muted)",
+                }}
+              >
+                <span style={{ color: "var(--gold)", flexShrink: 0 }}>{item.svg}</span>
                 {item.label}
               </span>
             ))}

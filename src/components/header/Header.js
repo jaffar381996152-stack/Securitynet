@@ -5,17 +5,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
-  { name: "HOME",        path: "/" },
-  { name: "PRESALE",     path: "/presale" },
-  { name: "TOKENOMICS",  path: "/tokenomics" },
-  { name: "SERVICES",    path: "/services" },
-  { name: "ABOUT",       path: "/about" },
-  { name: "NEWS",        path: "/news" },
+  { name: "HOME",       path: "/" },
+  { name: "TOKENOMICS", path: "/tokenomics" },
+  { name: "SERVICES",   path: "/services" },
+  { name: "ABOUT",      path: "/about" },
+  { name: "NEWS",       path: "/news" },
 ];
 
 export default function Header() {
-  const pathname    = usePathname();
-  const [open, setOpen]       = useState(false);
+  const pathname = usePathname();
+  const [open, setOpen]         = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -65,21 +64,33 @@ export default function Header() {
             justifyContent: "space-between",
           }}
         >
-          {/* Logo */}
-          <Link
-            href="/"
-            style={{
-              fontFamily: "var(--font-disp)",
-              fontWeight: 700,
-              fontSize: 18,
-              letterSpacing: "0.14em",
-              color: "var(--gold)",
-              textTransform: "uppercase",
-              flexShrink: 0,
-            }}
-          >
-            SECURITYNET
-            <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>.AI</span>
+          {/* Logo — two-line */}
+          <Link href="/" style={{ display: "flex", flexDirection: "column", textDecoration: "none", flexShrink: 0 }}>
+            <span
+              style={{
+                fontFamily: "var(--font-disp)",
+                fontWeight: 800,
+                fontSize: 20,
+                letterSpacing: "0.08em",
+                color: "var(--text-primary)",
+                textTransform: "uppercase",
+                lineHeight: 1.1,
+              }}
+            >
+              SecurityNet
+            </span>
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 9,
+                letterSpacing: "0.22em",
+                color: "var(--gold)",
+                textTransform: "lowercase",
+                lineHeight: 1.4,
+              }}
+            >
+              securitynet.ai
+            </span>
           </Link>
 
           {/* Desktop nav */}
@@ -138,7 +149,7 @@ export default function Header() {
               className="hidden lg:inline-flex btn-primary"
               style={{ height: 40, padding: "0 24px", fontSize: 12 }}
             >
-              BUY XN →
+              BUY XN
             </Link>
 
             {/* Hamburger */}
@@ -175,8 +186,6 @@ export default function Header() {
           background: "#0A0A0E",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
           opacity: open ? 1 : 0,
           pointerEvents: open ? "all" : "none",
           transition: "opacity 0.3s ease",
@@ -209,79 +218,133 @@ export default function Header() {
           ×
         </button>
 
-        {/* Logo */}
+        {/* Content area — full height, flex column with padding */}
         <div
-          style={{
-            fontFamily: "var(--font-disp)",
-            fontWeight: 700,
-            fontSize: 20,
-            letterSpacing: "0.2em",
-            color: "var(--gold)",
-            textTransform: "uppercase",
-            marginBottom: 56,
-          }}
-        >
-          SECURITYNET.AI
-        </div>
-
-        {/* Links */}
-        <nav
           style={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            gap: 32,
-            marginBottom: 48,
+            height: "100%",
+            padding: "80px var(--gut) 32px",
           }}
         >
-          {NAV_LINKS.map((item, i) => {
-            const active = pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                href={item.path}
-                onClick={() => setOpen(false)}
-                style={{
-                  fontFamily: "var(--font-disp)",
-                  fontWeight: 700,
-                  fontSize: 28,
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  color: active ? "var(--gold)" : "var(--text-sec)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 16,
-                  opacity: open ? 1 : 0,
-                  transform: open ? "translateY(0)" : "translateY(16px)",
-                  transition: `opacity 0.35s ease ${i * 0.06}s, transform 0.35s ease ${i * 0.06}s`,
-                }}
-              >
-                <span
+          {/* Classification eyebrow */}
+          <div
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 9,
+              letterSpacing: "0.28em",
+              textTransform: "uppercase",
+              color: "var(--text-muted)",
+              marginBottom: 12,
+            }}
+          >
+            CLASSIFIED NAVIGATION
+          </div>
+          <div style={{ width: 40, height: 1, background: "var(--gold-dim)", marginBottom: 40 }} />
+
+          {/* Links */}
+          <nav
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 28,
+              flex: 1,
+            }}
+          >
+            {NAV_LINKS.map((item, i) => {
+              const active = pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  onClick={() => setOpen(false)}
                   style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 10,
-                    color: "var(--gold-dim)",
-                    letterSpacing: "0.1em",
-                    minWidth: 24,
+                    fontFamily: "var(--font-disp)",
+                    fontWeight: 700,
+                    fontSize: 28,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    color: active ? "var(--gold)" : "var(--text-sec)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 16,
+                    opacity: open ? 1 : 0,
+                    transform: open ? "translateY(0)" : "translateY(16px)",
+                    transition: `opacity 0.35s ease ${i * 0.06}s, transform 0.35s ease ${i * 0.06}s`,
                   }}
                 >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 10,
+                      color: "var(--gold-dim)",
+                      letterSpacing: "0.1em",
+                      minWidth: 24,
+                    }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {item.name}
+                </Link>
+              );
+            })}
+          </nav>
 
-        <Link
-          href="/presale"
-          onClick={() => setOpen(false)}
-          className="btn-primary"
-          style={{ fontSize: 14, padding: "0 40px" }}
-          data-cursor="cta"
-        >
-          BUY XN →
-        </Link>
+          {/* CTA */}
+          <div style={{ paddingTop: 32, borderTop: "1px solid var(--border-sub)", marginTop: 32 }}>
+            <Link
+              href="/presale"
+              onClick={() => setOpen(false)}
+              className="btn-primary"
+              style={{ fontSize: 13, padding: "0 40px", width: "100%", justifyContent: "center" }}
+              data-cursor="cta"
+            >
+              AUTHORIZE PURCHASE — BUY XN
+            </Link>
+          </div>
+
+          {/* Bottom info bar */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingTop: 24,
+              marginTop: 20,
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              letterSpacing: "0.16em",
+              color: "var(--text-muted)",
+            }}
+          >
+            <span>
+              1 XN = <span style={{ color: "var(--gold)" }}>$0.20 USDT</span> · STAGE 3
+            </span>
+            {/* Social icons */}
+            <div style={{ display: "flex", gap: 16 }}>
+              {/* X icon */}
+              <a href="https://x.com/securitynetAI" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter"
+                style={{ color: "var(--text-muted)", transition: "color 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.736-8.857L2.25 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
+              {/* Telegram icon */}
+              <a href="https://t.me/securitynetai" target="_blank" rel="noopener noreferrer" aria-label="Telegram"
+                style={{ color: "var(--text-muted)", transition: "color 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
