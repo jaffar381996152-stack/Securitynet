@@ -2,13 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ethers } from "ethers";
 import toast from "react-hot-toast";
-import { motion, AnimatePresence } from "framer-motion";
 import { useAppKit, useAppKitAccount, useDisconnect } from "@reown/appkit/react";
-
-import Participate from "@/app/presale/components/Participate";
-import SaleTimer from "@/app/presale/components/SaleTimer";
-import XNCoin from "@/components/brand/XNCoin";
-import CoinBurst from "@/components/brand/CoinBurst";
 import settings from "../../../data/settings";
 
 const CONTRACT_ADDRESS =
@@ -16,10 +10,10 @@ const CONTRACT_ADDRESS =
 const USDT_NETWORKS = settings.USDT_NETWORKS;
 const XN_PRICE = 0.20;
 
-// ─── Chain logos ────────────────────────────────────────────────────────────
+// ─── Chain logos ─────────────────────────────────────────────────────────────
 
 const BscLogo = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="12" fill="#F0B90B" />
     <path d="M12 4.5L9.75 6.75L12 9L14.25 6.75L12 4.5Z" fill="white" />
     <path d="M7.5 9L5.25 11.25L7.5 13.5L9.75 11.25L7.5 9Z" fill="white" />
@@ -28,9 +22,8 @@ const BscLogo = () => (
     <path d="M12 13.5L9.75 15.75L12 18L14.25 15.75L12 13.5Z" fill="white" />
   </svg>
 );
-
 const EthLogo = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="12" fill="#627EEA" />
     <path d="M12 4.5V10.275L16.875 12.45L12 4.5Z" fill="white" fillOpacity="0.6" />
     <path d="M12 4.5L7.125 12.45L12 10.275V4.5Z" fill="white" />
@@ -40,9 +33,8 @@ const EthLogo = () => (
     <path d="M7.125 12.45L12 15.075V10.277L7.125 12.45Z" fill="white" fillOpacity="0.6" />
   </svg>
 );
-
 const TronLogo = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="12" fill="#EF0027" />
     <path d="M17.5 9.5L12 5L6 9.5L8.5 18L12 19.5L15.5 18L17.5 9.5Z" fill="white" fillOpacity="0.15" />
     <path d="M12 5L17.5 9.5L15.5 10.5L12 7.5V5Z" fill="white" />
@@ -54,41 +46,14 @@ const TronLogo = () => (
 );
 
 const NETWORK_OPTIONS = [
-  { key: "BSC",  label: "BNB Chain", sub: "BEP-20", Icon: BscLogo  },
-  { key: "ETH",  label: "Ethereum",  sub: "ERC-20", Icon: EthLogo  },
-  { key: "TRON", label: "Tron",      sub: "TRC-20", Icon: TronLogo },
+  { key: "BSC",  label: "BNB Chain", sub: "BEP-20", Icon: BscLogo,  recommended: true },
+  { key: "ETH",  label: "Ethereum",  sub: "ERC-20", Icon: EthLogo,  recommended: false },
+  { key: "TRON", label: "Tron",      sub: "TRC-20", Icon: TronLogo, recommended: false },
 ];
 
-// ─── Design primitives ───────────────────────────────────────────────────────
+const QUICK_AMOUNTS = [50, 100, 500, 1000];
 
-const GREEN = "#00C853";
-const RED   = "#EF4444";
-
-// The whole buy flow lives in ONE card that reshapes itself as you progress —
-// no page changes, no separate boxes. These describe its three faces.
-const FLOW_STAGES = [
-  { key: "connect",   label: "Connect" },
-  { key: "configure", label: "Send" },
-  { key: "success",   label: "Done" },
-];
-
-const stageMotion = {
-  initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -16 },
-  transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] },
-};
-
-const SectionLabel = ({ children }) => (
-  <p
-    className="text-xs font-semibold uppercase tracking-[0.18em] mb-3"
-    style={{ color: "var(--text-accent)" }}
-  >
-    {children}
-  </p>
-);
-
-// ─── Main component ──────────────────────────────────────────────────────────
+// ─── Main component ───────────────────────────────────────────────────────────
 
 export default function DigitalGold() {
   const { address, isConnected } = useAppKitAccount();
@@ -96,20 +61,21 @@ export default function DigitalGold() {
   const { disconnect } = useDisconnect();
 
   const [selectedNetwork, setSelectedNetwork] = useState("BSC");
-  const [usdtAmount, setUsdtAmount]     = useState(15);
-  const [xnAmount, setXnAmount]         = useState((15 / XN_PRICE).toFixed(2));
+  const [usdtAmount, setUsdtAmount]           = useState(15);
+  const [xnAmount, setXnAmount]               = useState((15 / XN_PRICE).toFixed(2));
   const [userTokenBalance, setUserTokenBalance] = useState(null);
-  const [tokensSold]  = useState(0);
-  const [presaleCap]  = useState(0);
 
-  const [verified, setVerified]         = useState(null);
-  const [burstKey, setBurstKey]         = useState(0);
-  const [tronAddress, setTronAddress]   = useState("");
-  const [copied, setCopied]             = useState(false);
-  const [scanning, setScanning]         = useState(false);
+  const [verified, setVerified]   = useState(null);
+  const [burstKey, setBurstKey]   = useState(0);
+  const [tronAddress, setTronAddress] = useState("");
+  const [copied, setCopied]       = useState(false);
+  const [scanning, setScanning]   = useState(false);
+
   const pollIntervalRef = useRef(null);
   const scannerRef      = useRef(null);
   const scannerDivRef   = useRef(null);
+
+  // ── Handlers ─────────────────────────────────────────────────────────────
 
   const startScanner = async () => {
     const { Html5Qrcode } = await import("html5-qrcode");
@@ -127,17 +93,12 @@ export default function DigitalGold() {
           },
           () => {}
         );
-      } catch {
-        setScanning(false);
-      }
+      } catch { setScanning(false); }
     }, 100);
   };
 
   const stopScanner = () => {
-    if (scannerRef.current) {
-      scannerRef.current.stop().catch(() => {});
-      scannerRef.current = null;
-    }
+    if (scannerRef.current) { scannerRef.current.stop().catch(() => {}); scannerRef.current = null; }
     setScanning(false);
   };
 
@@ -148,48 +109,9 @@ export default function DigitalGold() {
     } catch {}
   };
 
-  const currentNetwork = USDT_NETWORKS[selectedNetwork];
-
-  // Fetch XN balance on wallet connect
-  useEffect(() => {
-    if (!isConnected || !address) return;
-    const fetchBalance = async () => {
-      try {
-        const provider = new ethers.JsonRpcProvider("https://bsc-dataseed1.binance.org/");
-        const contract = new ethers.Contract(
-          CONTRACT_ADDRESS,
-          [
-            "function balanceOf(address account) view returns (uint256)",
-            "function decimals() view returns (uint8)",
-          ],
-          provider
-        );
-        const [balance, decimals] = await Promise.all([
-          contract.balanceOf(address),
-          contract.decimals(),
-        ]);
-        setUserTokenBalance(ethers.formatUnits(balance, decimals));
-      } catch {}
-    };
-    fetchBalance();
-  }, [isConnected, address]);
-
-  const handleUsdtChange = (value) => {
-    setUsdtAmount(value);
-    setXnAmount((parseFloat(value) / XN_PRICE).toFixed(2));
-    setVerified(null);
-  };
-
-  const handleXnChange = (value) => {
-    setXnAmount(value);
-    setUsdtAmount((parseFloat(value) * XN_PRICE).toFixed(2));
-    setVerified(null);
-  };
-
-  const handleNetworkChange = (key) => {
-    setSelectedNetwork(key);
-    setVerified(null);
-  };
+  const handleUsdtChange = (value) => { setUsdtAmount(value); setXnAmount((parseFloat(value) / XN_PRICE).toFixed(2)); setVerified(null); };
+  const handleXnChange   = (value) => { setXnAmount(value);   setUsdtAmount((parseFloat(value) * XN_PRICE).toFixed(2)); setVerified(null); };
+  const handleNetworkChange = (key) => { setSelectedNetwork(key); setVerified(null); };
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
@@ -197,12 +119,28 @@ export default function DigitalGold() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Background payment poll every 15 s once wallet is connected
+  // ── Balance fetch ─────────────────────────────────────────────────────────
+
   useEffect(() => {
-    if (!isConnected || !address || verified) {
-      clearInterval(pollIntervalRef.current);
-      return;
-    }
+    if (!isConnected || !address) return;
+    const fetchBalance = async () => {
+      try {
+        const provider = new ethers.JsonRpcProvider("https://bsc-dataseed1.binance.org/");
+        const contract = new ethers.Contract(CONTRACT_ADDRESS, [
+          "function balanceOf(address account) view returns (uint256)",
+          "function decimals() view returns (uint8)",
+        ], provider);
+        const [balance, decimals] = await Promise.all([contract.balanceOf(address), contract.decimals()]);
+        setUserTokenBalance(ethers.formatUnits(balance, decimals));
+      } catch {}
+    };
+    fetchBalance();
+  }, [isConnected, address]);
+
+  // ── Payment poll ──────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (!isConnected || !address || verified) { clearInterval(pollIntervalRef.current); return; }
     const checkPayment = async () => {
       if (!usdtAmount || parseFloat(usdtAmount) < 10) return;
       if (selectedNetwork === "TRON" && !tronAddress) return;
@@ -223,13 +161,7 @@ export default function DigitalGold() {
           setVerified(data.data);
           setBurstKey((k) => k + 1);
           toast.success(
-            <span>
-              <strong>Payment Confirmed!</strong>
-              <br />
-              We received <strong>{data.data.usdtAmount} USDT</strong> from your wallet.
-              <br />
-              <strong>{data.data.xnTokens} XN</strong> tokens are being sent to your wallet now.
-            </span>,
+            `Payment Confirmed! We received ${data.data.usdtAmount} USDT. ${data.data.xnTokens} XN tokens are being sent to your wallet.`,
             { duration: 8000 }
           );
         }
@@ -239,591 +171,395 @@ export default function DigitalGold() {
     return () => clearInterval(pollIntervalRef.current);
   }, [isConnected, address, selectedNetwork, usdtAmount, verified, tronAddress]);
 
-  const networkLabel = { BSC: "BEP-20", ETH: "ERC-20", TRON: "TRC-20" }[selectedNetwork];
-
-  // The single smart card has three faces — which one shows depends purely
-  // on where the user is in the flow (no separate pages/boxes to manage).
-  const stage = !isConnected ? "connect" : verified ? "success" : "configure";
-  const stageIndex = FLOW_STAGES.findIndex((s) => s.key === stage);
+  const currentNetwork = USDT_NETWORKS[selectedNetwork];
+  const networkLabel   = { BSC: "BEP-20", ETH: "ERC-20", TRON: "TRC-20" }[selectedNetwork];
 
   // ── Render ────────────────────────────────────────────────────────────────
+
   return (
-    <section className="py-12 lg:py-16">
-      <div className="max-w-7xl mx-auto px-6">
-
-        {/* ── Page header ── */}
-        <div className="text-center mb-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="flex justify-center mb-4"
-          >
-            <XNCoin size={72} float spinDuration={12} />
-          </motion.div>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-xs font-semibold uppercase tracking-[0.25em] mb-3"
-            style={{ color: "var(--accent-cyan)" }}
-          >
-            Token Sale
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-sora text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4"
-            style={{ color: "var(--text-primary)" }}
-          >
-            SecurityNet (XN) Presale
-          </motion.h1>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col items-center gap-3 mt-2"
-          >
-            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Manually import the XN token (if not already) into your wallet before purchasing.
-            </p>
-            <a
-              href="/news/how-to-add-a-xn-token"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-ghost btn-shimmer text-xs px-4 py-2 rounded-lg"
-            >
-              How to import XN tokens →
-            </a>
-            <p className="text-sm font-semibold mt-1" style={{ color: "var(--text-accent)" }}>
-              1 XN = 0.20 USDT · Min: $10
-            </p>
-          </motion.div>
-        </div>
-
-        {/* ── Sale timer ── */}
-        <div className="mb-10">
-          <SaleTimer tokensSold={tokensSold} presaleCap={presaleCap} />
-        </div>
-
-        {/* ── Main layout ── */}
-        <div className="flex lg:flex-nowrap flex-wrap lg:gap-10 gap-6">
-
-          {/* Sidebar */}
-          <div className="lg:w-3/12 w-full lg:order-1 order-2">
-            <Participate tokensSold={tokensSold} presaleCap={presaleCap} />
+    <div
+      style={{
+        background: "var(--bg-secondary)",
+        border: "1px solid var(--border-gold)",
+      }}
+    >
+      {/* Widget header */}
+      <div
+        style={{
+          padding: "20px 24px",
+          borderBottom: "1px solid var(--border-sub)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 4 }}>
+            BUY XN TOKEN
           </div>
+          <div style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 15, color: "var(--text-primary)" }}>
+            1 XN = {XN_PRICE} USDT
+          </div>
+        </div>
+        {isConnected && (
+          <div className="badge badge-active">
+            WALLET CONNECTED
+          </div>
+        )}
+      </div>
 
-          {/* ── Smart buy card — ONE card that reshapes itself through the whole flow ── */}
-          <div className="lg:w-9/12 w-full lg:order-2 order-1">
-            <motion.div
-              layout
-              className="glass-card rounded-[var(--radius-card)] p-6 lg:p-8 relative overflow-visible"
-              transition={{ layout: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } }}
+      <div style={{ padding: "24px" }}>
+
+        {/* ── SUCCESS STATE ── */}
+        {verified && (
+          <div style={{ textAlign: "center", padding: "32px 0" }}>
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                border: "2px solid var(--c-success)",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 20px",
+                background: "rgba(74,140,111,0.1)",
+              }}
             >
-              <CoinBurst active={stage === "success"} burstKey={burstKey} />
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M5 13l4 4L19 7" stroke="var(--c-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <div style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 20, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--c-success)", marginBottom: 12 }}>
+              TRANSFER INITIATED
+            </div>
+            <p style={{ fontFamily: "var(--font-disp)", fontSize: 14, color: "var(--text-muted)", marginBottom: 6 }}>
+              Received: <strong style={{ color: "var(--text-primary)" }}>{verified.usdtAmount} USDT</strong>
+            </p>
+            <p style={{ fontFamily: "var(--font-disp)", fontSize: 14, color: "var(--text-muted)", marginBottom: 20 }}>
+              Sending: <strong style={{ color: "var(--gold)" }}>{verified.xnTokens} XN</strong>
+            </p>
+            <a href="/news/how-to-add-a-xn-token" target="_blank" rel="noopener noreferrer" className="btn-link" style={{ justifyContent: "center" }}>
+              HOW TO IMPORT XN TOKENS →
+            </a>
+            {verified.txHash && (
+              <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", marginTop: 16, wordBreak: "break-all", letterSpacing: "0.06em" }}>
+                TX: {verified.txHash}
+              </p>
+            )}
+          </div>
+        )}
 
-              {/* Progress rail */}
-              <div className="flex items-center mb-8">
-                {FLOW_STAGES.map((s, i) => {
-                  const active = stageIndex === i;
-                  const done = stageIndex > i;
+        {/* ── MAIN FLOW ── */}
+        {!verified && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+
+            {/* Step 1: Network */}
+            <div>
+              <WidgetLabel>STEP 1 · SELECT NETWORK</WidgetLabel>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                {NETWORK_OPTIONS.map((net) => {
+                  const selected = selectedNetwork === net.key;
                   return (
-                    <div key={s.key} className="flex items-center flex-1 last:flex-none">
-                      <div className="flex items-center gap-2.5 shrink-0">
-                        <motion.div
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                          animate={{
-                            background: done
-                              ? GREEN
-                              : active
-                              ? "linear-gradient(135deg, var(--brand-start) 0%, var(--brand-mid) 100%)"
-                              : "var(--bg-tertiary)",
-                            boxShadow: done
-                              ? `0 0 14px ${GREEN}55`
-                              : active
-                              ? "0 0 14px var(--brand-glow)"
-                              : "none",
-                            color: done || active ? "#fff" : "var(--text-muted)",
-                          }}
-                          transition={{ duration: 0.4 }}
-                        >
-                          {done ? (
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                              <path d="M5 13l4 4L19 7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                          ) : (
-                            i + 1
-                          )}
-                        </motion.div>
+                    <button
+                      key={net.key}
+                      onClick={() => handleNetworkChange(net.key)}
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 8,
+                        padding: "14px 8px",
+                        border: selected ? "1px solid var(--gold)" : "1px solid var(--border-sub)",
+                        background: selected ? "var(--gold-ghost)" : "var(--bg-tertiary)",
+                        cursor: "pointer",
+                        transition: "all 0.15s",
+                        position: "relative",
+                      }}
+                    >
+                      {net.recommended && (
                         <span
-                          className="text-xs font-semibold hidden sm:inline"
-                          style={{ color: active || done ? "var(--text-primary)" : "var(--text-muted)" }}
+                          style={{
+                            position: "absolute",
+                            top: -1,
+                            left: -1,
+                            right: -1,
+                            fontFamily: "var(--font-mono)",
+                            fontSize: 8,
+                            letterSpacing: "0.12em",
+                            textTransform: "uppercase",
+                            background: "var(--gold)",
+                            color: "var(--text-inv)",
+                            padding: "2px 0",
+                            textAlign: "center",
+                          }}
                         >
-                          {s.label}
+                          RECOMMENDED
                         </span>
-                      </div>
-                      {i < FLOW_STAGES.length - 1 && (
-                        <div
-                          className="flex-1 h-px mx-3 relative overflow-hidden rounded-full"
-                          style={{ background: "var(--border-subtle)" }}
-                        >
-                          <motion.div
-                            className="absolute inset-y-0 left-0 rounded-full"
-                            style={{ background: GREEN, boxShadow: `0 0 8px ${GREEN}80` }}
-                            initial={false}
-                            animate={{ width: stageIndex > i ? "100%" : "0%" }}
-                            transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                          />
-                        </div>
                       )}
-                    </div>
+                      <div style={{ marginTop: net.recommended ? 10 : 0 }}>
+                        <net.Icon />
+                      </div>
+                      <span style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em", color: selected ? "var(--gold)" : "var(--text-muted)" }}>
+                        {net.sub}
+                      </span>
+                    </button>
                   );
                 })}
               </div>
+            </div>
 
-              <AnimatePresence mode="wait">
+            {/* Step 2: Wallet */}
+            <div>
+              <WidgetLabel>STEP 2 · CONNECT WALLET</WidgetLabel>
+              {!isConnected ? (
+                <div>
+                  <appkit-button />
+                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", color: "var(--text-muted)", marginTop: 10 }}>
+                    SUPPORTS METAMASK, TRUST WALLET, WALLETCONNECT +30 MORE
+                  </p>
+                </div>
+              ) : (
+                <div style={{ border: "1px solid rgba(74,140,111,0.3)", background: "rgba(74,140,111,0.06)", padding: "12px 16px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--c-success)" }}>CONNECTED</span>
+                    <div style={{ display: "flex", gap: 12 }}>
+                      <button onClick={() => open({ view: "Account" })} style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", cursor: "pointer" }}>CHANGE</button>
+                      <button onClick={() => disconnect()} style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--c-danger)", cursor: "pointer" }}>DISCONNECT</button>
+                    </div>
+                  </div>
+                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-sec)", wordBreak: "break-all" }}>{address}</p>
+                  {userTokenBalance !== null && (
+                    <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--c-success)", marginTop: 6 }}>XN BALANCE: {userTokenBalance} XN</p>
+                  )}
+                </div>
+              )}
+            </div>
 
-                {/* ── Face 1 — Connect ── */}
-                {stage === "connect" && (
-                  <motion.div key="connect" {...stageMotion}>
-                    <h3 className="font-sora text-xl font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
-                      Connect Your Wallet
-                    </h3>
-                    <p className="text-sm mb-6 max-w-md" style={{ color: "var(--text-secondary)" }}>
-                      Connect your crypto wallet to begin — MetaMask, Coinbase, Trust Wallet, and more are
-                      supported. The instant you connect, this card reshapes itself so you can pick a network,
-                      enter an amount, and send — all without leaving this spot.
-                    </p>
-                    <appkit-button />
-                    <p className="text-xs mt-5 max-w-md font-medium" style={{ color: "var(--text-muted)" }}>
-                      If your wallet didn&apos;t redirect after connecting, please navigate back to the website manually.
-                    </p>
-                  </motion.div>
+            {/* TRON sender address */}
+            {selectedNetwork === "TRON" && (
+              <div>
+                <WidgetLabel>YOUR TRON SENDER ADDRESS</WidgetLabel>
+                <p style={{ fontFamily: "var(--font-disp)", fontSize: 12, color: "var(--text-muted)", marginBottom: 10 }}>
+                  Enter the TRON wallet you will send USDT <span style={{ color: "var(--c-danger)" }}>from</span>:
+                </p>
+                <div style={{ display: "flex", gap: 6 }}>
+                  <input
+                    type="text"
+                    placeholder="TYour...TRON...wallet...address"
+                    value={tronAddress}
+                    onChange={(e) => setTronAddress(e.target.value.trim())}
+                    style={{
+                      flex: 1,
+                      background: "var(--bg-tertiary)",
+                      border: "1px solid var(--border-sub)",
+                      padding: "10px 12px",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 11,
+                      color: "var(--text-primary)",
+                      outline: "none",
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--gold)")}
+                    onBlur={(e) => (e.target.style.borderColor = "var(--border-sub)")}
+                  />
+                  <button
+                    onClick={pasteFromClipboard}
+                    style={{ padding: "0 12px", background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)", fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-sec)", cursor: "pointer", whiteSpace: "nowrap" }}
+                  >PASTE</button>
+                  <button
+                    onClick={scanning ? stopScanner : startScanner}
+                    style={{
+                      padding: "0 12px",
+                      background: scanning ? "rgba(168,82,82,0.1)" : "var(--gold-ghost)",
+                      border: scanning ? "1px solid var(--c-danger)" : "1px solid var(--border-gold)",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 9,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      color: scanning ? "var(--c-danger)" : "var(--gold)",
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                    }}
+                  >{scanning ? "STOP" : "SCAN"}</button>
+                </div>
+                {scanning && (
+                  <div style={{ marginTop: 12, border: "1px solid var(--border-sub)" }}>
+                    <div id="tron-qr-reader" ref={scannerDivRef} />
+                  </div>
                 )}
+              </div>
+            )}
 
-                {/* ── Face 2 — Configure & send ── */}
-                {stage === "configure" && (
-                  <motion.div key="configure" {...stageMotion} className="space-y-7">
+            {/* Step 3: Amount */}
+            <div>
+              <WidgetLabel>STEP 3 · ENTER AMOUNT</WidgetLabel>
+              {/* Quick select */}
+              <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
+                {QUICK_AMOUNTS.map((amt) => (
+                  <button
+                    key={amt}
+                    onClick={() => handleUsdtChange(amt)}
+                    style={{
+                      flex: 1,
+                      padding: "6px 0",
+                      background: usdtAmount == amt ? "var(--gold)" : "var(--bg-tertiary)",
+                      border: usdtAmount == amt ? "1px solid var(--gold)" : "1px solid var(--border-sub)",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 10,
+                      letterSpacing: "0.1em",
+                      color: usdtAmount == amt ? "var(--text-inv)" : "var(--text-muted)",
+                      cursor: "pointer",
+                      transition: "all 0.15s",
+                    }}
+                  >
+                    ${amt}
+                  </button>
+                ))}
+              </div>
 
-                    {/* Connected wallet */}
-                    <div className="rounded-xl px-4 py-3 glass" style={{ border: `1px solid ${GREEN}40` }}>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <p className="text-xs" style={{ color: "var(--text-muted)" }}>Connected wallet</p>
-                        <div className="flex items-center gap-3">
-                          <button
-                            onClick={() => open({ view: "Account" })}
-                            className="text-xs font-medium hover:underline"
-                            style={{ color: "var(--text-accent)" }}
-                          >
-                            Change
-                          </button>
-                          <span style={{ color: "var(--border-subtle)" }}>|</span>
-                          <button
-                            onClick={() => disconnect()}
-                            className="text-xs font-medium hover:underline"
-                            style={{ color: RED }}
-                          >
-                            Disconnect
-                          </button>
-                        </div>
-                      </div>
-                      <p className="text-xs font-mono break-all" style={{ color: "var(--text-secondary)" }}>
-                        {address}
-                      </p>
-                      {userTokenBalance !== null && (
-                        <p className="text-sm font-semibold mt-1.5" style={{ color: GREEN }}>
-                          XN Balance: {userTokenBalance} XN
-                        </p>
-                      )}
-                    </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {/* USDT input */}
+                <div>
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 6 }}>YOU SEND (USDT)</div>
+                  <div style={{ display: "flex", alignItems: "center", background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)", padding: "10px 12px" }}>
+                    <input
+                      type="number"
+                      value={usdtAmount}
+                      min={10}
+                      max={10000}
+                      onChange={(e) => handleUsdtChange(e.target.value)}
+                      style={{ flex: 1, background: "none", border: "none", outline: "none", fontFamily: "var(--font-mono)", fontSize: 14, color: "var(--text-primary)", width: "100%" }}
+                    />
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.1em" }}>USDT</span>
+                  </div>
+                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", marginTop: 4, letterSpacing: "0.1em" }}>MIN: 10 USDT</p>
+                </div>
 
-                    {/* Network */}
-                    <div>
-                      <SectionLabel>Pick your USDT network</SectionLabel>
-                      <div className="grid grid-cols-3 gap-3">
-                        {NETWORK_OPTIONS.map((net) => {
-                          const selected = selectedNetwork === net.key;
-                          return (
-                            <button
-                              key={net.key}
-                              onClick={() => handleNetworkChange(net.key)}
-                              className="flex flex-col items-center gap-2 py-4 px-3 rounded-xl transition-all duration-200"
-                              style={selected ? {
-                                background: "var(--surface-glow)",
-                                border: "1px solid var(--brand-mid)",
-                                boxShadow: "inset 0 0 20px var(--surface-glow)",
-                              } : {
-                                background: "var(--bg-tertiary)",
-                                border: "1px solid var(--border-subtle)",
-                              }}
-                            >
-                              <net.Icon />
-                              <span
-                                className="font-semibold text-sm"
-                                style={{ color: "var(--text-primary)" }}
-                              >
-                                {net.label}
-                              </span>
-                              <span
-                                className="text-xs px-2 py-0.5 rounded-full"
-                                style={selected ? {
-                                  background: "var(--brand-mid)",
-                                  color: "white",
-                                } : {
-                                  background: "var(--bg-surface)",
-                                  color: "var(--text-muted)",
-                                }}
-                              >
-                                {net.sub}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
+                {/* XN output */}
+                <div>
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 6 }}>YOU RECEIVE (XN)</div>
+                  <div style={{ display: "flex", alignItems: "center", background: "var(--bg-tertiary)", border: "1px solid var(--border-gold)", padding: "10px 12px" }}>
+                    <input
+                      type="number"
+                      value={xnAmount}
+                      onChange={(e) => handleXnChange(e.target.value)}
+                      style={{ flex: 1, background: "none", border: "none", outline: "none", fontFamily: "var(--font-mono)", fontSize: 14, color: "var(--gold)", width: "100%" }}
+                    />
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--gold)", letterSpacing: "0.1em" }}>XN</span>
+                  </div>
+                  <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", marginTop: 4, textAlign: "right", letterSpacing: "0.1em" }}>0.20 USDT = 1 XN</p>
+                </div>
+              </div>
+            </div>
 
-                      <div
-                        className="mt-4 flex items-center gap-2 rounded-xl px-4 py-3 text-sm glass"
-                        style={{ border: "1px solid var(--border-subtle)" }}
-                      >
-                        <span style={{ color: "var(--accent-cyan)" }}>ℹ</span>
-                        <span style={{ color: "var(--text-secondary)" }}>
-                          Send{" "}
-                          <strong style={{ color: "var(--text-primary)" }}>{networkLabel} USDT</strong>{" "}
-                          to our deposit address.
-                        </span>
-                      </div>
+            {/* Step 4: Contract address + authorize */}
+            <div>
+              <WidgetLabel>STEP 4 · SEND & AUTHORIZE</WidgetLabel>
 
-                      {/* TRON sender address input */}
-                      {selectedNetwork === "TRON" && (
-                        <div className="mt-4">
-                          <label
-                            className="text-xs font-semibold uppercase tracking-wide block mb-2"
-                            style={{ color: "var(--text-secondary)" }}
-                          >
-                            <strong style={{ color: "var(--text-primary)" }}>TRC-20</strong> — Enter the TRON wallet address you will be sending USDT{" "}
-                            <span style={{ color: RED }}>from</span>
-                          </label>
-                          <div className="flex gap-2">
-                            <input
-                              type="text"
-                              placeholder="Paste/Scan your TRON wallet address"
-                              value={tronAddress}
-                              onChange={(e) => setTronAddress(e.target.value.trim())}
-                              className="flex-1 rounded-xl px-4 py-3 text-sm font-mono outline-none transition-all"
-                              style={{
-                                background: "var(--bg-tertiary)",
-                                border: "1px solid var(--border-subtle)",
-                                color: "var(--text-primary)",
-                              }}
-                            />
-                            <button
-                              onClick={pasteFromClipboard}
-                              className="px-3 py-2 rounded-xl text-xs font-medium transition-colors"
-                              style={{
-                                background: "var(--bg-tertiary)",
-                                border: "1px solid var(--border-subtle)",
-                                color: "var(--text-secondary)",
-                              }}
-                            >
-                              Paste
-                            </button>
-                            <button
-                              onClick={scanning ? stopScanner : startScanner}
-                              className="px-3 py-2 rounded-xl text-xs font-medium transition-colors"
-                              style={scanning ? {
-                                background: `${RED}14`,
-                                border: `1px solid ${RED}4D`,
-                                color: RED,
-                              } : {
-                                background: "var(--surface-glow)",
-                                border: "1px solid var(--brand-mid)",
-                                color: "var(--text-accent)",
-                              }}
-                            >
-                              {scanning ? "✕ Stop" : "📷 Scan"}
-                            </button>
-                          </div>
-                          {scanning && (
-                            <div
-                              className="mt-3 rounded-xl overflow-hidden"
-                              style={{ border: "1px solid var(--border-subtle)" }}
-                            >
-                              <div id="tron-qr-reader" ref={scannerDivRef} />
-                            </div>
-                          )}
-                          <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-                            For verification — we detect your payment automatically.
-                          </p>
-                        </div>
-                      )}
-                    </div>
+              {currentNetwork?.depositAddress ? (
+                <>
+                  <div style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-muted)", marginBottom: 10 }}>
+                    Send <strong style={{ color: "var(--text-primary)" }}>{usdtAmount} {networkLabel} USDT</strong> to:
+                  </div>
 
-                    {/* Amount */}
-                    <div>
-                      <SectionLabel>Enter the amount</SectionLabel>
-                      <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
-                        Enter USDT to see XN, or enter XN to see the USDT cost — both fields update automatically.
-                      </p>
-                      <div className="grid md:grid-cols-2 gap-4">
+                  {/* Address box */}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      background: "var(--bg-tertiary)",
+                      border: "1px solid var(--border-gold)",
+                      padding: "14px 16px",
+                      marginBottom: 12,
+                    }}
+                  >
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-sec)", flex: 1, wordBreak: "break-all", letterSpacing: "0.04em" }}>
+                      {currentNetwork.depositAddress}
+                    </span>
+                    <button
+                      onClick={() => copyToClipboard(currentNetwork.depositAddress)}
+                      style={{
+                        padding: "8px 16px",
+                        background: copied ? "rgba(74,140,111,0.15)" : "var(--gold)",
+                        border: copied ? "1px solid var(--c-success)" : "none",
+                        fontFamily: "var(--font-disp)",
+                        fontWeight: 700,
+                        fontSize: 11,
+                        letterSpacing: "0.15em",
+                        textTransform: "uppercase",
+                        color: copied ? "var(--c-success)" : "var(--text-inv)",
+                        cursor: "pointer",
+                        flexShrink: 0,
+                        transition: "all 0.2s",
+                      }}
+                    >
+                      {copied ? "✓ COPIED" : "COPY"}
+                    </button>
+                  </div>
 
-                        {/* USDT */}
-                        <div>
-                          <label
-                            className="text-xs font-semibold uppercase tracking-wide block mb-2"
-                            style={{ color: "var(--text-muted)" }}
-                          >
-                            You Send
-                          </label>
-                          <div
-                            className="flex items-center gap-3 rounded-xl px-4 py-3 transition-all"
-                            style={{
-                              background: "var(--bg-tertiary)",
-                              border: "1px solid var(--border-subtle)",
-                            }}
-                          >
-                            <span
-                              className="text-xs font-semibold px-2.5 py-1 rounded-lg glass shrink-0"
-                              style={{
-                                border: "1px solid var(--border-glass)",
-                                color: "var(--text-accent)",
-                              }}
-                            >
-                              USDT
-                            </span>
-                            <input
-                              type="number"
-                              className="flex-1 bg-transparent text-right outline-none font-sora font-semibold"
-                              style={{ fontSize: "1.125rem", color: "var(--text-primary)" }}
-                              placeholder="0.00"
-                              value={usdtAmount}
-                              min={10}
-                              max={10000}
-                              onChange={(e) => handleUsdtChange(e.target.value)}
-                            />
-                          </div>
-                          <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-                            Min: 10 USDT
-                          </p>
-                        </div>
+                  {/* Warning */}
+                  <div style={{ background: "rgba(168,82,82,0.08)", border: "1px solid rgba(168,82,82,0.25)", padding: "10px 14px", marginBottom: 16 }}>
+                    <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--c-danger)" }}>
+                      ⚠ ONLY SEND {networkLabel} USDT TO THIS ADDRESS. OTHER TOKENS WILL BE LOST PERMANENTLY.
+                    </p>
+                  </div>
 
-                        {/* XN */}
-                        <div>
-                          <label
-                            className="text-xs font-semibold uppercase tracking-wide block mb-2"
-                            style={{ color: "var(--text-muted)" }}
-                          >
-                            You Receive
-                          </label>
-                          <div
-                            className="flex items-center gap-3 rounded-xl px-4 py-3 transition-all"
-                            style={{
-                              background: "var(--bg-tertiary)",
-                              border: "1px solid var(--brand-mid)",
-                              boxShadow: "inset 0 0 14px var(--surface-glow)",
-                            }}
-                          >
-                            <span
-                              className="text-xs font-semibold px-2.5 py-1 rounded-lg glass shrink-0"
-                              style={{
-                                border: "1px solid var(--border-glass)",
-                                color: "var(--text-accent)",
-                              }}
-                            >
-                              XN
-                            </span>
-                            <input
-                              type="number"
-                              className="flex-1 bg-transparent text-right outline-none font-sora font-semibold"
-                              style={{ fontSize: "1.125rem", color: "var(--text-primary)" }}
-                              placeholder="0.00"
-                              value={xnAmount}
-                              onChange={(e) => handleXnChange(e.target.value)}
-                            />
-                          </div>
-                          <p className="text-xs mt-1 text-right" style={{ color: "var(--text-muted)" }}>
-                            0.20 USDT = 1 XN
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                  {/* Authorize button */}
+                  <button
+                    className="btn-primary"
+                    style={{ width: "100%", justifyContent: "center" }}
+                    onClick={() => copyToClipboard(currentNetwork.depositAddress)}
+                    data-cursor="cta"
+                  >
+                    AUTHORIZE TRANSFER →
+                  </button>
 
-                    {/* Send & confirm */}
-                    <div>
-                      <SectionLabel>Send &amp; we&apos;ll confirm automatically</SectionLabel>
-                      <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
-                        Copy the deposit address below and send your USDT — XN tokens are sent to your wallet
-                        automatically as soon as we detect confirmation.
-                      </p>
-
-                      <div className="mb-4">
-                        <label
-                          className="text-xs font-semibold uppercase tracking-wide block mb-2"
-                          style={{ color: "var(--text-muted)" }}
-                        >
-                          Send {networkLabel} USDT to this address
-                        </label>
-
-                        {currentNetwork?.depositAddress ? (
-                          <>
-                            <div
-                              className="flex items-center gap-3 rounded-xl px-4 py-3"
-                              style={{
-                                background: "var(--bg-tertiary)",
-                                border: "1px solid var(--border-subtle)",
-                              }}
-                            >
-                              <span
-                                className="text-sm font-mono break-all flex-1"
-                                style={{ color: "var(--text-secondary)" }}
-                              >
-                                {currentNetwork.depositAddress}
-                              </span>
-                              <div className="relative shrink-0">
-                                <button
-                                  onClick={() => copyToClipboard(currentNetwork.depositAddress)}
-                                  className="text-xs px-3 py-1.5 rounded-lg font-semibold transition-all"
-                                  style={copied ? {
-                                    background: `${GREEN}20`,
-                                    border: `1px solid ${GREEN}59`,
-                                    color: GREEN,
-                                  } : {
-                                    background: "linear-gradient(135deg, var(--brand-start) 0%, var(--brand-mid) 100%)",
-                                    color: "white",
-                                  }}
-                                >
-                                  {copied ? "✓ Copied" : "Copy"}
-                                </button>
-                                {copied && (
-                                  <div
-                                    className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 glass rounded-lg px-3 py-2 text-xs z-10 whitespace-nowrap"
-                                    style={{
-                                      border: "1px solid var(--border-glass)",
-                                      color: "var(--text-secondary)",
-                                    }}
-                                  >
-                                    Paste this address in your wallet and send exactly {usdtAmount} USDT.
-                                    <div
-                                      className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent"
-                                      style={{ borderTopColor: "var(--border-glass)" }}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                            <p className="text-xs mt-2" style={{ color: RED }}>
-                              ⚠ Only send <strong>{networkLabel} USDT</strong> to this address. Other tokens will be lost permanently.
-                            </p>
-                          </>
-                        ) : (
-                          <div
-                            className="flex items-center gap-3 rounded-xl px-4 py-4 glass"
-                            style={{ border: "1px solid rgba(245,158,11,0.35)" }}
-                          >
-                            <span className="text-xl shrink-0">⚠</span>
-                            <div>
-                              <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
-                                Deposit address not configured
-                              </p>
-                              <p className="text-xs mt-0.5" style={{ color: "var(--text-secondary)" }}>
-                                The {selectedNetwork} deposit wallet has not been set up yet. Please check back soon or contact support.
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Listening indicator */}
-                      <motion.div
-                        animate={{
-                          boxShadow: [
-                            "0 0 0px rgba(0,212,255,0)",
-                            "0 0 18px rgba(0,212,255,0.14)",
-                            "0 0 0px rgba(0,212,255,0)",
-                          ],
-                        }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                        className="flex items-center gap-3 rounded-xl px-4 py-3 glass"
-                        style={{ border: "1px solid rgba(0,212,255,0.20)" }}
-                      >
-                        <span className="relative flex h-3 w-3 shrink-0">
-                          <span
-                            className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                            style={{ background: "var(--accent-cyan)" }}
-                          />
-                          <span
-                            className="relative inline-flex rounded-full h-3 w-3"
-                            style={{ background: "var(--accent-cyan)" }}
-                          />
-                        </span>
-                        <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                          <strong style={{ color: "var(--text-primary)" }}>Listening for your payment</strong> — send{" "}
-                          {networkLabel} USDT to the address above. We&apos;ll detect it automatically within 15 seconds of
-                          confirmation.
-                        </span>
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* ── Face 3 — Success, with the coin celebrating ── */}
-                {stage === "success" && verified && (
-                  <motion.div key="success" {...stageMotion}>
-                    <div className="flex items-center gap-3 mb-4">
-                      <motion.svg
-                        width="44" height="44" viewBox="0 0 36 36" fill="none"
-                        initial={{ opacity: 0, scale: 0.6 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.4, delay: 0.1 }}
-                      >
-                        <circle cx="18" cy="18" r="17" fill={`${GREEN}20`} stroke={`${GREEN}66`} strokeWidth="1.5" />
-                        <motion.path
-                          d="M11 18.5L16 23.5L25 13"
-                          stroke={GREEN}
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          initial={{ pathLength: 0 }}
-                          animate={{ pathLength: 1 }}
-                          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                        />
-                      </motion.svg>
-                      <span className="font-sora text-2xl font-bold" style={{ color: GREEN }}>
-                        Payment Confirmed!
+                  {/* Listening indicator */}
+                  {isConnected && (
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12, padding: "10px 14px", border: "1px solid rgba(74,140,111,0.2)", background: "rgba(74,140,111,0.04)" }}>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--c-success)", display: "inline-block", animation: "ubPulse 1.8s ease-in-out infinite" }} />
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)" }}>
+                        LISTENING FOR PAYMENT — CONFIRMATION WITHIN 15s
                       </span>
                     </div>
-                    <p className="text-sm mb-1" style={{ color: "var(--text-secondary)" }}>
-                      We received{" "}
-                      <strong style={{ color: "var(--text-primary)" }}>{verified.usdtAmount} USDT</strong>{" "}
-                      from your wallet.
-                    </p>
-                    <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
-                      <strong style={{ color: "var(--text-primary)" }}>{verified.xnTokens} XN</strong> tokens are
-                      being sent to your wallet now.
-                    </p>
-                    <a
-                      href="/news/how-to-import-xn-tokens"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-medium hover:underline"
-                      style={{ color: GREEN }}
-                    >
-                      How to import XN tokens →
-                    </a>
-                    {verified.txHash && (
-                      <p className="text-xs font-mono mt-3 break-all" style={{ color: "var(--text-muted)" }}>
-                        Tx: {verified.txHash}
-                      </p>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+                  )}
+                </>
+              ) : (
+                <div style={{ border: "1px solid var(--border-gold)", background: "var(--gold-ghost)", padding: "16px 18px" }}>
+                  <p style={{ fontFamily: "var(--font-disp)", fontWeight: 600, fontSize: 14, color: "var(--text-primary)", marginBottom: 6 }}>
+                    Deposit address not configured
+                  </p>
+                  <p style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-muted)" }}>
+                    The {selectedNetwork} deposit wallet has not been set up yet. Please check back soon or contact support.
+                  </p>
+                </div>
+              )}
+            </div>
+
           </div>
-        </div>
+        )}
       </div>
-    </section>
+
+      {/* Widget footer */}
+      <div style={{ padding: "14px 24px", borderTop: "1px solid var(--border-sub)", background: "var(--bg-tertiary)" }}>
+        <a
+          href="/news/how-to-add-a-xn-token"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-link"
+        >
+          HOW TO IMPORT XN TOKENS →
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function WidgetLabel({ children }) {
+  return (
+    <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 12 }}>
+      {children}
+    </div>
   );
 }

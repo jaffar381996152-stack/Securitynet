@@ -7,139 +7,145 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        inter: ["Inter", "sans-serif"],
-        sora: ["Sora", "sans-serif"],
+        barlow:    ["'Barlow Condensed'", "'Arial Narrow'", "sans-serif"],
+        cormorant: ["'Cormorant Garamond'", "Georgia", "serif"],
+        jetbrains: ["'JetBrains Mono'", "'Courier New'", "monospace"],
+        // Aliases — redirected to Ghost Protocol fonts
+        inter: ["'Barlow Condensed'", "'Arial Narrow'", "sans-serif"],
+        sora:  ["'Barlow Condensed'", "'Arial Narrow'", "sans-serif"],
       },
       screens: {
-        sm: "576px",
-        md: "768px",
-        lg: "1024px",
-        xl: "1283px",
+        sm:  "576px",
+        md:  "768px",
+        lg:  "1024px",
+        xl:  "1283px",
         "2xl": "1320px",
       },
       colors: {
-        /* ── Background layers ── */
-        bg: {
-          base:         "var(--bg-base)",
-          primary:      "var(--bg-primary)",
-          secondary:    "var(--bg-secondary)",
-          tertiary:     "var(--bg-tertiary)",
-          glass:        "var(--bg-glass)",
-          surface:      "var(--bg-surface)",
-          "surface-md": "var(--bg-surface-md)",
-          "surface-lg": "var(--bg-surface-lg)",
+        // ── Ghost Protocol core ───────────────────
+        void:        "#0A0A0E",
+        gold:        "#D4AF6E",
+        bone:        "#F0EDE8",
+        "gold-bright": "#E8C882",
+        "gold-dim":    "#A88A52",
+
+        // ── Surface layers ────────────────────────
+        surface: {
+          secondary: "#1C1C22",
+          tertiary:  "#141418",
         },
 
-        /* ── Brand gradient spectrum ── */
-        brand: {
-          start:     "var(--brand-start)",
-          mid:       "var(--brand-mid)",
-          end:       "var(--brand-end)",
-          glow:      "var(--brand-glow)",
-          cyan:      "var(--brand-cyan)",
-          purple:    "var(--brand-purple)",
-          magenta:   "var(--brand-magenta)",
-          gold:      "var(--brand-gold)",
-          champagne: "var(--brand-champagne)",
-          "champagne-deep": "var(--brand-champagne-deep)",
+        // ── Status ────────────────────────────────
+        status: {
+          success: "#4A8C6F",
+          danger:  "#A85252",
+          warn:    "#C48A3A",
         },
 
-        /* ── Accent / status colors ── */
-        accent: {
-          DEFAULT:  "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-          cyan:     "var(--accent-cyan)",
-          amber:    "var(--accent-amber)",
-          green:    "var(--accent-green)",
-          red:      "var(--accent-red)",
-        },
-
-        /* ── Text hierarchy ── */
-        "text-base": {
-          primary:   "var(--text-primary)",
-          secondary: "var(--text-secondary)",
-          muted:     "var(--text-muted)",
-          accent:    "var(--text-accent)",
-        },
-
-        /* ── Borders ── */
-        border: {
-          DEFAULT: "hsl(var(--border))",
-          subtle:  "var(--border-subtle)",
-          medium:  "var(--border-medium)",
-          strong:  "var(--border-strong)",
-          glass:   "var(--border-glass)",
-        },
-
-        /* ── shadcn/ui compatibility ── */
+        // ── shadcn/ui compatibility ───────────────
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
-          DEFAULT: "hsl(var(--card))",
+          DEFAULT:    "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
+          DEFAULT:    "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT:    "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT:    "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
+          DEFAULT:    "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
+        accent: {
+          DEFAULT:    "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
+          DEFAULT:    "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
-        input: "hsl(var(--input))",
-        ring:  "hsl(var(--ring))",
-        chart: {
-          1: "hsl(var(--chart-1))",
-          2: "hsl(var(--chart-2))",
-          3: "hsl(var(--chart-3))",
-          4: "hsl(var(--chart-4))",
-          5: "hsl(var(--chart-5))",
+        border: "hsl(var(--border))",
+        input:  "hsl(var(--input))",
+        ring:   "hsl(var(--ring))",
+
+        // ── Kept for any legacy references ───────
+        bg: {
+          base:         "var(--bg-primary)",
+          primary:      "var(--bg-primary)",
+          secondary:    "var(--bg-secondary)",
+          tertiary:     "var(--bg-tertiary)",
+          glass:        "var(--bg-secondary)",
+          surface:      "var(--gold-ghost)",
+          "surface-md": "rgba(212,175,110,0.05)",
+          "surface-lg": "rgba(212,175,110,0.08)",
+        },
+        brand: {
+          start:     "var(--gold-dim)",
+          mid:       "var(--gold)",
+          end:       "var(--gold-bright)",
+          glow:      "var(--gold-glow)",
+          cyan:      "var(--gold)",
+          purple:    "var(--gold-dim)",
+          magenta:   "var(--gold)",
+          gold:      "var(--gold)",
+          champagne: "var(--gold-bright)",
+          "champagne-deep": "var(--gold-dim)",
+        },
+        "text-base": {
+          primary:   "var(--text-primary)",
+          secondary: "var(--text-sec)",
+          muted:     "var(--text-muted)",
+          accent:    "var(--gold)",
+        },
+        "accent-legacy": {
+          DEFAULT:   "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+          cyan:      "var(--gold)",
+          amber:     "var(--c-warn)",
+          green:     "var(--c-success)",
+          red:       "var(--c-danger)",
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        // Ghost Protocol: sharp corners everywhere
+        lg:   "0px",
+        md:   "0px",
+        sm:   "0px",
+        none: "0px",
       },
       boxShadow: {
-        "glow-cyan":    "0 0 40px rgba(0, 212, 255, 0.35)",
-        "glow-cyan-sm": "0 0 20px rgba(0, 212, 255, 0.20)",
-        "glow-purple":  "0 0 40px rgba(123, 94, 167, 0.35)",
-        "glow-magenta": "0 0 40px rgba(194, 76, 242, 0.32)",
-        "glow-gold":    "0 0 40px rgba(249, 163, 40, 0.35)",
-        "glass":        "0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)",
-        "glass-lg":     "0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08)",
-      },
-      backdropBlur: {
-        xs: "4px",
+        "gold":    "0 0 40px rgba(212,175,110,0.35)",
+        "gold-sm": "0 0 20px rgba(212,175,110,0.20)",
+        "gold-lg": "0 0 80px rgba(212,175,110,0.50)",
+        // Legacy aliases
+        "glow-cyan":    "0 0 40px rgba(212,175,110,0.35)",
+        "glow-cyan-sm": "0 0 20px rgba(212,175,110,0.20)",
+        "glow-purple":  "0 0 40px rgba(212,175,110,0.30)",
+        "glow-magenta": "0 0 40px rgba(212,175,110,0.32)",
+        "glow-gold":    "0 0 40px rgba(212,175,110,0.35)",
+        "glass":        "0 4px 24px rgba(0,0,0,0.5)",
+        "glass-lg":     "0 8px 40px rgba(0,0,0,0.6)",
       },
       animation: {
-        "orb-pulse":    "orb-pulse 6s ease-in-out infinite",
-        "orb-spin":     "orb-ring-spin 12s linear infinite",
-        "fade-up":      "fade-up 0.6s ease-out",
-        "shimmer":      "shimmer 2s linear infinite",
-        "float":        "float 4s ease-in-out infinite",
-        "holo-sweep":   "holo-sweep 6s ease-in-out infinite",
+        "fade-up":   "fadeUp 0.6s var(--ease-expo) forwards",
+        "shimmer":   "shimmer 2s linear infinite",
+        "ticker-l":  "tickerLeft 30s linear infinite",
+        "ticker-r":  "tickerRight 30s linear infinite",
+        "float":     "float 4s ease-in-out infinite",
+        "orb-pulse": "orb-pulse 3s ease-in-out infinite",
+        "orb-spin":  "ringRotate 12s linear infinite",
       },
       backgroundImage: {
-        "grid-dark": "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-        "radial-cyan": "radial-gradient(ellipse at center, rgba(0,212,255,0.12) 0%, transparent 70%)",
-        "radial-purple": "radial-gradient(ellipse at center, rgba(123,94,167,0.12) 0%, transparent 70%)",
-        "radial-magenta": "radial-gradient(ellipse at center, rgba(194,76,242,0.12) 0%, transparent 70%)",
-        "gradient-holo": "var(--gradient-holo)",
-        "gradient-champagne": "linear-gradient(135deg, #F0D9A8 0%, #F9A328 50%, #D9B873 100%)",
+        "grid-dark": "linear-gradient(rgba(212,175,110,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(212,175,110,0.03) 1px,transparent 1px)",
       },
     },
   },

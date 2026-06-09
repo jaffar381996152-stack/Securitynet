@@ -4,19 +4,16 @@ import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { Suspense } from "react";
 import { AppKit } from "../context/appkit";
 import SmoothScrollProvider from "@/components/animations/SmoothScrollProvider";
-import AuroraField from "@/components/animations/AuroraField";
-import ScanlineSweep from "@/components/animations/ScanlineSweep";
-import CursorGlow from "@/components/animations/CursorGlow";
-import PageTransition from "@/components/animations/PageTransition";
-import IntroOverlay from "@/components/intro/IntroOverlay";
-import ToastCoin from "@/components/brand/ToastCoin";
+import Preloader from "@/components/shell/Preloader";
+import CustomCursor from "@/components/shell/CustomCursor";
+import UrgencyBar from "@/components/shell/UrgencyBar";
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://securitynet.ai";
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Securitynet — AI Eyes, Safe Skies Fueled By Blockchain Technology",
+    default: "Securitynet — Intelligence-Grade Security, Tokenized",
     template: "%s | Securitynet",
   },
   description:
@@ -32,7 +29,7 @@ export const metadata = {
     "smart surveillance",
   ],
   openGraph: {
-    title: "Securitynet — AI Eyes, Safe Skies Fueled By Blockchain Technology",
+    title: "Securitynet — Intelligence-Grade Security, Tokenized",
     description:
       "Securitynet leverages cutting-edge AI for facial recognition, real-time alerts, and comprehensive monitoring — now fuelled by blockchain technology through the XN token.",
     url: "/",
@@ -41,7 +38,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Securitynet — AI Eyes, Safe Skies Fueled By Blockchain Technology",
+    title: "Securitynet — Intelligence-Grade Security, Tokenized",
     description:
       "Securitynet leverages cutting-edge AI for facial recognition, real-time alerts, and comprehensive monitoring — now fuelled by blockchain technology through the XN token.",
   },
@@ -49,38 +46,41 @@ export const metadata = {
     index: true,
     follow: true,
   },
-  // Favicon is auto-generated from src/app/icon.svg (Next.js file convention) — no manual icons entry needed
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body>
         <AppKit>
-          <AuroraField />
-          <ScanlineSweep />
-          <CursorGlow />
-          <IntroOverlay />
+          <Preloader />
+          <CustomCursor />
+          <UrgencyBar />
           <SmoothScrollProvider>
             <Suspense>
-              <PageTransition>{children}</PageTransition>
+              {children}
               <Toaster
                 position="top-right"
                 toastOptions={{
-                  className: "glass-card",
                   style: {
-                    background: "var(--bg-surface-md)",
-                    border: "1px solid var(--border-glass)",
-                    borderRadius: "var(--radius-button)",
+                    background: "var(--bg-secondary)",
+                    border: "1px solid var(--border-gold)",
+                    borderRadius: 0,
                     color: "var(--text-primary)",
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "0.875rem",
-                    backdropFilter: "blur(16px)",
-                    boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "0.75rem",
+                    letterSpacing: "0.06em",
                   },
-                  success: { icon: <ToastCoin tone="success" /> },
-                  error: { icon: <ToastCoin tone="error" /> },
-                  loading: { icon: <ToastCoin tone="brand" /> },
+                  success: { iconTheme: { primary: "#4A8C6F", secondary: "#0A0A0E" } },
+                  error:   { iconTheme: { primary: "#A85252", secondary: "#0A0A0E" } },
                 }}
               />
               <GoogleAnalytics gaId="G-DJF0D3925S" />

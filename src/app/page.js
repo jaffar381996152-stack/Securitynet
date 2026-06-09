@@ -1,17 +1,41 @@
-import Presalepage from "./presale/page";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+import Hero from "./home/components/Hero";
+import PresaleInline from "./home/components/PresaleInline";
+import Vision from "./home/components/Vision";
+import TechScroll from "./home/components/TechScroll";
+import TokenomicsPreview from "./home/components/TokenomicsPreview";
+import HowToBuy from "./home/components/HowToBuy";
+import Roadmap from "./home/components/Roadmap";
+import LogoTicker from "./home/components/LogoTicker";
+import CommunityCTA from "./home/components/CommunityCTA";
+import FAQ from "./home/components/FAQ";
 import { pageMetadata } from "@/app/libs/seo";
 
 export const metadata = pageMetadata({
-  title: "XN Token Presale",
+  title: "Intelligence-Grade Security, Tokenized",
   description:
-    "Join the SecurityNet (XN) presale — purchase XN, the BEP-20 utility token powering the Securitynet AI security ecosystem on Binance Smart Chain, at $0.20 per token.",
+    "Securitynet combines AI-powered surveillance with blockchain technology. Buy XN tokens in the presale at $0.20 — listing at $0.80.",
   path: "/",
 });
 
-export default function EntryPoint() {
+export default function HomePage() {
   return (
     <>
-      <Presalepage />
+      <Header />
+      <main>
+        <Hero />
+        <PresaleInline />
+        <Vision />
+        <TechScroll />
+        <TokenomicsPreview />
+        <HowToBuy />
+        <Roadmap />
+        <LogoTicker />
+        <CommunityCTA />
+        <FAQ />
+      </main>
+      <Footer />
     </>
   );
 }

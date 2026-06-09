@@ -1,29 +1,23 @@
-import MyAccount from "./components/account";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-import DigitalGold from "@/components/token/erctoken";
+import PresaleContent from "./components/PresaleContent";
 import { pageMetadata } from "@/app/libs/seo";
 
-// Mirrors the root `/` route's content exactly — canonicalize to `/` so
-// search engines treat this as the same page rather than duplicate content.
 export const metadata = pageMetadata({
-  title: "XN Token Presale",
+  title: "XN Token Presale — Stage 1 · $0.20 USDT",
   description:
-    "Join the SecurityNet (XN) presale — purchase XN, the BEP-20 utility token powering the Securitynet AI security ecosystem on Binance Smart Chain, at $0.20 per token.",
+    "Join the SecurityNet (XN) presale — purchase XN at $0.20 per token. Listing price $0.80. BEP-20, ERC-20, and TRC-20 USDT accepted.",
   path: "/presale",
-  canonical: "/",
 });
 
-const Presalepage = () => {
+export default function PresalePage() {
   return (
     <>
       <Header />
-      <div className="h-[72px]" aria-hidden="true" />
-      <DigitalGold />
-      <MyAccount />
+      <main>
+        <PresaleContent />
+      </main>
       <Footer />
     </>
   );
-};
-
-export default Presalepage;
+}

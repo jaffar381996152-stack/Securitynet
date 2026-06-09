@@ -3,229 +3,286 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import Logo from "@/components/brand/Logo";
-import { CloseIcon, MenuIcon } from "../../../public/icons/icons";
-import { NavigationData } from "../../../data/NavigationData";
 
-const navLinks = NavigationData.filter((item) => item.name !== "Securitynet.ai");
+const NAV_LINKS = [
+  { name: "HOME",        path: "/" },
+  { name: "PRESALE",     path: "/presale" },
+  { name: "TOKENOMICS",  path: "/tokenomics" },
+  { name: "SERVICES",    path: "/services" },
+  { name: "ABOUT",       path: "/about" },
+  { name: "NEWS",        path: "/news" },
+];
 
 export default function Header() {
-  const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname    = usePathname();
+  const [open, setOpen]       = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    const handler = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", handler, { passive: true });
+    handler();
+    return () => window.removeEventListener("scroll", handler);
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [mobileOpen]);
+    document.body.classList.toggle("mobile-nav-open", open);
+    return () => document.body.classList.remove("mobile-nav-open");
+  }, [open]);
 
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
+  useEffect(() => { setOpen(false); }, [pathname]);
 
   return (
     <>
-      {/* ── Fixed header bar ─────────────────────────────────────── */}
-      <motion.header
-        initial={{ y: -60, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="fixed top-0 inset-x-0 z-50 h-[72px] flex items-center transition-all duration-500"
+      {/* ── Fixed nav bar ─────────────────────────────────────────── */}
+      <header
         style={{
-          background: scrolled ? "rgba(8, 11, 20, 0.85)" : "transparent",
+          position: "fixed",
+          top: 36,
+          left: 0,
+          right: 0,
+          height: 72,
+          zIndex: 8000,
+          display: "flex",
+          alignItems: "center",
+          background: scrolled ? "rgba(10,10,14,0.92)" : "rgba(10,10,14,0)",
           backdropFilter: scrolled ? "blur(20px)" : "none",
           WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
           borderBottom: scrolled
-            ? "1px solid var(--border-glass)"
+            ? "1px solid rgba(212,175,110,0.12)"
             : "1px solid transparent",
+          transition: "background 0.35s ease, border-color 0.35s ease",
         }}
       >
-        <div className="w-full max-w-7xl mx-auto px-6 flex items-center justify-between">
-
+        <div
+          style={{
+            maxWidth: "var(--max-w)",
+            margin: "0 auto",
+            padding: "0 var(--gut)",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0 group" aria-label="SecurityNet.ai home">
-            <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }}>
-              <Logo size={44} showWordmark={false} />
-            </motion.div>
+          <Link
+            href="/"
+            style={{
+              fontFamily: "var(--font-disp)",
+              fontWeight: 700,
+              fontSize: 18,
+              letterSpacing: "0.14em",
+              color: "var(--gold)",
+              textTransform: "uppercase",
+              flexShrink: 0,
+            }}
+          >
+            SECURITYNET
+            <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>.AI</span>
           </Link>
 
-          {/* Desktop nav ─────────────────────────────────────── */}
-          <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
-            {navLinks.map((item, i) => {
+          {/* Desktop nav */}
+          <nav
+            className="hidden lg:flex"
+            style={{ alignItems: "center", gap: 36 }}
+            aria-label="Main navigation"
+          >
+            {NAV_LINKS.map((item) => {
               const active = pathname === item.path;
               return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + i * 0.06, duration: 0.4 }}
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  style={{
+                    fontFamily: "var(--font-disp)",
+                    fontWeight: 600,
+                    fontSize: 12,
+                    letterSpacing: "0.22em",
+                    textTransform: "uppercase",
+                    color: active ? "var(--gold)" : "var(--text-sec)",
+                    position: "relative",
+                    transition: "color 0.2s",
+                    paddingBottom: 2,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active) e.currentTarget.style.color = "var(--text-primary)";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) e.currentTarget.style.color = "var(--text-sec)";
+                  }}
                 >
-                  <Link
-                    href={item.path}
-                    className={`relative text-[0.8125rem] font-semibold tracking-widest uppercase transition-colors duration-200 group ${
-                      active
-                        ? "text-[var(--text-accent)]"
-                        : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                    }`}
-                  >
-                    {item.name}
-
-                    {/* Underline glow */}
+                  {item.name}
+                  {active && (
                     <span
-                      className={`absolute left-0 -bottom-1 h-[2px] rounded-full transition-all duration-300 ${
-                        active
-                          ? "w-full bg-[var(--text-accent)] shadow-[0_0_8px_var(--brand-mid)]"
-                          : "w-0 group-hover:w-full bg-[var(--brand-mid)]"
-                      }`}
+                      style={{
+                        position: "absolute",
+                        bottom: -2,
+                        left: 0,
+                        right: 0,
+                        height: 1,
+                        background: "var(--gold)",
+                      }}
                     />
-                  </Link>
-                </motion.div>
+                  )}
+                </Link>
               );
             })}
           </nav>
 
-          {/* Right side ───────────────────────────────────────── */}
-          <div className="flex items-center gap-3">
-            {/* White Paper CTA */}
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.4 }}
-              className="hidden lg:block"
+          {/* Right: CTA + hamburger */}
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <Link
+              href="/presale"
+              data-cursor="cta"
+              className="hidden lg:inline-flex btn-primary"
+              style={{ height: 40, padding: "0 24px", fontSize: 12 }}
             >
-              <Link
-                href="https://securitynets.s3.amazonaws.com/securitynetai.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-ghost btn-shimmer px-5 py-2.5 text-[0.8125rem] rounded-xl"
-              >
-                White Paper
-              </Link>
-            </motion.div>
+              BUY XN →
+            </Link>
 
             {/* Hamburger */}
-            <motion.button
-              whileTap={{ scale: 0.92 }}
-              onClick={() => setMobileOpen(true)}
-              className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl glass"
-              aria-label="Open navigation menu"
-              aria-expanded={mobileOpen}
+            <button
+              className="lg:hidden"
+              onClick={() => setOpen(true)}
+              aria-label="Open navigation"
+              aria-expanded={open}
+              style={{
+                width: 40,
+                height: 40,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 5,
+                background: "var(--gold-ghost)",
+                border: "1px solid var(--border-gold)",
+              }}
             >
-              <MenuIcon width={20} height={12} stroke="var(--text-primary)" />
-            </motion.button>
+              <span style={{ width: 18, height: 1, background: "var(--text-primary)", display: "block" }} />
+              <span style={{ width: 12, height: 1, background: "var(--text-primary)", display: "block", alignSelf: "flex-start", marginLeft: 11 }} />
+            </button>
           </div>
         </div>
-      </motion.header>
+      </header>
 
-      {/* ── Mobile full-screen overlay ───────────────────────────── */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              key="backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="fixed inset-0 z-[60]"
-              style={{
-                background: "rgba(8, 11, 20, 0.92)",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
-              }}
-              onClick={() => setMobileOpen(false)}
-            />
+      {/* ── Mobile overlay ────────────────────────────────────────── */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 9500,
+          background: "#0A0A0E",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          opacity: open ? 1 : 0,
+          pointerEvents: open ? "all" : "none",
+          transition: "opacity 0.3s ease",
+        }}
+        aria-modal="true"
+        role="dialog"
+        aria-label="Navigation menu"
+        aria-hidden={!open}
+      >
+        {/* Close */}
+        <button
+          onClick={() => setOpen(false)}
+          aria-label="Close navigation"
+          style={{
+            position: "absolute",
+            top: 20,
+            right: 20,
+            width: 40,
+            height: 40,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "1px solid var(--border-gold)",
+            color: "var(--text-primary)",
+            fontFamily: "var(--font-disp)",
+            fontWeight: 700,
+            fontSize: 18,
+          }}
+        >
+          ×
+        </button>
 
-            {/* Menu panel */}
-            <motion.div
-              key="mobile-menu"
-              initial={{ opacity: 0, scale: 0.96, y: -12 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: -12 }}
-              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="fixed inset-0 z-[70] flex flex-col items-center justify-center gap-0"
-              aria-modal="true"
-              role="dialog"
-              aria-label="Navigation menu"
-            >
-              {/* Close button */}
-              <motion.button
-                whileTap={{ scale: 0.92 }}
-                onClick={() => setMobileOpen(false)}
-                className="absolute top-5 right-5 flex items-center justify-center w-10 h-10 rounded-xl glass"
-                aria-label="Close navigation menu"
+        {/* Logo */}
+        <div
+          style={{
+            fontFamily: "var(--font-disp)",
+            fontWeight: 700,
+            fontSize: 20,
+            letterSpacing: "0.2em",
+            color: "var(--gold)",
+            textTransform: "uppercase",
+            marginBottom: 56,
+          }}
+        >
+          SECURITYNET.AI
+        </div>
+
+        {/* Links */}
+        <nav
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 32,
+            marginBottom: 48,
+          }}
+        >
+          {NAV_LINKS.map((item, i) => {
+            const active = pathname === item.path;
+            return (
+              <Link
+                key={item.path}
+                href={item.path}
+                onClick={() => setOpen(false)}
+                style={{
+                  fontFamily: "var(--font-disp)",
+                  fontWeight: 700,
+                  fontSize: 28,
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                  color: active ? "var(--gold)" : "var(--text-sec)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  opacity: open ? 1 : 0,
+                  transform: open ? "translateY(0)" : "translateY(16px)",
+                  transition: `opacity 0.35s ease ${i * 0.06}s, transform 0.35s ease ${i * 0.06}s`,
+                }}
               >
-                <CloseIcon width={18} height={18} fill="var(--text-primary)" />
-              </motion.button>
-
-              {/* Logo */}
-              <motion.div
-                initial={{ opacity: 0, y: -16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05, duration: 0.4 }}
-                className="mb-12"
-              >
-                <Link href="/" onClick={() => setMobileOpen(false)}>
-                  <Logo size={56} showWordmark={false} />
-                </Link>
-              </motion.div>
-
-              {/* Nav links */}
-              <nav className="flex flex-col items-center gap-8 mb-12">
-                {navLinks.map((item, i) => {
-                  const active = pathname === item.path;
-                  return (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 24 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.08 + i * 0.07, duration: 0.4 }}
-                    >
-                      <Link
-                        href={item.path}
-                        onClick={() => setMobileOpen(false)}
-                        className={`text-2xl font-bold tracking-widest uppercase transition-colors duration-200 ${
-                          active
-                            ? "text-[var(--text-accent)]"
-                            : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                        }`}
-                      >
-                        {item.name}
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </nav>
-
-              {/* White Paper CTA */}
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.08 + navLinks.length * 0.07, duration: 0.4 }}
-              >
-                <Link
-                  href="https://securitynets.s3.amazonaws.com/securitynetai.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setMobileOpen(false)}
-                  className="btn-primary btn-shimmer px-8 py-3.5 text-base rounded-xl"
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 10,
+                    color: "var(--gold-dim)",
+                    letterSpacing: "0.1em",
+                    minWidth: 24,
+                  }}
                 >
-                  White Paper
-                </Link>
-              </motion.div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                {item.name}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <Link
+          href="/presale"
+          onClick={() => setOpen(false)}
+          className="btn-primary"
+          style={{ fontSize: 14, padding: "0 40px" }}
+          data-cursor="cta"
+        >
+          BUY XN →
+        </Link>
+      </div>
     </>
   );
 }

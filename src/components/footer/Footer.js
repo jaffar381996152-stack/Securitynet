@@ -1,208 +1,245 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import Logo from "@/components/brand/Logo";
-import {
-  PlayIcon,
-  Twitter,
-  Linkedin,
-  Instagram,
-} from "../../../public/icons/icons";
 
-const socials = [
-  {
-    label: "YouTube",
-    href: "https://www.youtube.com/@securitynetai",
-    icon: <PlayIcon width={13} height={13} fill="#fff" />,
-  },
-  {
-    label: "X / Twitter",
-    href: "https://x.com/securitynetAI",
-    icon: <Twitter width={13} height={13} fill="#fff" />,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/company/securitynet-ai/",
-    icon: <Linkedin width={13} height={13} stroke="#fff" />,
-  },
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/securitynetai",
-    icon: <Instagram width={13} height={13} stroke="#fff" />,
-  },
+const SOCIALS = [
+  { label: "YouTube",    href: "https://www.youtube.com/@securitynetai",            sym: "▶" },
+  { label: "X",          href: "https://x.com/securitynetAI",                       sym: "𝕏" },
+  { label: "LinkedIn",   href: "https://www.linkedin.com/company/securitynet-ai/",  sym: "in" },
+  { label: "Instagram",  href: "https://www.instagram.com/securitynetai",           sym: "◎" },
 ];
 
-const navGroups = [
+const NAV_GROUPS = [
   {
-    title: "Company",
+    title: "COMPANY",
     links: [
-      { label: "Home", href: "/" },
-      { label: "About", href: "/about" },
-      { label: "Services", href: "/services" },
-      { label: "Tokenomics", href: "/tokenomics" },
+      { label: "Home",        href: "/" },
+      { label: "About",       href: "/about" },
+      { label: "Services",    href: "/services" },
+      { label: "Tokenomics",  href: "/tokenomics" },
     ],
   },
   {
-    title: "Resources",
+    title: "RESOURCES",
     links: [
-      {
-        label: "White Paper",
-        href: "https://securitynets.s3.amazonaws.com/securitynetai.pdf",
-        external: true,
-      },
-      { label: "Blog", href: "/blog" },
-      { label: "News", href: "/news" },
-      { label: "Presale", href: "/presale" },
+      { label: "Whitepaper",  href: "/whitepaper" },
+      { label: "Blog",        href: "/blog" },
+      { label: "News",        href: "/news" },
+      { label: "Presale",     href: "/presale" },
     ],
   },
   {
-    title: "Contact",
+    title: "LEGAL",
     links: [
-      { label: "Contact Us", href: "/contact-us" },
-      {
-        label: "info@securitynet.ai",
-        href: "mailto:info@securitynet.ai",
-        external: true,
-      },
+      { label: "Contact Us",  href: "/contact-us" },
+      { label: "info@securitynet.ai", href: "mailto:info@securitynet.ai", external: true },
     ],
   },
 ];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
-  },
-};
-
-const stagger = {
-  show: { transition: { staggerChildren: 0.08 } },
-};
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer
-      className="relative"
-      style={{ background: "var(--bg-secondary)" }}
+      style={{
+        background: "var(--bg-secondary)",
+        borderTop: "1px solid var(--border-gold)",
+        position: "relative",
+      }}
     >
-      {/* ── Gradient top border ───────────────────────────────────── */}
+      {/* Top gradient rule */}
       <div
-        className="absolute top-0 inset-x-0 h-px pointer-events-none"
         style={{
-          background:
-            "linear-gradient(90deg, transparent 0%, var(--brand-start) 25%, var(--brand-end) 65%, transparent 100%)",
+          position: "absolute",
+          top: -1,
+          left: 0,
+          right: 0,
+          height: 1,
+          background: "linear-gradient(90deg,transparent 0%,var(--gold-dim) 25%,var(--gold-bright) 65%,transparent 100%)",
+          pointerEvents: "none",
         }}
       />
 
-      {/* ── Main content ─────────────────────────────────────────── */}
-      <motion.div
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={stagger}
-        className="max-w-7xl mx-auto px-6 pt-16 pb-12"
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-
-          {/* Col 1 — Logo + tagline + social */}
-          <motion.div
-            variants={fadeUp}
-            className="flex flex-col items-center sm:items-start text-center sm:text-start"
-          >
-            <Link href="/" className="inline-block mb-5 transition-transform duration-300 hover:scale-105">
-              <Logo size={56} showWordmark={false} />
-            </Link>
-
-            <p
-              className="text-sm leading-relaxed mb-7 max-w-[220px]"
-              style={{ color: "var(--text-secondary)" }}
-            >
-              AI-powered security intelligence, fuelled by blockchain technology.
-            </p>
-
-            {/* Social icons */}
-            <motion.ul variants={stagger} className="flex items-center gap-3">
-              {socials.map((s, i) => (
-                <motion.li variants={fadeUp} key={i}>
-                  <Link
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={s.label}
-                    className="group relative flex items-center justify-center w-7 h-7 rounded-full overflow-hidden transition-all duration-300"
-                    style={{
-                      background: "var(--bg-tertiary)",
-                      border: "1px solid var(--border-subtle)",
-                    }}
-                  >
-                    {/* Gradient hover overlay */}
-                    <span
-                      className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, var(--brand-start) 0%, var(--brand-mid) 100%)",
-                      }}
-                    />
-                    <span className="relative z-10 flex items-center justify-center">
-                      {s.icon}
-                    </span>
-                  </Link>
-                </motion.li>
-              ))}
-            </motion.ul>
-          </motion.div>
-
-          {/* Cols 2-4 — Nav link groups */}
-          {navGroups.map(({ title, links }) => (
-            <motion.div
-              key={title}
-              variants={fadeUp}
-              className="flex flex-col items-center sm:items-start text-center sm:text-start"
-            >
-              <h3
-                className="text-xs font-semibold uppercase tracking-[0.15em] mb-5"
-                style={{ color: "var(--text-primary)" }}
-              >
-                {title}
-              </h3>
-              <ul className="flex flex-col gap-3">
-                {links.map((link, i) => (
-                  <li key={i}>
-                    <Link
-                      href={link.href}
-                      {...(link.external
-                        ? { target: "_blank", rel: "noopener noreferrer" }
-                        : {})}
-                      className="text-sm transition-colors duration-200 hover:text-white break-all"
-                      style={{ color: "var(--text-secondary)" }}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* ── Bottom bar ───────────────────────────────────────────── */}
+      {/* Main grid */}
       <div
-        className="border-t"
-        style={{ borderColor: "var(--border-subtle)" }}
+        style={{
+          maxWidth: "var(--max-w)",
+          margin: "0 auto",
+          padding: "clamp(48px,7vw,80px) var(--gut) 48px",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px,1fr))",
+          gap: "clamp(32px,4vw,48px)",
+        }}
       >
-        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-            © {year} SecurityNet.ai — All rights reserved.
+        {/* Brand column */}
+        <div>
+          <Link
+            href="/"
+            style={{
+              fontFamily: "var(--font-disp)",
+              fontWeight: 700,
+              fontSize: 18,
+              letterSpacing: "0.14em",
+              color: "var(--gold)",
+              textTransform: "uppercase",
+              display: "block",
+              marginBottom: 16,
+            }}
+          >
+            SECURITYNET.AI
+          </Link>
+
+          <p
+            style={{
+              fontFamily: "var(--font-disp)",
+              fontSize: 13,
+              color: "var(--text-muted)",
+              lineHeight: 1.7,
+              maxWidth: 220,
+              marginBottom: 24,
+            }}
+          >
+            Intelligence-grade security, tokenized. Powered by AI and anchored on blockchain.
           </p>
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-            XN Token · BSC Network
-          </p>
+
+          {/* Classification tag */}
+          <div className="badge" style={{ marginBottom: 24 }}>
+            XN TOKEN · BSC NETWORK
+          </div>
+
+          {/* Socials */}
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            {SOCIALS.map((s) => (
+              <Link
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={s.label}
+                style={{
+                  width: 32,
+                  height: 32,
+                  border: "1px solid var(--border-sub)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: "var(--font-disp)",
+                  fontWeight: 700,
+                  fontSize: 11,
+                  color: "var(--text-muted)",
+                  transition: "border-color 0.2s, color 0.2s",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "var(--gold)";
+                  e.currentTarget.style.color = "var(--gold)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "var(--border-sub)";
+                  e.currentTarget.style.color = "var(--text-muted)";
+                }}
+              >
+                {s.sym}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Nav groups */}
+        {NAV_GROUPS.map(({ title, links }) => (
+          <div key={title}>
+            <h3
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 10,
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                color: "var(--gold)",
+                marginBottom: 20,
+              }}
+            >
+              {title}
+            </h3>
+            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 12 }}>
+              {links.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    style={{
+                      fontFamily: "var(--font-disp)",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      letterSpacing: "0.08em",
+                      color: "var(--text-muted)",
+                      transition: "color 0.2s",
+                      wordBreak: "break-all",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom bar */}
+      <div
+        style={{
+          borderTop: "1px solid var(--border-sub)",
+          maxWidth: "var(--max-w)",
+          margin: "0 auto",
+          padding: "18px var(--gut)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 8,
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 10,
+            letterSpacing: "0.12em",
+            color: "var(--text-muted)",
+          }}
+        >
+          © {year} SECURITYNET.AI — ALL RIGHTS RESERVED
+        </p>
+        <div
+          style={{
+            display: "flex",
+            gap: 20,
+            fontFamily: "var(--font-mono)",
+            fontSize: 10,
+            letterSpacing: "0.12em",
+            color: "var(--text-muted)",
+          }}
+        >
+          <Link href="/contact-us" style={{ transition: "color 0.2s" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+          >
+            TERMS
+          </Link>
+          <Link href="/contact-us" style={{ transition: "color 0.2s" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+          >
+            PRIVACY
+          </Link>
+          <Link href="/contact-us" style={{ transition: "color 0.2s" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+          >
+            DISCLAIMER
+          </Link>
         </div>
       </div>
     </footer>
