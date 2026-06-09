@@ -8,9 +8,9 @@ const MILESTONES = [
     status:  "complete",
     items: [
       "Project inception + whitepaper V1",
-      "Smart contract dev & audit",
+      "Smart contract development & audit",
       "Token deployment on BNB Chain",
-      "Website + community setup",
+      "Website launch and community setup",
       "Presale Stage 1 opened ($0.10 USDT)",
     ],
   },
@@ -31,7 +31,7 @@ const MILESTONES = [
     status:  "active",
     items: [
       "Stage 3 active ($0.20 USDT) — currently live",
-      "Stage 4 & 5 prep ($0.35/$0.55)",
+      "Stage 4 & 5 prep ($0.35 / $0.55)",
       "CEX listing applications submitted",
       "Security audit V2 underway",
       "Marketing & KOL partnerships",
@@ -62,12 +62,12 @@ const MILESTONES = [
 ];
 
 const STATUS_STYLES = {
-  complete: { label: "COMPLETED ✓", color: "var(--c-success)",  borderColor: "rgba(74,140,111,0.4)",  bg: "rgba(74,140,111,0.08)" },
+  complete: { label: "COMPLETED ✓", color: "var(--c-success)",  borderColor: "rgba(74,140,111,0.35)", bg: "rgba(74,140,111,0.07)" },
   active:   { label: "ACTIVE NOW",  color: "var(--gold)",        borderColor: "var(--border-gold)",    bg: "var(--gold-ghost)" },
   upcoming: { label: "UPCOMING",    color: "var(--text-muted)",  borderColor: "var(--border-sub)",     bg: "transparent" },
 };
 
-function MilestoneCard({ m, s, align, slideDir, delay }) {
+function MilestoneCard({ m, s, slideDir }) {
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
 
@@ -85,65 +85,87 @@ function MilestoneCard({ m, s, align, slideDir, delay }) {
   return (
     <div
       ref={ref}
+      className="rm-card"
       style={{
         border: "1px solid var(--border-sub)",
         background: "var(--bg-primary)",
         padding: "24px 28px",
-        textAlign: align,
         maxWidth: 360,
-        marginLeft: align === "right" ? "auto" : 0,
-        transition: `border-color 0.2s, opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
+        transition: "border-color 0.2s, opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)",
         opacity: vis ? 1 : 0,
         transform: vis ? "translateX(0)" : `translateX(${slideDir}px)`,
       }}
       onMouseEnter={(e) => (e.currentTarget.style.borderColor = s.color)}
       onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border-sub)")}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 10, justifyContent: align === "right" ? "flex-end" : "flex-start", marginBottom: 12 }}>
+      {/* Quarter + status row */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 6,
+          marginBottom: 12,
+        }}
+      >
         <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)" }}>
           {m.quarter}
         </span>
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 9,
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            color: s.color,
-            border: `1px solid ${s.borderColor}`,
-            background: s.bg,
-            padding: "2px 8px",
-          }}
-        >
-          {s.label}
-        </span>
-        {m.status === "active" && (
-          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--gold)", display: "inline-block", animation: "ubPulse 1.8s ease-in-out infinite", flexShrink: 0 }} />
-        )}
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: 9,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: s.color,
+              border: `1px solid ${s.borderColor}`,
+              background: s.bg,
+              padding: "2px 8px",
+            }}
+          >
+            {s.label}
+          </span>
+          {m.status === "active" && (
+            <span
+              style={{
+                width: 5,
+                height: 5,
+                borderRadius: "50%",
+                background: "var(--gold)",
+                display: "inline-block",
+                animation: "ubPulse 1.8s ease-in-out infinite",
+                flexShrink: 0,
+              }}
+            />
+          )}
+        </div>
       </div>
 
-      <h3 style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 18, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--text-primary)", marginBottom: 16 }}>
+      {/* Title */}
+      <h3
+        className="rm-title"
+        style={{
+          fontFamily: "var(--font-disp)",
+          fontWeight: 700,
+          fontSize: 18,
+          letterSpacing: "0.04em",
+          color: "var(--text-primary)",
+          marginBottom: 16,
+        }}
+      >
         {m.title}
       </h3>
 
+      {/* Bullet list */}
       <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
         {m.items.map((item, i) => (
-          <li
-            key={i}
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 8,
-              justifyContent: align === "right" ? "flex-end" : "flex-start",
-            }}
-          >
-            {align === "right" && (
-              <span style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-muted)", lineHeight: 1.5, flex: 1 }}>{item}</span>
-            )}
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--gold-dim)", flexShrink: 0, marginTop: 4 }}>—</span>
-            {align === "left" && (
-              <span style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-muted)", lineHeight: 1.5 }}>{item}</span>
-            )}
+          <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--gold-dim)", flexShrink: 0, marginTop: 3 }}>—</span>
+            <span className="rm-item" style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-muted)", lineHeight: 1.5 }}>
+              {item}
+            </span>
           </li>
         ))}
       </ul>
@@ -155,18 +177,18 @@ export default function Roadmap() {
   return (
     <section className="section-py" style={{ background: "var(--bg-secondary)", borderTop: "1px solid var(--border-sub)" }}>
       <div className="container">
+        {/* Section heading */}
         <div style={{ textAlign: "center", marginBottom: 64 }}>
-          <span className="eyebrow" style={{ marginBottom: 12 }}>DEVELOPMENT TIMELINE</span>
+          <span className="eyebrow" style={{ marginBottom: 12 }}>ROADMAP</span>
           <h2 className="disp-title" style={{ fontSize: "var(--lg-size)" }}>
-            ROAD<span style={{ color: "var(--gold)" }}>MAP</span>
+            MISSION TIMELINE
           </h2>
         </div>
 
-        {/* Timeline */}
+        {/* Timeline container */}
         <div style={{ position: "relative", maxWidth: 900, margin: "0 auto" }}>
-          {/* Central decorative line */}
+          {/* Vertical connecting line — always visible */}
           <div
-            className="hidden md:block"
             style={{
               position: "absolute",
               left: "50%",
@@ -175,56 +197,51 @@ export default function Roadmap() {
               width: 1,
               background: "linear-gradient(to bottom, var(--gold-dim), transparent)",
               transform: "translateX(-50%)",
+              pointerEvents: "none",
             }}
           />
 
+          {/* Milestones */}
           <div style={{ display: "flex", flexDirection: "column", gap: 48 }}>
             {MILESTONES.map((m, i) => {
               const s      = STATUS_STYLES[m.status];
               const isLeft = i % 2 === 0;
-              const slideDir = isLeft ? -28 : 28;
 
               return (
-                <div key={m.quarter}>
-                  {/* Desktop: two-column layout */}
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 40px 1fr",
-                      alignItems: "start",
-                      gap: 16,
-                    }}
-                    className="hidden md:grid"
-                  >
-                    <div style={{ textAlign: isLeft ? "right" : "left" }}>
-                      {isLeft && <MilestoneCard m={m} s={s} align="right" slideDir={-28} delay={0} />}
-                    </div>
-
-                    {/* Center dot */}
-                    <div style={{ display: "flex", justifyContent: "center", paddingTop: 18 }}>
-                      <div
-                        style={{
-                          width: 12,
-                          height: 12,
-                          borderRadius: "50%",
-                          border: `2px solid ${s.color}`,
-                          background: m.status === "active" ? s.color : "var(--bg-secondary)",
-                          zIndex: 1,
-                          position: "relative",
-                          boxShadow: m.status === "active" ? "0 0 0 4px rgba(212,175,110,0.2)" : "none",
-                          animation: m.status === "active" ? "ubPulse 2s ease-in-out infinite" : "none",
-                        }}
-                      />
-                    </div>
-
-                    <div>
-                      {!isLeft && <MilestoneCard m={m} s={s} align="left" slideDir={28} delay={0} />}
-                    </div>
+                <div
+                  key={m.quarter}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 40px 1fr",
+                    alignItems: "start",
+                    gap: 8,
+                  }}
+                >
+                  {/* Left column — push card to right (toward center line) */}
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    {isLeft && <MilestoneCard m={m} s={s} slideDir={-28} />}
                   </div>
 
-                  {/* Mobile: single column */}
-                  <div className="md:hidden">
-                    <MilestoneCard m={m} s={s} align="left" slideDir={-20} delay={0} />
+                  {/* Center dot */}
+                  <div style={{ display: "flex", justifyContent: "center", paddingTop: 20 }}>
+                    <div
+                      style={{
+                        width: 12,
+                        height: 12,
+                        borderRadius: "50%",
+                        border: `2px solid ${s.color}`,
+                        background: m.status === "active" ? s.color : "var(--bg-secondary)",
+                        zIndex: 1,
+                        position: "relative",
+                        boxShadow: m.status === "active" ? "0 0 0 4px rgba(212,175,110,0.2)" : "none",
+                        animation: m.status === "active" ? "ubPulse 2s ease-in-out infinite" : "none",
+                      }}
+                    />
+                  </div>
+
+                  {/* Right column */}
+                  <div>
+                    {!isLeft && <MilestoneCard m={m} s={s} slideDir={28} />}
                   </div>
                 </div>
               );

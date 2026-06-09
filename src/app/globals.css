@@ -680,6 +680,11 @@ w3m-account-button, appkit-account-button {
 
   /* Hero adjustments */
   .hero-trust-row span { padding: 8px 12px !important; border-right: none !important; border-bottom: 1px solid var(--border-sub); }
+
+  /* Roadmap cards — compact on mobile */
+  .rm-card  { padding: 12px 12px !important; max-width: 100% !important; }
+  .rm-title { font-size: 13px !important; letter-spacing: 0.02em !important; }
+  .rm-item  { font-size: 11px !important; }
 }
 
 @media (max-width: 1023px) {
