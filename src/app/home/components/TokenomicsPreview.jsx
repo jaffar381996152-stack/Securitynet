@@ -11,6 +11,13 @@ const SEGMENTS = [
   { label: "MARKETING", pct: 7,  color: "#262E26" },
 ];
 
+const STATS = [
+  { value: "100,000,000", label: "TOTAL XN SUPPLY"       },
+  { value: "40%",         label: "PRESALE ALLOCATION"    },
+  { value: "15%",         label: "CIRCULATING AT LAUNCH" },
+  { value: "24 Months",   label: "TEAM VESTING PERIOD"   },
+];
+
 const R    = 85;
 const CIRC = 2 * Math.PI * R;
 const CX   = 130;
@@ -23,7 +30,6 @@ function DonutChart({ animated }) {
 
   return (
     <svg width={260} height={260} viewBox="0 0 260 260" style={{ overflow: "visible" }}>
-      {/* Background track */}
       <circle cx={CX} cy={CY} r={R} fill="none" stroke="rgba(212,175,110,0.08)" strokeWidth={28} />
 
       {SEGMENTS.map((seg, i) => {
@@ -53,7 +59,6 @@ function DonutChart({ animated }) {
         );
       })}
 
-      {/* Center label */}
       <text x={CX} y={CY - 8} textAnchor="middle" fill="#D4AF6E" style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 26 }}>
         XN
       </text>
@@ -83,7 +88,6 @@ export default function TokenomicsPreview() {
     <section ref={ref} className="section-py" style={{ background: "var(--bg-primary)" }}>
       <div className="container">
         <div
-          className="tokenomics-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
@@ -91,16 +95,16 @@ export default function TokenomicsPreview() {
             alignItems: "center",
           }}
         >
-          {/* Left: text */}
+          {/* Left: heading + description + stats + CTA */}
           <div>
-            <span className="eyebrow" style={{ marginBottom: 16 }}>TOKEN DISTRIBUTION</span>
+            <span className="eyebrow" style={{ marginBottom: 16 }}>TOKENOMICS</span>
             <h2
               className="disp-title"
               style={{ fontSize: "var(--lg-size)", marginBottom: 24 }}
             >
-              XN TOKEN
+              ALLOCATION
               <br />
-              <span style={{ color: "var(--gold)" }}>ECONOMICS</span>
+              STRUCTURE
             </h2>
             <p
               style={{
@@ -108,35 +112,116 @@ export default function TokenomicsPreview() {
                 fontSize: 16,
                 color: "var(--text-muted)",
                 lineHeight: 1.7,
-                marginBottom: 36,
+                marginBottom: 32,
               }}
             >
-              A carefully designed token allocation model ensuring long-term ecosystem sustainability, community rewards, and aligned incentives across all stakeholders.
+              A transparent, lock-secured token economy designed to align the incentives of early investors, the development team, and the long-term ecosystem.
             </p>
 
-            {/* Legend */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 32 }}>
-              {SEGMENTS.map((seg) => (
-                <div key={seg.label} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 12, height: 12, background: seg.color, flexShrink: 0 }} />
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-sec)", flex: 1 }}>
-                    {seg.label}
-                  </span>
-                  <span style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 14, color: "var(--gold)" }}>
-                    {seg.pct}%
-                  </span>
+            {/* Stats 2×2 grid */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 1,
+                background: "var(--border-sub)",
+                marginBottom: 32,
+              }}
+            >
+              {STATS.map((s) => (
+                <div
+                  key={s.label}
+                  style={{
+                    background: "var(--bg-secondary)",
+                    padding: "20px 16px",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "var(--font-disp)",
+                      fontWeight: 800,
+                      fontSize: "clamp(16px,2vw,24px)",
+                      color: "var(--text-primary)",
+                      lineHeight: 1.1,
+                      marginBottom: 6,
+                    }}
+                  >
+                    {s.value}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 9,
+                      letterSpacing: "0.16em",
+                      textTransform: "uppercase",
+                      color: "var(--text-muted)",
+                    }}
+                  >
+                    {s.label}
+                  </div>
                 </div>
               ))}
             </div>
 
-            <Link href="/tokenomics" className="btn-ghost">
+            <Link
+              href="/tokenomics"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 11,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "var(--gold)",
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
               VIEW FULL TOKENOMICS →
             </Link>
           </div>
 
-          {/* Right: donut chart */}
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <DonutChart animated={animated} />
+          {/* Right: donut chart + legend */}
+          <div>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+              <DonutChart animated={animated} />
+            </div>
+
+            {/* 2-column legend */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "10px 16px",
+              }}
+            >
+              {SEGMENTS.map((seg) => (
+                <div key={seg.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      background: seg.color,
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 10,
+                      letterSpacing: "0.12em",
+                      color: "var(--text-sec)",
+                    }}
+                  >
+                    {seg.label.charAt(0) + seg.label.slice(1).toLowerCase()} — {seg.pct}%
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

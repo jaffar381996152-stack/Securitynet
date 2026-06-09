@@ -52,11 +52,11 @@ export default function UrgencyBar() {
           PRESALE LIVE
         </span>
 
-        <span style={{ color: "rgba(212,175,110,0.3)" }}>│</span>
+        <span style={{ color: "rgba(212,175,110,0.3)" }}>·</span>
 
         <span>
           STAGE{" "}
-          <span style={{ color: "#D4AF6E" }}>{STAGE_NUM}</span> OF {STAGE_TOTAL} ACTIVE
+          <span style={{ color: "#D4AF6E" }}>{STAGE_NUM}</span>
         </span>
 
         <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -85,14 +85,14 @@ export default function UrgencyBar() {
           <span style={{ color: "#D4AF6E" }}>{STAGE_SOLD}% FILLED</span>
         </span>
 
-        <span style={{ color: "rgba(212,175,110,0.3)" }}>│</span>
+        <span style={{ color: "rgba(212,175,110,0.3)" }}>·</span>
 
         <span>
-          1 XN ={" "}
+          PRICE:{" "}
           <span style={{ color: "#D4AF6E" }}>{TOKEN_PRICE} USDT</span>
         </span>
 
-        <span style={{ color: "rgba(212,175,110,0.3)" }}>│</span>
+        <span style={{ color: "rgba(212,175,110,0.3)" }}>·</span>
 
         <Link
           href="/presale"
@@ -102,6 +102,8 @@ export default function UrgencyBar() {
             fontWeight: 600,
             letterSpacing: "0.2em",
             transition: "color 0.2s",
+            border: "1px solid rgba(212,175,110,0.45)",
+            padding: "2px 8px",
           }}
           onMouseEnter={(e) => (e.currentTarget.style.color = "#E8C882")}
           onMouseLeave={(e) => (e.currentTarget.style.color = "#D4AF6E")}

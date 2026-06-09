@@ -5,33 +5,34 @@ const PANELS = [
   {
     num: null,
     isIntro: true,
-    title: "INTELLIGENCE ARCHITECTURE",
-    titleGold: "INTELLIGENCE",
-    titleRest: " ARCHITECTURE",
     hint: "→ SCROLL TO EXPLORE",
   },
   {
     num: "01",
-    title: "AI-DRIVEN SECURITY",
+    titleGold: "AI-DRIVEN",
+    titleWhite: "SECURITY",
     desc: "XN powers real-time threat detection and automated response across decentralized networks. Every transaction is analyzed and secured by on-chain AI.",
     tags: ["Threat Detection", "On-chain AI", "Auto-Response"],
   },
   {
     num: "02",
-    title: "AUTOMATION ENGINE",
-    desc: "Smart contracts powered by AI decision trees execute security protocols automatically — from flagging anomalies to isolating compromised nodes and settling disputes.",
+    titleGold: "AUTOMATION",
+    titleWhite: "ENGINE",
+    desc: "Smart contract automation driven by AI decision trees. Transactions are validated, routed, and settled without human intervention across any supported chain.",
     tags: ["Smart Contracts", "AI Decisions", "Auto-Settle"],
   },
   {
     num: "03",
-    title: "REAL-TIME INTELLIGENCE",
-    desc: "Live market data, wallet activity, and on-chain signals processed by AI in milliseconds — giving XN holders and platform operators a decisive informational advantage.",
+    titleGold: "REAL-TIME",
+    titleWhite: "INTELLIGENCE",
+    desc: "Live market data, on-chain analytics, and AI-powered signals. XN holders access intelligence feeds that update in milliseconds, not minutes.",
     tags: ["Live Data", "AI Analytics", "Millisecond Feed"],
   },
   {
     num: "04",
-    title: "DECENTRALIZED SECURITY",
-    desc: "Distributed node architecture eliminates single points of failure. Non-custodial by design — your keys, your assets, protected by an intelligent decentralized network.",
+    titleGold: "DECENTRALIZED",
+    titleWhite: "SECURITY",
+    desc: "No single point of failure. XN's security layer distributes trust across hundreds of nodes — the network gets stronger with every new participant.",
     tags: ["Distributed Nodes", "Non-Custodial", "Zero Single Point"],
     link: "Read the Whitepaper →",
     linkHref: "/whitepaper",
@@ -81,53 +82,130 @@ function Panel01SVG() {
 function Panel02SVG() {
   return (
     <svg className="tech-svg" viewBox="0 0 340 260" fill="none" aria-hidden="true">
-      {[50, 110, 170, 230].map((y, i) => (
-        <g key={i}>
-          <rect x="60" y={y - 20} width="220" height="34" rx="2" stroke="#D4AF6E" strokeWidth="1" />
-          <line x1="170" y1={y + 14} x2="170" y2={y + 50 < 260 ? y + 50 : y + 14} stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 4" />
-        </g>
-      ))}
-      <rect x="130" y={210} width="80" height="30" rx="2" stroke="#D4AF6E" strokeWidth="0.5" fill="rgba(212,175,110,0.06)" />
+      {/* AI INPUT */}
+      <rect x="120" y="10" width="100" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
+      <text x="170" y="30" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">AI INPUT</text>
+      <line x1="170" y1="40" x2="170" y2="70" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" />
+      {/* Middle row */}
+      <rect x="10" y="70" width="75" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
+      <text x="47" y="90" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">PASS</text>
+      <rect x="120" y="70" width="100" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
+      <text x="170" y="90" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">DECISION</text>
+      <rect x="255" y="70" width="75" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
+      <text x="292" y="90" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">HOLD</text>
+      {/* Horizontal connectors */}
+      <line x1="120" y1="85" x2="85" y2="85" stroke="#D4AF6E" strokeWidth="1" />
+      <line x1="220" y1="85" x2="255" y2="85" stroke="#D4AF6E" strokeWidth="1" />
+      {/* Drop lines */}
+      <line x1="47" y1="100" x2="47" y2="155" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" />
+      <line x1="170" y1="100" x2="170" y2="155" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" />
+      <line x1="292" y1="100" x2="292" y2="155" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" />
+      {/* Bottom row */}
+      <rect x="10" y="155" width="75" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
+      <text x="47" y="175" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">SETTLE</text>
+      <rect x="120" y="155" width="100" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
+      <text x="170" y="175" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">EXECUTE</text>
+      <rect x="255" y="155" width="75" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
+      <text x="292" y="175" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">REVIEW</text>
     </svg>
   );
 }
 
 function Panel03SVG() {
+  const rows = [
+    { label: "TX.FEED",     lineEnd: 230, highlight: false },
+    { label: "PRICE.DATA",  lineEnd: 210, highlight: false },
+    { label: "AI.SIGNAL",   lineEnd: 165, highlight: true  },
+    { label: "CHAIN.STATS", lineEnd: 200, highlight: false },
+    { label: "THREAT.LOG",  lineEnd: 220, highlight: false },
+  ];
+  const baseY = 50;
+  const gap   = 40;
   return (
     <svg className="tech-svg" viewBox="0 0 340 260" fill="none" aria-hidden="true">
-      {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-        <line key={i} x1="20" y1={30 + i * 30} x2="320" y2={30 + i * 30}
-          stroke="#D4AF6E" strokeWidth="1" strokeDasharray="10 6"
-          style={{ animation: `streamFlow ${2 + i * 0.4}s linear infinite` }} />
-      ))}
-      <circle cx="170" cy="130" r="20" stroke="#D4AF6E" strokeWidth="1" fill="rgba(212,175,110,0.06)" />
-      <text x="158" y="134" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono">LIVE</text>
+      {rows.map((row, i) => {
+        const y   = baseY + i * gap;
+        const rX2 = 282 + (i % 3) * 8;
+        return (
+          <g key={i}>
+            <text
+              x="10" y={y + 4} fontSize="9"
+              fill={row.highlight ? "#D4AF6E" : "rgba(212,175,110,0.45)"}
+              fontFamily="JetBrains Mono,monospace" letterSpacing="0.5"
+            >
+              {row.label}
+            </text>
+            <line
+              x1="90" y1={y}
+              x2={row.highlight ? 165 : row.lineEnd} y2={y}
+              stroke={row.highlight ? "#D4AF6E" : "rgba(212,175,110,0.3)"}
+              strokeWidth="0.8"
+            />
+            {row.highlight && (
+              <>
+                <circle cx="172" cy={y} r="6" stroke="#D4AF6E" strokeWidth="1" fill="rgba(212,175,110,0.15)" />
+                <circle cx="172" cy={y} r="2" fill="#D4AF6E" />
+                <line x1="178" y1={y} x2={row.lineEnd} y2={y} stroke="#D4AF6E" strokeWidth="0.8" />
+              </>
+            )}
+            <line x1="268" y1={y} x2={rX2} y2={y} stroke="rgba(212,175,110,0.18)" strokeWidth="0.6" />
+          </g>
+        );
+      })}
     </svg>
   );
 }
 
 function Panel04SVG() {
   return (
-    <svg className="tech-svg" viewBox="0 0 340 260" fill="none" aria-hidden="true">
-      <circle cx="170" cy="130" r="100" stroke="#D4AF6E" strokeWidth="1" />
-      <ellipse cx="170" cy="130" rx="100" ry="32" stroke="#D4AF6E" strokeWidth="0.8" />
-      <ellipse cx="170" cy="130" rx="60" ry="100" stroke="#D4AF6E" strokeWidth="0.8" />
-      <line x1="70" y1="130" x2="270" y2="130" stroke="#D4AF6E" strokeWidth="0.8" />
-      <line x1="170" y1="30" x2="170" y2="230" stroke="#D4AF6E" strokeWidth="0.8" />
-      {[[90,70],[250,70],[90,190],[250,190]].map(([cx,cy],i) => (
-        <circle key={i} cx={cx} cy={cy} r="4" fill="#D4AF6E" fillOpacity="0.4" />
-      ))}
-    </svg>
+    <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+      {/* Shield with network */}
+      <svg
+        style={{ width: 140, flexShrink: 0, opacity: 0.55 }}
+        viewBox="0 0 180 220"
+        fill="none"
+        stroke="#D4AF6E"
+        strokeWidth="1"
+      >
+        <path d="M90 12L162 48V112Q162 172 90 208Q18 172 18 112V48Z" />
+        <path d="M90 28L146 58V110Q146 160 90 190Q34 160 34 110V58Z" strokeWidth="0.6" opacity="0.6" />
+        <circle cx="90" cy="90" r="5" fill="#D4AF6E" fillOpacity="0.3" />
+        <circle cx="62" cy="122" r="3.5" fill="#D4AF6E" fillOpacity="0.3" />
+        <circle cx="118" cy="122" r="3.5" fill="#D4AF6E" fillOpacity="0.3" />
+        <circle cx="90" cy="152" r="3" fill="#D4AF6E" fillOpacity="0.3" />
+        <line x1="90" y1="90" x2="62" y2="122" strokeWidth="0.6" />
+        <line x1="90" y1="90" x2="118" y2="122" strokeWidth="0.6" />
+        <line x1="62" y1="122" x2="90" y2="152" strokeWidth="0.6" />
+        <line x1="118" y1="122" x2="90" y2="152" strokeWidth="0.6" />
+      </svg>
+      {/* Globe */}
+      <svg
+        style={{ width: 140, flexShrink: 0, opacity: 0.55 }}
+        viewBox="0 0 220 220"
+        fill="none"
+        stroke="#D4AF6E"
+        strokeWidth="1"
+      >
+        <circle cx="110" cy="110" r="95" />
+        <ellipse cx="110" cy="110" rx="95" ry="30" strokeWidth="0.8" />
+        <ellipse cx="110" cy="110" rx="57" ry="95" strokeWidth="0.8" />
+        <line x1="15" y1="110" x2="205" y2="110" strokeWidth="0.8" />
+        <line x1="110" y1="15" x2="110" y2="205" strokeWidth="0.8" />
+        {[[40,60],[180,60],[40,160],[180,160]].map(([cx,cy],i) => (
+          <circle key={i} cx={cx} cy={cy} r="4" fill="#D4AF6E" fillOpacity="0.4" />
+        ))}
+      </svg>
+    </div>
   );
 }
 
 const PANEL_SVGS = [null, Panel01SVG, Panel02SVG, Panel03SVG, Panel04SVG];
 
 export default function TechScroll() {
-  const outerRef   = useRef(null);
-  const trackRef   = useRef(null);
+  const outerRef    = useRef(null);
+  const trackRef    = useRef(null);
   const progressRef = useRef(null);
-  const dotsRef    = useRef([]);
+  const dotsRef     = useRef([]);
 
   useEffect(() => {
     const outer = outerRef.current;
@@ -276,7 +354,9 @@ export default function TechScroll() {
                         marginBottom: 24,
                       }}
                     >
-                      <span style={{ color: "var(--gold)" }}>INTELLIGENCE</span>{" "}ARCHITECTURE
+                      <span style={{ color: "var(--gold)" }}>INTELLIGENCE</span>
+                      <br />
+                      ARCHITECTURE
                     </h2>
                     <p className="tech-intro-hint">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -299,7 +379,9 @@ export default function TechScroll() {
                 <div className="tech-panel-left">
                   <span className="tech-panel-num" aria-hidden="true">{panel.num}</span>
                   <h2 className="disp-title tech-panel-title">
-                    {panel.title}
+                    <span style={{ color: "var(--gold)" }}>{panel.titleGold}</span>
+                    <br />
+                    {panel.titleWhite}
                   </h2>
                   <p className="tech-panel-body">{panel.desc}</p>
                   <div className="tech-tags">

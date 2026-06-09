@@ -10,7 +10,6 @@ const NAV_LINKS = [
   { name: "SERVICES",   path: "/services" },
   { name: "ABOUT",      path: "/about" },
   { name: "NEWS",       path: "/news" },
-  { name: "PRESALE",    path: "/presale" },
 ];
 
 export default function Header() {
