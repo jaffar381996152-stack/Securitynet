@@ -86,6 +86,7 @@ export default function PresaleInline() {
     >
       <div className="container">
         <div
+          className="presale-inline-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",

@@ -1,6 +1,7 @@
 import PresaleNav from "./components/PresaleNav";
 import PresaleFooter from "./components/PresaleFooter";
 import PresaleContent from "./components/PresaleContent";
+import PresaleCanvas from "./components/PresaleCanvas";
 import { pageMetadata } from "@/app/libs/seo";
 
 export const metadata = pageMetadata({
@@ -12,12 +13,15 @@ export const metadata = pageMetadata({
 
 export default function PresalePage() {
   return (
-    <>
-      <PresaleNav />
-      <main style={{ paddingTop: "calc(36px + 60px)" }}>
-        <PresaleContent />
-      </main>
-      <PresaleFooter />
-    </>
+    <div style={{ position: "relative" }}>
+      <PresaleCanvas />
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <PresaleNav />
+        <main>
+          <PresaleContent />
+        </main>
+        <PresaleFooter />
+      </div>
+    </div>
   );
 }

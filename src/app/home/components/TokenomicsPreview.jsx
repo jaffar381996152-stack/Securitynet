@@ -18,7 +18,8 @@ const CY   = 130;
 
 function DonutChart({ animated }) {
   let cumPct = 0;
-  const gap  = 1.5; // degree gap
+  const gapDeg = 1.5;
+  const gapLen = (gapDeg / 360) * CIRC;
 
   return (
     <svg width={260} height={260} viewBox="0 0 260 260" style={{ overflow: "visible" }}>
@@ -26,10 +27,9 @@ function DonutChart({ animated }) {
       <circle cx={CX} cy={CY} r={R} fill="none" stroke="rgba(212,175,110,0.08)" strokeWidth={28} />
 
       {SEGMENTS.map((seg, i) => {
-        const startAngle = cumPct / 100 * 360 - 90;
-        const segAngle   = seg.pct / 100 * 360 - gap;
-        const dashLen    = (segAngle / 360) * CIRC;
-        const offset     = ((90 - startAngle) / 360) * CIRC;
+        const startFraction = cumPct / 100;
+        const dashLen       = (seg.pct / 100) * CIRC - gapLen;
+        const dashOffset    = CIRC - startFraction * CIRC;
         cumPct += seg.pct;
 
         return (
@@ -41,14 +41,13 @@ function DonutChart({ animated }) {
             fill="none"
             stroke={seg.color}
             strokeWidth={28}
+            transform={`rotate(-90, ${CX}, ${CY})`}
             strokeDasharray={`${animated ? dashLen : 0} ${CIRC}`}
-            strokeDashoffset={offset}
+            strokeDashoffset={dashOffset}
             style={{
               transition: animated
                 ? `stroke-dasharray 1.2s cubic-bezier(0.16,1,0.3,1) ${0.1 + i * 0.12}s`
                 : "none",
-              transformOrigin: `${CX}px ${CY}px`,
-              transform: "rotate(-90deg)",
             }}
           />
         );
@@ -84,6 +83,7 @@ export default function TokenomicsPreview() {
     <section ref={ref} className="section-py" style={{ background: "var(--bg-primary)" }}>
       <div className="container">
         <div
+          className="tokenomics-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",

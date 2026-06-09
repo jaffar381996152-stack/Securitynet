@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import FadeUpSection from "./FadeUpSection";
 
@@ -51,6 +52,82 @@ const STEPS = [
   },
 ];
 
+function StepCard({ step, delay }) {
+  const ref = useRef(null);
+  const [vis, setVis] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVis(true); obs.disconnect(); } },
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        background: "var(--bg-secondary)",
+        padding: "28px 24px",
+        position: "relative",
+        opacity: vis ? 1 : 0,
+        transform: vis ? "translateY(0)" : "translateY(28px)",
+        transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
+      }}
+    >
+      {/* Faint step number — top-right */}
+      <div
+        style={{
+          position: "absolute",
+          top: 20,
+          right: 20,
+          fontFamily: "var(--font-mono)",
+          fontSize: 48,
+          fontWeight: 700,
+          color: "rgba(212,175,110,0.12)",
+          lineHeight: 1,
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+      >
+        {step.num}
+      </div>
+
+      <div style={{ marginBottom: 20 }}>{step.icon}</div>
+
+      <h3
+        style={{
+          fontFamily: "var(--font-disp)",
+          fontWeight: 700,
+          fontSize: 18,
+          textTransform: "uppercase",
+          letterSpacing: "0.06em",
+          color: "var(--text-primary)",
+          marginBottom: 12,
+          lineHeight: 1.2,
+        }}
+      >
+        {step.title}
+      </h3>
+
+      <p
+        style={{
+          fontFamily: "var(--font-disp)",
+          fontSize: 14,
+          color: "var(--text-muted)",
+          lineHeight: 1.7,
+        }}
+      >
+        {step.desc}
+      </p>
+    </div>
+  );
+}
+
 export default function HowToBuy() {
   return (
     <section className="section-py" style={{ background: "var(--bg-secondary)", borderTop: "1px solid var(--border-sub)" }}>
@@ -62,76 +139,18 @@ export default function HowToBuy() {
           </h2>
         </FadeUpSection>
 
-        {/* 1px-gap grid — the gap itself acts as dividers */}
+        {/* 1px-gap grid */}
         <div
+          className="htb-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
             gap: 1,
             background: "var(--border-sub)",
             marginBottom: 48,
           }}
         >
-          {STEPS.map((step) => (
-            <div
-              key={step.num}
-              style={{
-                background: "var(--bg-secondary)",
-                padding: "28px 24px",
-                position: "relative",
-              }}
-            >
-              {/* Faint step number — top-right */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: 20,
-                  right: 20,
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 48,
-                  fontWeight: 700,
-                  color: "rgba(212,175,110,0.12)",
-                  lineHeight: 1,
-                  userSelect: "none",
-                  pointerEvents: "none",
-                }}
-              >
-                {step.num}
-              </div>
-
-              {/* Icon */}
-              <div style={{ marginBottom: 20 }}>
-                {step.icon}
-              </div>
-
-              {/* Title */}
-              <h3
-                style={{
-                  fontFamily: "var(--font-disp)",
-                  fontWeight: 700,
-                  fontSize: 18,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                  color: "var(--text-primary)",
-                  marginBottom: 12,
-                  lineHeight: 1.2,
-                }}
-              >
-                {step.title}
-              </h3>
-
-              {/* Body */}
-              <p
-                style={{
-                  fontFamily: "var(--font-disp)",
-                  fontSize: 14,
-                  color: "var(--text-muted)",
-                  lineHeight: 1.7,
-                }}
-              >
-                {step.desc}
-              </p>
-            </div>
+          {STEPS.map((step, i) => (
+            <StepCard key={step.num} step={step} delay={i * 0.1} />
           ))}
         </div>
 

@@ -38,7 +38,6 @@ const PANELS = [
   },
 ];
 
-/* SVG decorations per panel */
 function IntroShield() {
   return (
     <svg width="300" height="360" viewBox="0 0 300 360" fill="none" style={{ opacity: 0.18, position: "absolute", right: "var(--gut)", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
@@ -54,7 +53,7 @@ function Panel01SVG() {
   return (
     <svg width="260" height="240" viewBox="0 0 260 240" fill="none" style={{ position: "absolute", right: "var(--gut)", top: "50%", transform: "translateY(-50%)", opacity: 0.25, pointerEvents: "none" }}>
       {[[65,60],[130,30],[195,60],[210,120],[195,180],[130,210],[65,180],[50,120]].map(([cx,cy], i) => (
-        <circle key={i} cx={cx} cy={cy} r="5" stroke="#D4AF6E" strokeWidth="1.5" style={{ animation: `techPulse ${2 + i * 0.3}s ease-in-out infinite` }} />
+        <circle key={i} cx={cx} cy={cy} r="5" stroke="#D4AF6E" strokeWidth="1.5" style={{ animation: `techPulseOpacity ${2 + i * 0.3}s ease-in-out infinite` }} />
       ))}
       {[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0],[0,4],[1,5],[2,6],[3,7]].map(([a,b], i) => {
         const pts = [[65,60],[130,30],[195,60],[210,120],[195,180],[130,210],[65,180],[50,120]];
@@ -104,270 +103,259 @@ function Panel04SVG() {
 const PANEL_SVGS = [null, Panel01SVG, Panel02SVG, Panel03SVG, Panel04SVG];
 
 export default function TechScroll() {
-  const containerRef = useRef(null);
-  const trackRef     = useRef(null);
-  const progressRef  = useRef(null);
-  const dotsRef      = useRef([]);
+  const outerRef   = useRef(null);
+  const trackRef   = useRef(null);
+  const progressRef = useRef(null);
+  const dotsRef    = useRef([]);
 
   useEffect(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) return;
+    const outer = outerRef.current;
+    const track = trackRef.current;
+    if (!outer || !track) return;
 
-    let gsapMod, ScrollTrigger;
-    import("@/lib/gsap").then(({ getGsap, ScrollTrigger: ST }) => {
-      gsapMod    = getGsap();
-      ScrollTrigger = ST;
+    const handleScroll = () => {
+      const rect      = outer.getBoundingClientRect();
+      const sectionH  = outer.offsetHeight;
+      const windowH   = window.innerHeight;
+      const scrollable = sectionH - windowH;
+      const scrolled  = Math.max(0, -rect.top);
+      const progress  = scrollable > 0 ? Math.min(scrolled / scrollable, 1) : 0;
 
-      const track = trackRef.current;
-      const container = containerRef.current;
-      if (!track || !container) return;
+      const translateX = -progress * (PANELS.length - 1) * 100;
+      track.style.transform = `translateX(${translateX}vw)`;
 
-      const totalWidth = track.scrollWidth - window.innerWidth;
-
-      const tl = gsapMod.timeline({
-        scrollTrigger: {
-          trigger: container,
-          start: "top top",
-          end: () => `+=${totalWidth}`,
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            const panelIndex = Math.round(self.progress * (PANELS.length - 1));
-            dotsRef.current.forEach((dot, i) => {
-              if (!dot) return;
-              dot.style.background = i === panelIndex ? "var(--gold)" : "rgba(212,175,110,0.25)";
-              dot.style.transform  = i === panelIndex ? "scale(1.4)" : "scale(1)";
-            });
-            if (progressRef.current) {
-              progressRef.current.style.width = `${self.progress * 100}%`;
-            }
-          },
-        },
+      const panelIdx = Math.round(progress * (PANELS.length - 1));
+      dotsRef.current.forEach((dot, i) => {
+        if (!dot) return;
+        dot.style.background = i === panelIdx ? "var(--gold)" : "rgba(212,175,110,0.25)";
+        dot.style.transform  = i === panelIdx ? "scale(1.4)" : "scale(1)";
       });
 
-      tl.to(track, { x: -totalWidth, ease: "none" });
-    });
-
-    return () => {
-      if (ScrollTrigger) ScrollTrigger.getAll().forEach((t) => t.kill());
+      if (progressRef.current) {
+        progressRef.current.style.width = `${progress * 100}%`;
+      }
     };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <section
-      ref={containerRef}
+    /* Outer: 600vh scroll container */
+    <div
+      ref={outerRef}
       style={{
-        overflow: "hidden",
+        height: "600vh",
         background: "var(--bg-secondary)",
-        position: "relative",
         borderTop: "1px solid var(--border-sub)",
         borderBottom: "1px solid var(--border-sub)",
+        position: "relative",
       }}
     >
-      {/* Section label */}
+      {/* Sticky viewport-height panel */}
       <div
         style={{
-          position: "absolute",
-          top: "clamp(20px,3vw,36px)",
-          left: "var(--gut)",
-          zIndex: 10,
-          display: "flex",
-          alignItems: "center",
-          gap: 20,
+          position: "sticky",
+          top: "calc(36px + 72px)",
+          height: "calc(100vh - 36px - 72px)",
+          overflow: "hidden",
         }}
       >
-        <span className="eyebrow" style={{ marginBottom: 0 }}>TECHNOLOGY</span>
-        <div style={{ width: 120, height: 1, background: "var(--border-sub)", position: "relative" }}>
-          <div
-            ref={progressRef}
-            style={{ position: "absolute", inset: 0, width: "0%", background: "var(--gold)", transition: "none" }}
-          />
+        {/* Section label */}
+        <div
+          style={{
+            position: "absolute",
+            top: "clamp(20px,3vw,36px)",
+            left: "var(--gut)",
+            zIndex: 10,
+            display: "flex",
+            alignItems: "center",
+            gap: 20,
+          }}
+        >
+          <span className="eyebrow" style={{ marginBottom: 0 }}>TECHNOLOGY</span>
+          <div style={{ width: 120, height: 1, background: "var(--border-sub)", position: "relative" }}>
+            <div
+              ref={progressRef}
+              style={{ position: "absolute", inset: 0, width: "0%", background: "var(--gold)", transition: "none" }}
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Dot navigation */}
-      <div
-        style={{
-          position: "absolute",
-          top: "clamp(20px,3vw,36px)",
-          right: "var(--gut)",
-          zIndex: 10,
-          display: "flex",
-          gap: 6,
-          alignItems: "center",
-        }}
-      >
-        {PANELS.map((_, i) => (
-          <div
-            key={i}
-            ref={(el) => (dotsRef.current[i] = el)}
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: i === 0 ? "var(--gold)" : "rgba(212,175,110,0.25)",
-              transition: "background 0.3s, transform 0.3s",
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Horizontal track */}
-      <div
-        ref={trackRef}
-        style={{
-          display: "flex",
-          width: "max-content",
-        }}
-      >
-        {PANELS.map((panel, i) => {
-          const PanelSVG = PANEL_SVGS[i];
-          return (
+        {/* Dot navigation */}
+        <div
+          style={{
+            position: "absolute",
+            top: "clamp(20px,3vw,36px)",
+            right: "var(--gut)",
+            zIndex: 10,
+            display: "flex",
+            gap: 6,
+            alignItems: "center",
+          }}
+        >
+          {PANELS.map((_, i) => (
             <div
               key={i}
+              ref={(el) => (dotsRef.current[i] = el)}
               style={{
-                width: "100vw",
-                minHeight: "100vh",
-                display: "flex",
-                alignItems: "center",
-                padding: "clamp(80px,10vw,120px) var(--gut)",
-                borderRight: "1px solid var(--border-sub)",
-                flexShrink: 0,
-                position: "relative",
-                overflow: "hidden",
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: i === 0 ? "var(--gold)" : "rgba(212,175,110,0.25)",
+                transition: "background 0.3s, transform 0.3s",
               }}
-            >
-              {/* Decorative SVG */}
-              {PanelSVG && <PanelSVG />}
+            />
+          ))}
+        </div>
 
-              {panel.isIntro ? (
-                /* Intro panel */
-                <div style={{ maxWidth: 600, position: "relative", zIndex: 1 }}>
-                  <span className="eyebrow" style={{ marginBottom: 24 }}>INTELLIGENCE ARCHITECTURE</span>
-                  <h2
-                    style={{
-                      fontFamily: "var(--font-disp)",
-                      fontWeight: 800,
-                      fontSize: "var(--xl-size)",
-                      textTransform: "uppercase",
-                      lineHeight: 1,
-                      letterSpacing: "-0.01em",
-                      color: "var(--text-primary)",
-                      marginBottom: 32,
-                    }}
-                  >
-                    <span style={{ color: "var(--gold)" }}>INTELLIGENCE</span>{" "}
-                    ARCHITECTURE
-                  </h2>
-                  <IntroShield />
-                  <p
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 11,
-                      letterSpacing: "0.22em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                      marginTop: 8,
-                    }}
-                  >
-                    {panel.hint}
-                  </p>
-                </div>
-              ) : (
-                /* Feature panels */
-                <div style={{ maxWidth: 560, position: "relative", zIndex: 1 }}>
-                  {/* Large background number */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      right: "-60px",
-                      bottom: "-60px",
-                      fontFamily: "var(--font-disp)",
-                      fontWeight: 900,
-                      fontSize: "clamp(120px,20vw,280px)",
-                      lineHeight: 1,
-                      color: "rgba(212,175,110,0.04)",
-                      userSelect: "none",
-                      pointerEvents: "none",
-                    }}
-                  >
-                    {panel.num}
-                  </div>
+        {/* Horizontal track */}
+        <div
+          ref={trackRef}
+          style={{
+            display: "flex",
+            width: `${PANELS.length * 100}vw`,
+            height: "100%",
+            willChange: "transform",
+          }}
+        >
+          {PANELS.map((panel, i) => {
+            const PanelSVG = PANEL_SVGS[i];
+            return (
+              <div
+                key={i}
+                style={{
+                  width: "100vw",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "clamp(80px,10vw,120px) var(--gut)",
+                  borderRight: "1px solid var(--border-sub)",
+                  flexShrink: 0,
+                  position: "relative",
+                  overflow: "hidden",
+                }}
+              >
+                {PanelSVG && <PanelSVG />}
 
-                  <div className="badge" style={{ marginBottom: 28 }}>
-                    {panel.num} / 04
-                  </div>
-
-                  <h2
-                    style={{
-                      fontFamily: "var(--font-disp)",
-                      fontWeight: 800,
-                      fontSize: "var(--xl-size)",
-                      textTransform: "uppercase",
-                      lineHeight: 1,
-                      color: "var(--text-primary)",
-                      letterSpacing: "-0.01em",
-                      marginBottom: 24,
-                    }}
-                  >
-                    {panel.title}
-                  </h2>
-
-                  <p
-                    style={{
-                      fontFamily: "var(--font-disp)",
-                      fontSize: 17,
-                      fontWeight: 400,
-                      color: "var(--text-sec)",
-                      lineHeight: 1.7,
-                      marginBottom: 32,
-                    }}
-                  >
-                    {panel.desc}
-                  </p>
-
-                  {/* Tags */}
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: panel.link ? 28 : 0 }}>
-                    {panel.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="badge"
-                        style={{ margin: 0 }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Whitepaper link for last panel */}
-                  {panel.link && (
-                    <a
-                      href={panel.linkHref}
+                {panel.isIntro ? (
+                  <div style={{ maxWidth: 600, position: "relative", zIndex: 1 }}>
+                    <span className="eyebrow" style={{ marginBottom: 24 }}>INTELLIGENCE ARCHITECTURE</span>
+                    <h2
                       style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 8,
+                        fontFamily: "var(--font-disp)",
+                        fontWeight: 800,
+                        fontSize: "var(--xl-size)",
+                        textTransform: "uppercase",
+                        lineHeight: 1,
+                        letterSpacing: "-0.01em",
+                        color: "var(--text-primary)",
+                        marginBottom: 32,
+                      }}
+                    >
+                      <span style={{ color: "var(--gold)" }}>INTELLIGENCE</span>{" "}
+                      ARCHITECTURE
+                    </h2>
+                    <IntroShield />
+                    <p
+                      style={{
                         fontFamily: "var(--font-mono)",
                         fontSize: 11,
-                        letterSpacing: "0.18em",
+                        letterSpacing: "0.22em",
                         textTransform: "uppercase",
-                        color: "var(--gold)",
-                        textDecoration: "none",
-                        transition: "opacity 0.2s",
+                        color: "var(--text-muted)",
+                        marginTop: 8,
                       }}
-                      onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
-                      onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
                     >
-                      {panel.link}
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
+                      {panel.hint}
+                    </p>
+                  </div>
+                ) : (
+                  <div style={{ maxWidth: 560, position: "relative", zIndex: 1 }}>
+                    <div
+                      style={{
+                        position: "absolute",
+                        right: "-60px",
+                        bottom: "-60px",
+                        fontFamily: "var(--font-disp)",
+                        fontWeight: 900,
+                        fontSize: "clamp(120px,20vw,280px)",
+                        lineHeight: 1,
+                        color: "rgba(212,175,110,0.04)",
+                        userSelect: "none",
+                        pointerEvents: "none",
+                      }}
+                    >
+                      {panel.num}
+                    </div>
+
+                    <div className="badge" style={{ marginBottom: 28 }}>
+                      {panel.num} / 04
+                    </div>
+
+                    <h2
+                      style={{
+                        fontFamily: "var(--font-disp)",
+                        fontWeight: 800,
+                        fontSize: "var(--xl-size)",
+                        textTransform: "uppercase",
+                        lineHeight: 1,
+                        color: "var(--text-primary)",
+                        letterSpacing: "-0.01em",
+                        marginBottom: 24,
+                      }}
+                    >
+                      {panel.title}
+                    </h2>
+
+                    <p
+                      style={{
+                        fontFamily: "var(--font-disp)",
+                        fontSize: 17,
+                        fontWeight: 400,
+                        color: "var(--text-sec)",
+                        lineHeight: 1.7,
+                        marginBottom: 32,
+                      }}
+                    >
+                      {panel.desc}
+                    </p>
+
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: panel.link ? 28 : 0 }}>
+                      {panel.tags.map((tag) => (
+                        <span key={tag} className="badge" style={{ margin: 0 }}>{tag}</span>
+                      ))}
+                    </div>
+
+                    {panel.link && (
+                      <a
+                        href={panel.linkHref}
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 8,
+                          fontFamily: "var(--font-mono)",
+                          fontSize: 11,
+                          letterSpacing: "0.18em",
+                          textTransform: "uppercase",
+                          color: "var(--gold)",
+                          textDecoration: "none",
+                          transition: "opacity 0.2s",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+                        onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                      >
+                        {panel.link}
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </section>
+    </div>
   );
 }

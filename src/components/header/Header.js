@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { name: "SERVICES",   path: "/services" },
   { name: "ABOUT",      path: "/about" },
   { name: "NEWS",       path: "/news" },
+  { name: "PRESALE",    path: "/presale" },
 ];
 
 export default function Header() {
@@ -146,8 +147,7 @@ export default function Header() {
             <Link
               href="/presale"
               data-cursor="cta"
-              className="hidden lg:inline-flex btn-primary"
-              style={{ height: 40, padding: "0 24px", fontSize: 12 }}
+              className="hidden lg:inline-flex nav-cta"
             >
               BUY XN
             </Link>
@@ -166,12 +166,13 @@ export default function Header() {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 5,
-                background: "var(--gold-ghost)",
-                border: "1px solid var(--border-gold)",
+                background: "transparent",
+                border: "none",
               }}
             >
-              <span style={{ width: 18, height: 1, background: "var(--text-primary)", display: "block" }} />
-              <span style={{ width: 12, height: 1, background: "var(--text-primary)", display: "block", alignSelf: "flex-start", marginLeft: 11 }} />
+              <span style={{ width: 22, height: 1.5, background: "var(--text-primary)", display: "block" }} />
+              <span style={{ width: 16, height: 1.5, background: "var(--text-primary)", display: "block", alignSelf: "flex-start", marginLeft: 3 }} />
+              <span style={{ width: 22, height: 1.5, background: "var(--text-primary)", display: "block" }} />
             </button>
           </div>
         </div>

@@ -1,14 +1,22 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const XN_PRICE = 0.20;
 
 export default function StickyPresaleWidget() {
-  const [minimized, setMinimized]   = useState(false);
-  const [visible, setVisible]       = useState(false);
-  const [usdtAmt, setUsdtAmt]       = useState(100);
-  const [xnAmt, setXnAmt]           = useState((100 / XN_PRICE).toFixed(0));
+  const [minimized, setMinimized] = useState(false);
+  const [visible, setVisible]     = useState(false);
+  const [usdtAmt, setUsdtAmt]     = useState(100);
+  const [xnAmt, setXnAmt]         = useState((100 / XN_PRICE).toFixed(0));
+  const [isMobile, setIsMobile]   = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 1024);
+    const onResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   useEffect(() => {
     const hero = document.getElementById("hero");
@@ -26,14 +34,15 @@ export default function StickyPresaleWidget() {
     setXnAmt(Math.round(parseFloat(v || 0) / XN_PRICE));
   };
 
+  const bottom = isMobile ? 72 : 32;
+
   return (
     <div
-      className="hidden lg:block"
       style={{
         position: "fixed",
-        bottom: 32,
-        right: 32,
-        width: 268,
+        bottom,
+        right: 12,
+        width: "min(268px, calc(100vw - 24px))",
         zIndex: 6000,
         background: "var(--bg-secondary)",
         border: "1px solid var(--border-gold)",
@@ -71,15 +80,23 @@ export default function StickyPresaleWidget() {
             PRESALE LIVE
           </span>
         </div>
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: 14, color: "var(--text-muted)", lineHeight: 1 }}>
-          {minimized ? "+" : "−"}
+        {/* ▲ rotated 180deg = ▼ when minimized */}
+        <span style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 12,
+          color: "var(--text-muted)",
+          lineHeight: 1,
+          display: "inline-block",
+          transform: minimized ? "rotate(180deg)" : "none",
+          transition: "transform 0.25s ease",
+        }}>
+          ▲
         </span>
       </div>
 
       {/* Body */}
       {!minimized && (
         <div style={{ padding: "14px" }}>
-          {/* Progress meta */}
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-muted)" }}>
               STAGE 3
@@ -88,18 +105,15 @@ export default function StickyPresaleWidget() {
               78% FILLED
             </span>
           </div>
-          {/* Track */}
           <div style={{ height: 4, background: "rgba(212,175,110,0.1)", position: "relative", marginBottom: 14 }}>
             <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "78%", background: "linear-gradient(90deg,#A88A52,#E8C882)" }} />
           </div>
 
-          {/* Price row */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.12em", color: "var(--text-muted)" }}>1 XN</span>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 14, color: "var(--gold)", fontWeight: 500 }}>$0.20 USDT</span>
           </div>
 
-          {/* USDT input */}
           <div style={{ position: "relative", marginBottom: 8 }}>
             <input
               type="number"
@@ -128,12 +142,10 @@ export default function StickyPresaleWidget() {
             </span>
           </div>
 
-          {/* Receive line */}
           <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-muted)", marginBottom: 14 }}>
             You receive: <span style={{ color: "var(--gold)" }}>{xnAmt} XN</span>
           </p>
 
-          {/* BUY XN button */}
           <Link
             href="/presale"
             style={{
@@ -159,7 +171,6 @@ export default function StickyPresaleWidget() {
             BUY XN
           </Link>
 
-          {/* Link */}
           <Link
             href="/presale"
             style={{

@@ -11,9 +11,9 @@ export default function Vision() {
             style={{
               fontFamily: "var(--font-disp)",
               fontWeight: 800,
-              fontSize: "var(--xl-size)",
+              fontSize: "var(--lg-size)",
               textTransform: "uppercase",
-              lineHeight: 1,
+              lineHeight: 1.05,
               color: "var(--text-primary)",
               marginBottom: 24,
               letterSpacing: "-0.01em",

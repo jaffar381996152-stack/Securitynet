@@ -46,6 +46,10 @@ export default function Hero() {
           position: "relative",
           zIndex: 1,
           width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
         }}
       >
         {/* Classification badge */}
@@ -60,14 +64,15 @@ export default function Hero() {
         <h1
           style={{
             fontFamily: "var(--font-disp)",
-            fontWeight: 800,
+            fontWeight: 900,
             textTransform: "uppercase",
-            lineHeight: 0.95,
-            letterSpacing: "-0.01em",
+            lineHeight: 0.92,
+            letterSpacing: "-0.02em",
             fontSize: "var(--hero-size)",
             color: "var(--text-primary)",
-            maxWidth: 960,
+            maxWidth: 1100,
             marginBottom: 28,
+            textAlign: "center",
           }}
         >
           <DeclassifyText text="AI EYES," delay={0.2} />
@@ -83,13 +88,15 @@ export default function Hero() {
         <FadeUpSection delay={1.0}>
           <p
             style={{
-              fontFamily: "var(--font-disp)",
-              fontSize: "clamp(16px,2vw,20px)",
+              fontFamily: "var(--font-ed)",
+              fontStyle: "italic",
+              fontSize: "clamp(17px,2vw,22px)",
               fontWeight: 400,
               color: "var(--text-sec)",
               maxWidth: 520,
               lineHeight: 1.65,
               marginBottom: 44,
+              textAlign: "center",
             }}
           >
             Fueled by blockchain. Powered by AI. Secured by design.
@@ -97,7 +104,7 @@ export default function Hero() {
         </FadeUpSection>
 
         {/* CTAs */}
-        <FadeUpSection delay={1.1} style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 60 }}>
+        <FadeUpSection delay={1.1} style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", justifyContent: "center", marginBottom: 60 }}>
           <Link href="/presale" className="btn-primary" data-cursor="cta">
             AUTHORIZE PURCHASE — BUY XN
           </Link>
@@ -199,14 +206,6 @@ export default function Hero() {
           zIndex: 1,
         }}
       >
-        <div
-          style={{
-            width: 1,
-            height: 56,
-            background: "linear-gradient(to bottom, var(--gold), transparent)",
-            animation: "scrollPulse 2s ease-in-out infinite",
-          }}
-        />
         <span
           style={{
             fontFamily: "var(--font-mono)",
@@ -218,6 +217,14 @@ export default function Hero() {
         >
           SCROLL
         </span>
+        <div
+          style={{
+            width: 1,
+            height: 56,
+            background: "linear-gradient(to bottom, var(--gold), transparent)",
+            animation: "scrollPulse 2s ease-in-out infinite",
+          }}
+        />
       </div>
     </section>
   );

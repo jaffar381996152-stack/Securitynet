@@ -549,3 +549,54 @@ w3m-account-button, appkit-account-button {
 
 /* techPulse targets SVG circle r attribute — CSS animation on SVG presentation attributes */
 @keyframes techPulseOpacity { 0%,100% { opacity:0.5 } 50% { opacity:0.2 } }
+
+/* =====================================================
+   NAV CTA (ghost outlined button for header nav)
+   ===================================================== */
+.nav-cta {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: var(--font-disp);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.nav-cta:hover { background: var(--gold); color: var(--text-inv); }
+
+/* =====================================================
+   HOW TO BUY — responsive grid
+   ===================================================== */
+.htb-grid { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1023px) { .htb-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 599px)  { .htb-grid { grid-template-columns: 1fr; } }
+
+/* =====================================================
+   MOBILE RESPONSIVE OVERRIDES
+   ===================================================== */
+@media (max-width: 767px) {
+  /* Stack 2-col grids */
+  .presale-inline-grid    { grid-template-columns: 1fr !important; }
+  .tokenomics-grid        { grid-template-columns: 1fr !important; }
+
+  /* Hero adjustments */
+  .hero-trust-row span { padding: 8px 12px !important; border-right: none !important; border-bottom: 1px solid var(--border-sub); }
+
+  /* TechScroll — show single panel, no sticky on mobile */
+  .tech-sticky { position: static !important; height: auto !important; overflow: visible !important; }
+}
+
+@media (max-width: 1023px) {
+  /* Presale inline widget stacks */
+  .presale-inline-grid { grid-template-columns: 1fr !important; }
+}

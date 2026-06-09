@@ -2,36 +2,45 @@
 import { useEffect, useRef, useState } from "react";
 
 export default function DeclassifyText({ text, tag: Tag = "span", style = {}, className = "", delay = 0 }) {
-  const ref       = useRef(null);
-  const [go, setGo] = useState(false);
+  const ref     = useRef(null);
+  const [chars, setChars]   = useState(() => text.split(""));
+  const [started, setStarted] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setGo(true); obs.disconnect(); } },
-      { threshold: 0.3 }
+      ([e]) => { if (e.isIntersecting) { setStarted(true); obs.disconnect(); } },
+      { threshold: 0.1 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!started) return;
+    const original = text.split("");
+    // Mask all non-space chars to █
+    setChars(original.map((c) => (c === " " ? " " : "█")));
+
+    const ids = [];
+    let idx = 0;
+    original.forEach((char, i) => {
+      if (char === " ") return;
+      const id = setTimeout(() => {
+        setChars((prev) => { const n = [...prev]; n[i] = char; return n; });
+      }, delay * 1000 + idx * 38);
+      idx++;
+      ids.push(id);
+    });
+    return () => ids.forEach(clearTimeout);
+  }, [started, text, delay]);
+
   return (
     <Tag ref={ref} className={className} style={{ display: "inline", ...style }} aria-label={text}>
-      {text.split("").map((char, i) => (
-        <span
-          key={i}
-          aria-hidden="true"
-          style={{
-            display: char === " " ? "inline" : "inline-block",
-            opacity: go ? 1 : 0,
-            transform: go ? "none" : "translateX(-4px)",
-            transition: go
-              ? `opacity 0.04s ease ${delay + i * 0.032}s, transform 0.04s ease ${delay + i * 0.032}s`
-              : "none",
-          }}
-        >
-          {char === " " ? " " : char}
+      {chars.map((char, i) => (
+        <span key={i} aria-hidden="true" style={{ display: char === " " ? "inline" : "inline-block" }}>
+          {char}
         </span>
       ))}
     </Tag>

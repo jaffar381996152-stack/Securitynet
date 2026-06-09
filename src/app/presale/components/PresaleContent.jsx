@@ -95,7 +95,7 @@ function FAQItem({ q, a }) {
 
 export default function PresaleContent() {
   return (
-    <section style={{ background: "var(--bg-primary)", minHeight: "100vh" }}>
+    <section style={{ background: "rgba(10,10,14,0.82)", minHeight: "100vh" }}>
       <div
         className="container"
         style={{
