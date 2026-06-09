@@ -15,7 +15,6 @@ export default function Hero() {
         minHeight: "100svh",
         display: "flex",
         alignItems: "center",
-        background: "var(--bg-primary)",
         overflow: "hidden",
       }}
     >
@@ -79,7 +78,7 @@ export default function Hero() {
           <br />
           <DeclassifyText
             text="SAFE SKIES."
-            delay={0.5}
+            delay={0.2}
             style={{ color: "var(--gold)" }}
           />
         </h1>

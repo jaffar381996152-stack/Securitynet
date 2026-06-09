@@ -95,7 +95,7 @@ function FAQItem({ q, a }) {
 
 export default function PresaleContent() {
   return (
-    <section style={{ background: "rgba(10,10,14,0.82)", minHeight: "100vh" }}>
+    <section style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
       <div
         className="container"
         style={{
@@ -271,7 +271,7 @@ export default function PresaleContent() {
           </div>
 
           {/* ── RIGHT COLUMN (sticky buy widget) ───────────────────── */}
-          <div style={{ position: "sticky", top: "calc(36px + 60px + 24px)" }}>
+          <div className="presale-widget-col">
             <SaleTimer />
             <div style={{ marginTop: 16 }}>
               <DigitalGold />

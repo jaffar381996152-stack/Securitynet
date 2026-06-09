@@ -28,8 +28,8 @@ export default function TopographicCanvas() {
     const DOT_GAP   = 130;
 
     const resize = () => {
-      canvas.width  = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
     };
     resize();
     window.addEventListener("resize", resize, { passive: true });
@@ -94,12 +94,13 @@ export default function TopographicCanvas() {
     <canvas
       ref={canvasRef}
       style={{
-        position: "absolute",
-        inset: 0,
-        width: "100%",
-        height: "100%",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
         pointerEvents: "none",
-        zIndex: 0,
+        zIndex: -1,
         transition: "opacity 0.5s ease",
       }}
       aria-hidden="true"

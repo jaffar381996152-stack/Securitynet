@@ -582,6 +582,93 @@ w3m-account-button, appkit-account-button {
 @media (max-width: 599px)  { .htb-grid { grid-template-columns: 1fr; } }
 
 /* =====================================================
+   TECH SCROLL PANEL LAYOUT
+   ===================================================== */
+.tech-panel-single {
+  display: flex;
+  padding: 0;
+  flex-shrink: 0;
+  height: 100%;
+}
+.tech-panel-left {
+  width: 50%;
+  padding: 0 var(--gut) 0 calc(var(--gut) + (100vw - var(--max-w)) / 2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+.tech-panel-right {
+  width: 50%;
+  padding: 0 calc(var(--gut) + (100vw - var(--max-w)) / 2) 0 var(--gut);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tech-panel-num {
+  font-family: var(--font-mono);
+  font-size: 90px;
+  color: rgba(212,175,110,0.07);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  margin-bottom: -16px;
+  display: block;
+}
+.tech-panel-title { font-size: var(--md-size); margin-bottom: 18px; }
+.tech-panel-body {
+  font-size: 15px;
+  color: var(--text-sec);
+  max-width: 420px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.tech-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tech-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--border-gold);
+  padding: 4px 10px;
+}
+.tech-svg { width: 100%; max-width: 340px; opacity: 0.6; }
+.tech-intro-title { font-size: var(--xl-size); margin-bottom: 20px; }
+.tech-intro-hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (max-width: 1023px) {
+  .tech-panel-left  { padding-left: var(--gut); padding-right: 10px; }
+  .tech-panel-right { padding-right: var(--gut); padding-left: 10px; }
+  .tech-panel-num   { font-size: 50px; }
+  .tech-svg         { max-width: 170px; }
+}
+@media (max-width: 767px) {
+  /* Correct sticky top for 32px urgency bar on mobile */
+  .tech-sticky { top: calc(32px + 72px) !important; height: calc(100vh - 104px) !important; }
+}
+@media (max-width: 479px) {
+  .tech-panel-right { display: none; }
+  .tech-panel-left  { width: 100%; padding-right: var(--gut); }
+}
+
+/* =====================================================
+   PRESALE WIDGET COLUMN (sticky on desktop, static on mobile)
+   ===================================================== */
+.presale-widget-col { position: sticky; top: calc(36px + 60px + 24px); align-self: start; }
+@media (max-width: 1023px) {
+  .presale-widget-col { position: static; top: auto; }
+}
+
+/* =====================================================
    MOBILE RESPONSIVE OVERRIDES
    ===================================================== */
 @media (max-width: 767px) {
@@ -591,9 +678,6 @@ w3m-account-button, appkit-account-button {
 
   /* Hero adjustments */
   .hero-trust-row span { padding: 8px 12px !important; border-right: none !important; border-bottom: 1px solid var(--border-sub); }
-
-  /* TechScroll — show single panel, no sticky on mobile */
-  .tech-sticky { position: static !important; height: auto !important; overflow: visible !important; }
 }
 
 @media (max-width: 1023px) {

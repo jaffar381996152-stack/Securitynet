@@ -161,18 +161,17 @@ export default function Header() {
               style={{
                 width: 40,
                 height: 40,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 5,
                 background: "transparent",
                 border: "none",
+                cursor: "pointer",
+                padding: 0,
               }}
             >
-              <span style={{ width: 22, height: 1.5, background: "var(--text-primary)", display: "block" }} />
-              <span style={{ width: 16, height: 1.5, background: "var(--text-primary)", display: "block", alignSelf: "flex-start", marginLeft: 3 }} />
-              <span style={{ width: 22, height: 1.5, background: "var(--text-primary)", display: "block" }} />
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5, height: "100%" }}>
+                <span style={{ width: 22, height: 1.5, background: "var(--text-primary)", display: "block" }} />
+                <span style={{ width: 16, height: 1.5, background: "var(--text-primary)", display: "block", alignSelf: "flex-start", marginLeft: 3 }} />
+                <span style={{ width: 22, height: 1.5, background: "var(--text-primary)", display: "block" }} />
+              </div>
             </button>
           </div>
         </div>

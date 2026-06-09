@@ -13,7 +13,7 @@ const PANELS = [
   {
     num: "01",
     title: "AI-DRIVEN SECURITY",
-    desc: "On-chain AI continuously monitors blockchain activity, flags suspicious transactions, and auto-responds to threats across the network — no central authority required.",
+    desc: "XN powers real-time threat detection and automated response across decentralized networks. Every transaction is analyzed and secured by on-chain AI.",
     tags: ["Threat Detection", "On-chain AI", "Auto-Response"],
   },
   {
@@ -40,62 +40,83 @@ const PANELS = [
 
 function IntroShield() {
   return (
-    <svg width="300" height="360" viewBox="0 0 300 360" fill="none" style={{ opacity: 0.18, position: "absolute", right: "var(--gut)", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
-      {[0, 20, 40, 60, 80].map((inset, i) => (
-        <path key={i} d={`M${150 - inset / 2} ${20 + inset / 2} L${300 - inset} ${80 + inset / 2} L${300 - inset} ${220 - inset / 2} Q${150} ${360 - inset} ${inset} ${220 - inset / 2} L${inset} ${80 + inset / 2} Z`}
-          stroke="#D4AF6E" strokeWidth="1" />
-      ))}
-    </svg>
+    <div style={{ position: "absolute", right: "8%", top: "50%", transform: "translateY(-50%)", opacity: 0.18, pointerEvents: "none" }} aria-hidden="true">
+      <svg width="300" height="360" viewBox="0 0 300 360" fill="none" stroke="#D4AF6E" strokeWidth="1">
+        <path d="M150 10L280 70V170Q280 290 150 350Q20 290 20 170V70Z" />
+        <path d="M150 30L260 83V168Q260 272 150 328Q40 272 40 168V83Z" opacity="0.7" />
+        <path d="M150 55L238 98V165Q238 255 150 304Q62 255 62 165V98Z" opacity="0.5" />
+        <path d="M150 80L216 113V162Q216 238 150 280Q84 238 84 162V113Z" opacity="0.3" />
+        <circle cx="110" cy="160" r="3" fill="#D4AF6E" />
+        <circle cx="150" cy="145" r="3" fill="#D4AF6E" />
+        <circle cx="190" cy="160" r="3" fill="#D4AF6E" />
+        <circle cx="150" cy="210" r="3" fill="#D4AF6E" />
+        <line x1="110" y1="160" x2="150" y2="145" strokeWidth="0.5" />
+        <line x1="150" y1="145" x2="190" y2="160" strokeWidth="0.5" />
+        <line x1="150" y1="145" x2="150" y2="210" strokeWidth="0.5" />
+      </svg>
+    </div>
   );
 }
 
 function Panel01SVG() {
   return (
-    <svg width="260" height="240" viewBox="0 0 260 240" fill="none" style={{ position: "absolute", right: "var(--gut)", top: "50%", transform: "translateY(-50%)", opacity: 0.25, pointerEvents: "none" }}>
-      {[[65,60],[130,30],[195,60],[210,120],[195,180],[130,210],[65,180],[50,120]].map(([cx,cy], i) => (
-        <circle key={i} cx={cx} cy={cy} r="5" stroke="#D4AF6E" strokeWidth="1.5" style={{ animation: `techPulseOpacity ${2 + i * 0.3}s ease-in-out infinite` }} />
-      ))}
-      {[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0],[0,4],[1,5],[2,6],[3,7]].map(([a,b], i) => {
-        const pts = [[65,60],[130,30],[195,60],[210,120],[195,180],[130,210],[65,180],[50,120]];
-        return <line key={i} x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} stroke="#D4AF6E" strokeWidth="0.5" strokeOpacity="0.5" />;
-      })}
+    <svg className="tech-svg" viewBox="0 0 340 260" fill="none" stroke="#D4AF6E" strokeWidth="1" aria-hidden="true">
+      <circle cx="170" cy="130" r="60" strokeWidth="0.5" />
+      <circle cx="60" cy="60" r="10" /><circle cx="290" cy="60" r="10" />
+      <circle cx="60" cy="200" r="10" /><circle cx="290" cy="200" r="10" />
+      <circle cx="170" cy="30" r="10" /><circle cx="170" cy="230" r="10" />
+      <line x1="70" y1="64" x2="155" y2="118" /><line x1="280" y1="64" x2="195" y2="118" />
+      <line x1="70" y1="196" x2="155" y2="142" /><line x1="280" y1="196" x2="195" y2="142" />
+      <line x1="170" y1="40" x2="170" y2="70" /><line x1="170" y1="220" x2="170" y2="190" />
+      <circle cx="290" cy="60" r="18" strokeDasharray="4 3" opacity="0.5" style={{ animation: "techPulseOpacity 2s ease-in-out infinite" }} />
+      <circle cx="60" cy="200" r="18" strokeDasharray="4 3" opacity="0.4" style={{ animation: "techPulseOpacity 2s 0.7s ease-in-out infinite" }} />
+      <text x="252" y="44" fontSize="9" fill="#A85252" fontFamily="JetBrains Mono" letterSpacing="1">THREAT</text>
+      <text x="18" y="185" fontSize="9" fill="#A85252" fontFamily="JetBrains Mono" letterSpacing="1">THREAT</text>
+      <circle cx="170" cy="130" r="8" fill="#D4AF6E" fillOpacity="0.2" stroke="#D4AF6E" />
+      <text x="152" y="134" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono">AI</text>
     </svg>
   );
 }
 
 function Panel02SVG() {
   return (
-    <svg width="220" height="260" viewBox="0 0 220 260" fill="none" style={{ position: "absolute", right: "var(--gut)", top: "50%", transform: "translateY(-50%)", opacity: 0.22, pointerEvents: "none" }}>
-      {[40,100,160,220].map((y, i) => (
+    <svg className="tech-svg" viewBox="0 0 340 260" fill="none" aria-hidden="true">
+      {[50, 110, 170, 230].map((y, i) => (
         <g key={i}>
-          <rect x="10" y={y - 20} width="200" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
-          <line x1="110" y1={y + 10} x2="110" y2={y + 40 < 280 ? y + 40 : y + 10} stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 4" />
+          <rect x="60" y={y - 20} width="220" height="34" rx="2" stroke="#D4AF6E" strokeWidth="1" />
+          <line x1="170" y1={y + 14} x2="170" y2={y + 50 < 260 ? y + 50 : y + 14} stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 4" />
         </g>
       ))}
+      <rect x="130" y={210} width="80" height="30" rx="2" stroke="#D4AF6E" strokeWidth="0.5" fill="rgba(212,175,110,0.06)" />
     </svg>
   );
 }
 
 function Panel03SVG() {
   return (
-    <svg width="280" height="200" viewBox="0 0 280 200" fill="none" style={{ position: "absolute", right: "var(--gut)", top: "50%", transform: "translateY(-50%)", opacity: 0.2, pointerEvents: "none" }}>
-      {[0,1,2,3,4,5].map((i) => (
-        <line key={i} x1="0" y1={20 + i * 32} x2="280" y2={20 + i * 32}
-          stroke="#D4AF6E" strokeWidth="1" strokeDasharray="8 6"
-          style={{ animation: `streamFlow ${2 + i * 0.5}s linear infinite` }} />
+    <svg className="tech-svg" viewBox="0 0 340 260" fill="none" aria-hidden="true">
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+        <line key={i} x1="20" y1={30 + i * 30} x2="320" y2={30 + i * 30}
+          stroke="#D4AF6E" strokeWidth="1" strokeDasharray="10 6"
+          style={{ animation: `streamFlow ${2 + i * 0.4}s linear infinite` }} />
       ))}
+      <circle cx="170" cy="130" r="20" stroke="#D4AF6E" strokeWidth="1" fill="rgba(212,175,110,0.06)" />
+      <text x="158" y="134" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono">LIVE</text>
     </svg>
   );
 }
 
 function Panel04SVG() {
   return (
-    <svg width="240" height="240" viewBox="0 0 240 240" fill="none" style={{ position: "absolute", right: "var(--gut)", top: "50%", transform: "translateY(-50%)", opacity: 0.2, pointerEvents: "none" }}>
-      <circle cx="120" cy="120" r="100" stroke="#D4AF6E" strokeWidth="1" />
-      <ellipse cx="120" cy="120" rx="100" ry="30" stroke="#D4AF6E" strokeWidth="0.8" />
-      <ellipse cx="120" cy="120" rx="60" ry="100" stroke="#D4AF6E" strokeWidth="0.8" />
-      <line x1="20" y1="120" x2="220" y2="120" stroke="#D4AF6E" strokeWidth="0.8" />
-      <line x1="120" y1="20" x2="120" y2="220" stroke="#D4AF6E" strokeWidth="0.8" />
+    <svg className="tech-svg" viewBox="0 0 340 260" fill="none" aria-hidden="true">
+      <circle cx="170" cy="130" r="100" stroke="#D4AF6E" strokeWidth="1" />
+      <ellipse cx="170" cy="130" rx="100" ry="32" stroke="#D4AF6E" strokeWidth="0.8" />
+      <ellipse cx="170" cy="130" rx="60" ry="100" stroke="#D4AF6E" strokeWidth="0.8" />
+      <line x1="70" y1="130" x2="270" y2="130" stroke="#D4AF6E" strokeWidth="0.8" />
+      <line x1="170" y1="30" x2="170" y2="230" stroke="#D4AF6E" strokeWidth="0.8" />
+      {[[90,70],[250,70],[90,190],[250,190]].map(([cx,cy],i) => (
+        <circle key={i} cx={cx} cy={cy} r="4" fill="#D4AF6E" fillOpacity="0.4" />
+      ))}
     </svg>
   );
 }
@@ -142,7 +163,6 @@ export default function TechScroll() {
   }, []);
 
   return (
-    /* Outer: 600vh scroll container */
     <div
       ref={outerRef}
       style={{
@@ -155,11 +175,13 @@ export default function TechScroll() {
     >
       {/* Sticky viewport-height panel */}
       <div
+        className="tech-sticky"
         style={{
           position: "sticky",
           top: "calc(36px + 72px)",
           height: "calc(100vh - 36px - 72px)",
           overflow: "hidden",
+          borderTop: "1px solid var(--border-gold)",
         }}
       >
         {/* Section label */}
@@ -222,135 +244,95 @@ export default function TechScroll() {
         >
           {PANELS.map((panel, i) => {
             const PanelSVG = PANEL_SVGS[i];
-            return (
-              <div
-                key={i}
-                style={{
-                  width: "100vw",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "clamp(80px,10vw,120px) var(--gut)",
-                  borderRight: "1px solid var(--border-sub)",
-                  flexShrink: 0,
-                  position: "relative",
-                  overflow: "hidden",
-                }}
-              >
-                {PanelSVG && <PanelSVG />}
 
-                {panel.isIntro ? (
-                  <div style={{ maxWidth: 600, position: "relative", zIndex: 1 }}>
-                    <span className="eyebrow" style={{ marginBottom: 24 }}>INTELLIGENCE ARCHITECTURE</span>
+            if (panel.isIntro) {
+              return (
+                <div
+                  key={i}
+                  className="tech-panel-0"
+                  style={{
+                    width: "100vw",
+                    flexShrink: 0,
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    padding: "0 var(--gut)",
+                    position: "relative",
+                    borderRight: "1px solid var(--border-sub)",
+                  }}
+                >
+                  <div style={{ maxWidth: "var(--max-w)", margin: "0 auto", width: "100%", position: "relative" }}>
+                    <span className="eyebrow" style={{ marginBottom: 16 }}>INTELLIGENCE ARCHITECTURE</span>
                     <h2
+                      className="tech-intro-title"
                       style={{
                         fontFamily: "var(--font-disp)",
                         fontWeight: 800,
-                        fontSize: "var(--xl-size)",
                         textTransform: "uppercase",
                         lineHeight: 1,
                         letterSpacing: "-0.01em",
                         color: "var(--text-primary)",
-                        marginBottom: 32,
-                      }}
-                    >
-                      <span style={{ color: "var(--gold)" }}>INTELLIGENCE</span>{" "}
-                      ARCHITECTURE
-                    </h2>
-                    <IntroShield />
-                    <p
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 11,
-                        letterSpacing: "0.22em",
-                        textTransform: "uppercase",
-                        color: "var(--text-muted)",
-                        marginTop: 8,
-                      }}
-                    >
-                      {panel.hint}
-                    </p>
-                  </div>
-                ) : (
-                  <div style={{ maxWidth: 560, position: "relative", zIndex: 1 }}>
-                    <div
-                      style={{
-                        position: "absolute",
-                        right: "-60px",
-                        bottom: "-60px",
-                        fontFamily: "var(--font-disp)",
-                        fontWeight: 900,
-                        fontSize: "clamp(120px,20vw,280px)",
-                        lineHeight: 1,
-                        color: "rgba(212,175,110,0.04)",
-                        userSelect: "none",
-                        pointerEvents: "none",
-                      }}
-                    >
-                      {panel.num}
-                    </div>
-
-                    <div className="badge" style={{ marginBottom: 28 }}>
-                      {panel.num} / 04
-                    </div>
-
-                    <h2
-                      style={{
-                        fontFamily: "var(--font-disp)",
-                        fontWeight: 800,
-                        fontSize: "var(--xl-size)",
-                        textTransform: "uppercase",
-                        lineHeight: 1,
-                        color: "var(--text-primary)",
-                        letterSpacing: "-0.01em",
                         marginBottom: 24,
                       }}
                     >
-                      {panel.title}
+                      <span style={{ color: "var(--gold)" }}>INTELLIGENCE</span>{" "}ARCHITECTURE
                     </h2>
-
-                    <p
-                      style={{
-                        fontFamily: "var(--font-disp)",
-                        fontSize: 17,
-                        fontWeight: 400,
-                        color: "var(--text-sec)",
-                        lineHeight: 1.7,
-                        marginBottom: 32,
-                      }}
-                    >
-                      {panel.desc}
+                    <p className="tech-intro-hint">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                      SCROLL TO EXPLORE
                     </p>
-
-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: panel.link ? 28 : 0 }}>
-                      {panel.tags.map((tag) => (
-                        <span key={tag} className="badge" style={{ margin: 0 }}>{tag}</span>
-                      ))}
-                    </div>
-
-                    {panel.link && (
-                      <a
-                        href={panel.linkHref}
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 8,
-                          fontFamily: "var(--font-mono)",
-                          fontSize: 11,
-                          letterSpacing: "0.18em",
-                          textTransform: "uppercase",
-                          color: "var(--gold)",
-                          textDecoration: "none",
-                          transition: "opacity 0.2s",
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
-                        onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-                      >
-                        {panel.link}
-                      </a>
-                    )}
+                    <IntroShield />
                   </div>
-                )}
+                </div>
+              );
+            }
+
+            return (
+              <div
+                key={i}
+                className="tech-panel-single"
+                style={{ width: "100vw", flexShrink: 0, height: "100%", borderRight: "1px solid var(--border-sub)" }}
+              >
+                <div className="tech-panel-left">
+                  <span className="tech-panel-num" aria-hidden="true">{panel.num}</span>
+                  <h2 className="disp-title tech-panel-title">
+                    {panel.title}
+                  </h2>
+                  <p className="tech-panel-body">{panel.desc}</p>
+                  <div className="tech-tags">
+                    {panel.tags.map((tag) => (
+                      <span key={tag} className="tech-tag">{tag}</span>
+                    ))}
+                  </div>
+                  {panel.link && (
+                    <a
+                      href={panel.linkHref}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 8,
+                        marginTop: 20,
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 11,
+                        letterSpacing: "0.18em",
+                        textTransform: "uppercase",
+                        color: "var(--gold)",
+                        textDecoration: "none",
+                        transition: "opacity 0.2s",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+                      onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                    >
+                      {panel.link}
+                    </a>
+                  )}
+                </div>
+                <div className="tech-panel-right" aria-hidden="true">
+                  {PanelSVG && <PanelSVG />}
+                </div>
               </div>
             );
           })}

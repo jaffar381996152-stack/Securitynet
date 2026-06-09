@@ -7,8 +7,8 @@ const XN_PRICE = 0.20;
 export default function StickyPresaleWidget() {
   const [minimized, setMinimized] = useState(false);
   const [visible, setVisible]     = useState(false);
-  const [usdtAmt, setUsdtAmt]     = useState(100);
-  const [xnAmt, setXnAmt]         = useState((100 / XN_PRICE).toFixed(0));
+  const [usdtAmt, setUsdtAmt]     = useState("");
+  const [xnAmt, setXnAmt]         = useState("");
   const [isMobile, setIsMobile]   = useState(false);
 
   useEffect(() => {
@@ -31,7 +31,8 @@ export default function StickyPresaleWidget() {
 
   const handleUsdt = (v) => {
     setUsdtAmt(v);
-    setXnAmt(Math.round(parseFloat(v || 0) / XN_PRICE));
+    const num = parseFloat(v);
+    setXnAmt(!isNaN(num) && num > 0 ? Math.round(num / XN_PRICE) : "");
   };
 
   const bottom = isMobile ? 72 : 32;
@@ -119,6 +120,7 @@ export default function StickyPresaleWidget() {
               type="number"
               value={usdtAmt}
               min={10}
+              placeholder="Enter USDT"
               onChange={(e) => handleUsdt(e.target.value)}
               style={{
                 width: "100%",
@@ -143,7 +145,7 @@ export default function StickyPresaleWidget() {
           </div>
 
           <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-muted)", marginBottom: 14 }}>
-            You receive: <span style={{ color: "var(--gold)" }}>{xnAmt} XN</span>
+            You receive: <span style={{ color: "var(--gold)" }}>{xnAmt ? `${xnAmt} XN` : "— XN"}</span>
           </p>
 
           <Link
