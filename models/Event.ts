@@ -6,7 +6,7 @@ export interface Event extends Document {
     event_image: string;
 }
 
-const EventSchema: Schema = new Schema(
+const EventSchema = new Schema<Event>(
     {
         title: {
             type: String,
@@ -27,4 +27,4 @@ const EventSchema: Schema = new Schema(
     },
     { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
-export default mongoose.models.Event || mongoose.model<Event>('Event', EventSchema);
+export default (mongoose.models.Event || mongoose.model<Event>('Event', EventSchema)) as mongoose.Model<Event>;

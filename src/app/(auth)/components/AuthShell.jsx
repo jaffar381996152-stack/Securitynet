@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import DeclassifyText from "@/app/home/components/DeclassifyText";
+import FadeUpSection from "@/app/home/components/FadeUpSection";
 
 export default function AuthShell({ title, subtitle = null, children = null, footer = null }) {
   return (
@@ -32,7 +34,7 @@ export default function AuthShell({ title, subtitle = null, children = null, foo
 
       <div style={{ width: "100%", maxWidth: 460, position: "relative", zIndex: 1 }}>
         {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
+        <FadeUpSection style={{ textAlign: "center", marginBottom: 32 }}>
           <Link
             href="/"
             style={{
@@ -46,10 +48,11 @@ export default function AuthShell({ title, subtitle = null, children = null, foo
           >
             SECURITYNET.AI
           </Link>
-        </div>
+        </FadeUpSection>
 
         {/* Card */}
-        <div
+        <FadeUpSection
+          delay={0.1}
           style={{
             background: "var(--bg-secondary)",
             border: "1px solid var(--border-gold)",
@@ -71,7 +74,9 @@ export default function AuthShell({ title, subtitle = null, children = null, foo
               SECURE ACCESS · AUTHENTICATION REQUIRED
             </div>
 
-            <h1
+            <DeclassifyText
+              tag="h1"
+              text={title}
               style={{
                 fontFamily: "var(--font-disp)",
                 fontWeight: 700,
@@ -81,9 +86,7 @@ export default function AuthShell({ title, subtitle = null, children = null, foo
                 color: "var(--text-primary)",
                 marginBottom: subtitle ? 10 : 0,
               }}
-            >
-              {title}
-            </h1>
+            />
 
             {subtitle && (
               <p
@@ -100,10 +103,11 @@ export default function AuthShell({ title, subtitle = null, children = null, foo
           </div>
 
           {children}
-        </div>
+        </FadeUpSection>
 
         {footer && (
-          <p
+          <FadeUpSection
+            delay={0.2}
             style={{
               fontFamily: "var(--font-disp)",
               fontSize: 13,
@@ -113,7 +117,7 @@ export default function AuthShell({ title, subtitle = null, children = null, foo
             }}
           >
             {footer}
-          </p>
+          </FadeUpSection>
         )}
       </div>
     </div>

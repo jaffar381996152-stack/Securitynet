@@ -10,6 +10,7 @@ import UrgencyBar from "@/components/shell/UrgencyBar";
 import StickyPresaleWidget from "@/components/shell/StickyPresaleWidget";
 import MobileBottomBar from "@/components/shell/MobileBottomBar";
 import PresaleCanvas from "@/app/presale/components/PresaleCanvas";
+import AuthProvider from "@/components/session/providers";
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://securitynet.ai";
 
@@ -63,6 +64,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
+        <AuthProvider>
         <AppKit>
           {/* Background canvas — direct body child at z:0, below all z:1 content */}
           <PresaleCanvas />
@@ -98,6 +100,7 @@ export default function RootLayout({ children }) {
             </SmoothScrollProvider>
           </div>
         </AppKit>
+        </AuthProvider>
       </body>
     </html>
   );

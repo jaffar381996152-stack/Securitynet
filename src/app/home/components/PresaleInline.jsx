@@ -3,7 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import FadeUpSection from "./FadeUpSection";
 import DeclassifyText from "./DeclassifyText";
-import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
+import { useAppKitAccount } from "@reown/appkit/react";
+import useWalletConnectGate from "@/hooks/useWalletConnectGate";
 
 const XN_PRICE   = 0.20;
 const SOLD_PCT   = 78;
@@ -38,7 +39,7 @@ function useCounter(target, inView, duration = 1800) {
 
 export default function PresaleInline() {
   const { address, isConnected } = useAppKitAccount();
-  const { open } = useAppKit();
+  const { connectWallet } = useWalletConnectGate();
 
   const [network, setNetwork]     = useState("BSC");
   const [usdtAmt, setUsdtAmt]     = useState(100);
@@ -331,7 +332,7 @@ export default function PresaleInline() {
                 {!isConnected ? (
                   <div>
                     <button
-                      onClick={() => open()}
+                      onClick={connectWallet}
                       style={{
                         width: "100%",
                         height: 52,

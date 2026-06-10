@@ -7,6 +7,8 @@ import Link from "next/link";
 import { toast } from "react-hot-toast";
 import AuthShell from "../components/AuthShell";
 import { authFieldStyle } from "../components/authFieldStyle";
+import GoogleSignInButton from "../components/GoogleSignInButton";
+import OrDivider from "../components/OrDivider";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const EMPTY = { email: "", password: "" };
@@ -59,7 +61,9 @@ export default function SignInPage() {
         toast.error("Invalid email or password");
       } else {
         toast.success("Welcome back!");
-        router.push("/");
+        const params = new URLSearchParams(window.location.search);
+        const callbackUrl = params.get("callbackUrl") || "/";
+        router.push(callbackUrl);
         router.refresh();
       }
     } catch {
@@ -76,7 +80,18 @@ export default function SignInPage() {
       footer={
         <>
           Don&apos;t have an account?{" "}
-          <Link href="/register" style={{ color: "var(--gold)", fontWeight: 600 }}>
+          <Link
+            href="/register"
+            onClick={(e) => {
+              const params = new URLSearchParams(window.location.search);
+              const cb = params.get("callbackUrl");
+              if (cb) {
+                e.preventDefault();
+                router.push(`/register?callbackUrl=${encodeURIComponent(cb)}`);
+              }
+            }}
+            style={{ color: "var(--gold)", fontWeight: 600 }}
+          >
             Create one
           </Link>
         </>
@@ -164,6 +179,9 @@ export default function SignInPage() {
           ) : "SIGN IN"}
         </button>
       </form>
+
+      <OrDivider />
+      <GoogleSignInButton />
     </AuthShell>
   );
 }

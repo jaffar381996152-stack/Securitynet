@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 
 const NAV_LINKS = [
   { name: "HOME",       path: "/" },
@@ -14,8 +15,10 @@ const NAV_LINKS = [
 
 export default function Header() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
   const [open, setOpen]         = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const accountName = session?.user?.name?.split(" ")[0] || session?.user?.email?.split("@")[0];
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 60);
@@ -141,8 +144,61 @@ export default function Header() {
             })}
           </nav>
 
-          {/* Right: CTA + hamburger */}
+          {/* Right: account + CTA + hamburger */}
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            {status === "authenticated" ? (
+              <div className="hidden lg:flex" style={{ alignItems: "center", gap: 14 }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 11,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    color: "var(--text-sec)",
+                  }}
+                >
+                  {accountName}
+                </span>
+                <button
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 11,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    color: "var(--text-muted)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    transition: "color 0.2s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+                >
+                  SIGN OUT
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/signin"
+                className="hidden lg:flex"
+                style={{
+                  alignItems: "center",
+                  fontFamily: "var(--font-disp)",
+                  fontWeight: 600,
+                  fontSize: 12,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: "var(--text-sec)",
+                  transition: "color 0.2s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-sec)")}
+              >
+                SIGN IN
+              </Link>
+            )}
+
             <Link
               href="/presale"
               data-cursor="cta"
@@ -290,8 +346,56 @@ export default function Header() {
             })}
           </nav>
 
-          {/* CTA */}
+          {/* Account */}
           <div style={{ paddingTop: 32, borderTop: "1px solid var(--border-sub)", marginTop: 32 }}>
+            {status === "authenticated" ? (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 12,
+                    letterSpacing: "0.16em",
+                    textTransform: "uppercase",
+                    color: "var(--text-sec)",
+                  }}
+                >
+                  SIGNED IN AS <span style={{ color: "var(--gold)" }}>{accountName}</span>
+                </span>
+                <button
+                  onClick={() => { setOpen(false); signOut({ callbackUrl: "/" }); }}
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 12,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    color: "var(--text-muted)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  SIGN OUT
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/signin"
+                onClick={() => setOpen(false)}
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 12,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "var(--gold)",
+                }}
+              >
+                SIGN IN / REGISTER →
+              </Link>
+            )}
+          </div>
+
+          {/* CTA */}
+          <div style={{ paddingTop: 24, marginTop: 24 }}>
             <Link
               href="/presale"
               onClick={() => setOpen(false)}

@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import AuthShell from "../components/AuthShell";
 import { authFieldStyle } from "../components/authFieldStyle";
+import GoogleSignInButton from "../components/GoogleSignInButton";
+import OrDivider from "../components/OrDivider";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const EMPTY = { firstname: "", lastname: "", email: "", password: "" };
@@ -56,7 +58,10 @@ export default function Register() {
       if (res.status === 200 || res.status === 201) {
         toast.success("Account created! Redirecting to sign in…");
         setUser(EMPTY);
-        setTimeout(() => router.push("/signin"), 1600);
+        const params = new URLSearchParams(window.location.search);
+        const callbackUrl = params.get("callbackUrl");
+        const signinUrl = callbackUrl ? `/signin?callbackUrl=${encodeURIComponent(callbackUrl)}` : "/signin";
+        setTimeout(() => router.push(signinUrl), 1600);
       }
     } catch (err: any) {
       toast.error(err?.response?.data?.error ?? "Could not create your account. Please try again.");
@@ -72,7 +77,18 @@ export default function Register() {
       footer={
         <>
           Already have an account?{" "}
-          <Link href="/signin" style={{ color: "var(--gold)", fontWeight: 600 }}>
+          <Link
+            href="/signin"
+            onClick={(e) => {
+              const params = new URLSearchParams(window.location.search);
+              const cb = params.get("callbackUrl");
+              if (cb) {
+                e.preventDefault();
+                router.push(`/signin?callbackUrl=${encodeURIComponent(cb)}`);
+              }
+            }}
+            style={{ color: "var(--gold)", fontWeight: 600 }}
+          >
             Sign in
           </Link>
         </>
@@ -185,6 +201,9 @@ export default function Register() {
           ) : "CREATE ACCOUNT"}
         </button>
       </form>
+
+      <OrDivider />
+      <GoogleSignInButton label="Sign up with Google" />
     </AuthShell>
   );
 }

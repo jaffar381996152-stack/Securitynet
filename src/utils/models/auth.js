@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema(
         return !this.isGoogleUser;
       }, 
     },
-    isGoogleUser: { type: Boolean, default: false }, 
+    isGoogleUser: { type: Boolean, default: false },
+    role: { type: String, default: "user" },
   },
   { timestamps: true }
 );
