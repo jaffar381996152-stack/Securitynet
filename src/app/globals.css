@@ -685,50 +685,34 @@ w3m-account-button, appkit-account-button {
   gap: 8px;
 }
 @media (max-width: 1023px) {
-  /* Scroll-jacked horizontal track is unreliable on touch devices —
-     drop it and stack the panels vertically in normal flow instead. */
-  .tech-outer { height: auto !important; }
-  .tech-sticky {
-    position: static !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-  .tech-label,
-  .tech-dots { display: none !important; }
-  .tech-track {
-    display: block !important;
-    width: 100% !important;
-    transform: none !important;
-  }
-  .tech-panel-0 {
-    width: 100% !important;
-    height: auto !important;
-    padding: 60px var(--gut) !important;
-    border-right: none !important;
-    border-bottom: 1px solid var(--border-sub);
-  }
-  .tech-panel-single {
-    width: 100% !important;
-    height: auto !important;
-    flex-direction: column;
-    padding: 60px 0 !important;
-    border-right: none !important;
-    border-bottom: 1px solid var(--border-sub);
-  }
-  .tech-panel-left {
-    width: 100% !important;
-    padding: 0 var(--gut) !important;
-  }
-  .tech-panel-right {
-    width: 100% !important;
-    padding: 32px var(--gut) 0 !important;
-    display: flex !important;
-  }
-  .tech-panel-num { font-size: 50px; }
-  .tech-svg       { max-width: 240px; }
+  .tech-panel-left  { padding-left: var(--gut); padding-right: 10px; }
+  .tech-panel-right { padding-right: var(--gut); padding-left: 10px; }
+  .tech-panel-num   { font-size: 50px; }
+  .tech-svg         { max-width: 170px; }
+}
+@media (max-width: 767px) {
+  /* Correct sticky top for 32px urgency bar on mobile */
+  .tech-sticky { top: calc(32px + 72px) !important; height: calc(100vh - 104px) !important; }
 }
 @media (max-width: 479px) {
-  .tech-svg { max-width: 200px; }
+  .tech-panel-left  { padding-left: 12px; padding-right: 6px; }
+  .tech-panel-right { padding-right: 12px; padding-left: 6px; }
+  .tech-panel-num   { font-size: 32px; }
+  .tech-panel-title { font-size: 20px; }
+  .tech-panel-body  { font-size: 12px; line-height: 1.5; margin-bottom: 12px; }
+  .tech-tag         { font-size: 8px; padding: 3px 6px; }
+  .tech-svg         { max-width: 110px; }
+}
+
+/* Intro shield (behind "INTELLIGENCE ARCHITECTURE") — fixed-size SVG that
+   needs to shrink on mobile so it doesn't overflow the panel width. */
+.tech-intro-shield { width: 300px; height: 360px; }
+.tech-intro-shield svg { display: block; width: 100%; height: 100%; }
+@media (max-width: 767px) {
+  .tech-intro-shield { width: 150px; height: 180px; right: 4%; }
+}
+@media (max-width: 479px) {
+  .tech-intro-shield { width: 100px; height: 120px; }
 }
 
 /* =====================================================
@@ -750,10 +734,17 @@ w3m-account-button, appkit-account-button {
   /* Hero adjustments */
   .hero-trust-row span { padding: 8px 12px !important; border-right: none !important; border-bottom: 1px solid var(--border-sub); }
 
-  /* Roadmap cards — compact on mobile */
-  .rm-card  { padding: 12px 12px !important; max-width: 100% !important; }
+  /* Roadmap cards — compact, single-column timeline on mobile */
+  .rm-card  { padding: 12px 12px !important; max-width: 100% !important; min-height: auto !important; }
   .rm-title { font-size: 13px !important; letter-spacing: 0.02em !important; }
   .rm-item  { font-size: 11px !important; }
+  .rm-line  { left: 20px !important; transform: none !important; }
+  .rm-row   { display: flex !important; align-items: flex-start !important; gap: 12px !important; }
+  .rm-dot-col { width: 40px !important; flex-shrink: 0; order: -1; padding-top: 6px !important; }
+  .rm-col-left,
+  .rm-col-right { flex: 1; justify-content: flex-start !important; }
+  .rm-col-left:empty,
+  .rm-col-right:empty { display: none !important; }
 }
 
 @media (max-width: 1023px) {

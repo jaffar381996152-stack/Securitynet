@@ -91,6 +91,7 @@ function MilestoneCard({ m, s, slideDir }) {
         background: "var(--bg-primary)",
         padding: "24px 28px",
         maxWidth: 360,
+        minHeight: 280,
         transition: "border-color 0.2s, opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)",
         opacity: vis ? 1 : 0,
         transform: vis ? "translateX(0)" : `translateX(${slideDir}px)`,
@@ -189,6 +190,7 @@ export default function Roadmap() {
         <div style={{ position: "relative", maxWidth: 900, margin: "0 auto" }}>
           {/* Vertical connecting line — always visible */}
           <div
+            className="rm-line"
             style={{
               position: "absolute",
               left: "50%",
@@ -210,6 +212,7 @@ export default function Roadmap() {
               return (
                 <div
                   key={m.quarter}
+                  className="rm-row"
                   style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 40px 1fr",
@@ -218,12 +221,12 @@ export default function Roadmap() {
                   }}
                 >
                   {/* Left column — push card to right (toward center line) */}
-                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <div className="rm-col-left" style={{ display: "flex", justifyContent: "flex-end" }}>
                     {isLeft && <MilestoneCard m={m} s={s} slideDir={-28} />}
                   </div>
 
                   {/* Center dot */}
-                  <div style={{ display: "flex", justifyContent: "center", paddingTop: 20 }}>
+                  <div className="rm-dot-col" style={{ display: "flex", justifyContent: "center", paddingTop: 20 }}>
                     <div
                       style={{
                         width: 12,
@@ -240,7 +243,7 @@ export default function Roadmap() {
                   </div>
 
                   {/* Right column */}
-                  <div>
+                  <div className="rm-col-right">
                     {!isLeft && <MilestoneCard m={m} s={s} slideDir={28} />}
                   </div>
                 </div>

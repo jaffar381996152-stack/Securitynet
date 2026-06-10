@@ -41,8 +41,8 @@ const PANELS = [
 
 function IntroShield() {
   return (
-    <div style={{ position: "absolute", right: "8%", top: "50%", transform: "translateY(-50%)", opacity: 0.18, pointerEvents: "none" }} aria-hidden="true">
-      <svg width="300" height="360" viewBox="0 0 300 360" fill="none" stroke="#D4AF6E" strokeWidth="1">
+    <div className="tech-intro-shield" style={{ position: "absolute", right: "8%", top: "50%", transform: "translateY(-50%)", opacity: 0.18, pointerEvents: "none" }} aria-hidden="true">
+      <svg viewBox="0 0 300 360" fill="none" stroke="#D4AF6E" strokeWidth="1">
         <path d="M150 10L280 70V170Q280 290 150 350Q20 290 20 170V70Z" />
         <path d="M150 30L260 83V168Q260 272 150 328Q40 272 40 168V83Z" opacity="0.7" />
         <path d="M150 55L238 98V165Q238 255 150 304Q62 255 62 165V98Z" opacity="0.5" />
@@ -260,7 +260,6 @@ export default function TechScroll() {
   return (
     <div
       ref={outerRef}
-      className="tech-outer"
       style={{
         height: "600vh",
         background: "var(--bg-secondary)",
@@ -282,7 +281,6 @@ export default function TechScroll() {
       >
         {/* Section label */}
         <div
-          className="tech-label"
           style={{
             position: "absolute",
             top: "clamp(20px,3vw,36px)",
@@ -304,7 +302,6 @@ export default function TechScroll() {
 
         {/* Dot navigation */}
         <div
-          className="tech-dots"
           style={{
             position: "absolute",
             top: "clamp(20px,3vw,36px)",
@@ -333,7 +330,6 @@ export default function TechScroll() {
         {/* Horizontal track */}
         <div
           ref={trackRef}
-          className="tech-track"
           style={{
             display: "flex",
             width: `${PANELS.length * 100}vw`,
