@@ -169,10 +169,11 @@ function Panel03SVG() {
 
 function Panel04SVG() {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+    <div className="tech-panel04-svgs" style={{ display: "flex", alignItems: "center", gap: 24 }}>
       {/* Shield with network */}
       <svg
-        style={{ width: 140, flexShrink: 0, opacity: 0.55 }}
+        className="tech-panel04-svg"
+        style={{ flexShrink: 0, opacity: 0.55 }}
         viewBox="0 0 180 220"
         fill="none"
         stroke="#D4AF6E"
@@ -195,7 +196,8 @@ function Panel04SVG() {
       </svg>
       {/* Globe */}
       <svg
-        style={{ width: 140, flexShrink: 0, opacity: 0.55 }}
+        className="tech-panel04-svg"
+        style={{ flexShrink: 0, opacity: 0.55 }}
         viewBox="0 0 220 220"
         fill="none"
         stroke="#D4AF6E"

@@ -673,6 +673,7 @@ w3m-account-button, appkit-account-button {
   padding: 4px 10px;
 }
 .tech-svg { width: 100%; max-width: 340px; opacity: 0.6; }
+.tech-panel04-svg { width: 140px; }
 .tech-intro-title { font-size: var(--xl-size); margin-bottom: 20px; }
 .tech-intro-hint {
   font-family: var(--font-mono);
@@ -693,15 +694,35 @@ w3m-account-button, appkit-account-button {
 @media (max-width: 767px) {
   /* Correct sticky top for 32px urgency bar on mobile */
   .tech-sticky { top: calc(32px + 72px) !important; height: calc(100vh - 104px) !important; }
+
+  /* Stack text above its diagram within each card instead of a
+     cramped side-by-side split — both become legible at full width. */
+  .tech-panel-single {
+    flex-direction: column;
+    justify-content: center;
+  }
+  .tech-panel-left,
+  .tech-panel-right {
+    width: 100% !important;
+    padding: 0 var(--gut) !important;
+  }
+  .tech-panel-right { padding-top: 20px !important; }
+  .tech-panel-num   { font-size: 36px; }
+  .tech-panel-title { font-size: 22px; }
+  .tech-panel-body  { font-size: 13px; }
+  .tech-svg         { max-width: 280px; }
+  .tech-panel04-svg { width: 120px; }
 }
 @media (max-width: 479px) {
-  .tech-panel-left  { padding-left: 12px; padding-right: 6px; }
-  .tech-panel-right { padding-right: 12px; padding-left: 6px; }
-  .tech-panel-num   { font-size: 32px; }
-  .tech-panel-title { font-size: 20px; }
+  .tech-panel-left,
+  .tech-panel-right { padding: 0 14px !important; }
+  .tech-panel-num   { font-size: 30px; }
+  .tech-panel-title { font-size: 19px; }
   .tech-panel-body  { font-size: 12px; line-height: 1.5; margin-bottom: 12px; }
   .tech-tag         { font-size: 8px; padding: 3px 6px; }
-  .tech-svg         { max-width: 110px; }
+  .tech-svg         { max-width: 220px; }
+  .tech-panel04-svgs { gap: 14px !important; }
+  .tech-panel04-svg  { width: 100px; }
 }
 
 /* Intro shield (behind "INTELLIGENCE ARCHITECTURE") — fixed-size SVG that
@@ -723,6 +744,12 @@ w3m-account-button, appkit-account-button {
   .presale-widget-col { position: static; top: auto; }
 }
 
+/* Roadmap milestone cards — force full column width so left- and
+   right-side cards in the alternating timeline render the same size
+   (left column is a flex item that would otherwise shrink to its
+   text's max-content width instead of filling the column). */
+.rm-card { width: 100%; }
+
 /* =====================================================
    MOBILE RESPONSIVE OVERRIDES
    ===================================================== */
@@ -734,17 +761,12 @@ w3m-account-button, appkit-account-button {
   /* Hero adjustments */
   .hero-trust-row span { padding: 8px 12px !important; border-right: none !important; border-bottom: 1px solid var(--border-sub); }
 
-  /* Roadmap cards — compact, single-column timeline on mobile */
-  .rm-card  { padding: 12px 12px !important; max-width: 100% !important; min-height: auto !important; }
+  /* Roadmap cards — keep the alternating left/right timeline, just
+     tighten card sizing/text and ensure both sides match in width. */
+  .rm-card  { padding: 16px 14px !important; max-width: 100% !important; }
   .rm-title { font-size: 13px !important; letter-spacing: 0.02em !important; }
   .rm-item  { font-size: 11px !important; }
-  .rm-line  { left: 20px !important; transform: none !important; }
-  .rm-row   { display: flex !important; align-items: flex-start !important; gap: 12px !important; }
-  .rm-dot-col { width: 40px !important; flex-shrink: 0; order: -1; padding-top: 6px !important; }
-  .rm-col-left,
-  .rm-col-right { flex: 1; justify-content: flex-start !important; }
-  .rm-col-left:empty,
-  .rm-col-right:empty { display: none !important; }
+  .rm-row   { gap: 4px !important; }
 }
 
 @media (max-width: 1023px) {
