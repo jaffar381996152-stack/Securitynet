@@ -28,6 +28,7 @@ export default function StickyPresaleWidget() {
 
   return (
     <div
+      className="sticky-presale-widget"
       style={{
         position: "fixed",
         bottom,

@@ -275,13 +275,15 @@ export default function Header() {
           ×
         </button>
 
-        {/* Content area — full height, flex column with padding */}
+        {/* Content area — full height, flex column with padding, scrollable if it overflows */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             height: "100%",
             padding: "80px var(--gut) 32px",
+            overflowY: "auto",
+            WebkitOverflowScrolling: "touch",
           }}
         >
           {/* Classification eyebrow */}

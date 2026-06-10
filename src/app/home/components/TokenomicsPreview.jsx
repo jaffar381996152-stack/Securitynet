@@ -29,7 +29,7 @@ function DonutChart({ animated }) {
   const gapLen = (gapDeg / 360) * CIRC;
 
   return (
-    <svg width={260} height={260} viewBox="0 0 260 260" style={{ overflow: "visible" }}>
+    <svg viewBox="0 0 260 260" style={{ overflow: "visible", display: "block", width: "100%", height: "100%" }}>
       <circle cx={CX} cy={CY} r={R} fill="none" stroke="rgba(212,175,110,0.08)" strokeWidth={28} />
 
       {SEGMENTS.map((seg, i) => {
@@ -87,14 +87,7 @@ export default function TokenomicsPreview() {
   return (
     <section ref={ref} className="section-py" style={{ background: "var(--bg-primary)" }}>
       <div className="container">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "clamp(40px,6vw,80px)",
-            alignItems: "center",
-          }}
-        >
+        <div className="tnp-grid">
           {/* Left: heading + description + stats + CTA */}
           <div>
             <span className="eyebrow" style={{ marginBottom: 16 }}>TOKENOMICS</span>
@@ -187,7 +180,9 @@ export default function TokenomicsPreview() {
           {/* Right: donut chart + legend */}
           <div>
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
-              <DonutChart animated={animated} />
+              <div style={{ width: "100%", maxWidth: 260, aspectRatio: "1 / 1" }}>
+                <DonutChart animated={animated} />
+              </div>
             </div>
 
             {/* 2-column legend */}

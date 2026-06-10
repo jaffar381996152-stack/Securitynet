@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function MobileBottomBar() {
   return (
     <div
-      className="flex lg:hidden"
+      className="mobile-bottom-bar flex lg:hidden"
       style={{
         position: "fixed",
         bottom: 0,

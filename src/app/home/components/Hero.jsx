@@ -127,6 +127,7 @@ export default function Hero() {
         {/* Trust row */}
         <FadeUpSection delay={1.25}>
           <div
+            className="hero-trust-row"
             style={{
               display: "flex",
               alignItems: "center",
@@ -164,6 +165,7 @@ export default function Hero() {
             ].map((item, i) => (
               <span
                 key={i}
+                className="hero-trust-item"
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -188,6 +190,7 @@ export default function Hero() {
 
       {/* Scroll indicator */}
       <div
+        className="hero-scroll-indicator"
         style={{
           position: "absolute",
           bottom: 32,

@@ -47,13 +47,17 @@ function IntroShield() {
         <path d="M150 30L260 83V168Q260 272 150 328Q40 272 40 168V83Z" opacity="0.7" />
         <path d="M150 55L238 98V165Q238 255 150 304Q62 255 62 165V98Z" opacity="0.5" />
         <path d="M150 80L216 113V162Q216 238 150 280Q84 238 84 162V113Z" opacity="0.3" />
+        <line x1="110" y1="160" x2="150" y2="145" strokeWidth="0.5" strokeDasharray="4 2" className="tech-dash-flow" />
+        <line x1="150" y1="145" x2="190" y2="160" strokeWidth="0.5" strokeDasharray="4 2" className="tech-dash-flow" style={{ animationDelay: "0.3s" }} />
+        <line x1="150" y1="145" x2="150" y2="210" strokeWidth="0.5" strokeDasharray="4 2" className="tech-dash-flow" style={{ animationDelay: "0.6s" }} />
+        <circle cx="110" cy="160" r="6" className="diag-pulse-ring" />
+        <circle cx="150" cy="145" r="6" className="diag-pulse-ring" style={{ animationDelay: "0.5s" }} />
+        <circle cx="190" cy="160" r="6" className="diag-pulse-ring" style={{ animationDelay: "1s" }} />
+        <circle cx="150" cy="210" r="6" className="diag-pulse-ring" style={{ animationDelay: "1.5s" }} />
         <circle cx="110" cy="160" r="3" fill="#D4AF6E" />
         <circle cx="150" cy="145" r="3" fill="#D4AF6E" />
         <circle cx="190" cy="160" r="3" fill="#D4AF6E" />
         <circle cx="150" cy="210" r="3" fill="#D4AF6E" />
-        <line x1="110" y1="160" x2="150" y2="145" strokeWidth="0.5" />
-        <line x1="150" y1="145" x2="190" y2="160" strokeWidth="0.5" />
-        <line x1="150" y1="145" x2="150" y2="210" strokeWidth="0.5" />
       </svg>
     </div>
   );
@@ -66,13 +70,17 @@ function Panel01SVG() {
       <circle cx="60" cy="60" r="10" /><circle cx="290" cy="60" r="10" />
       <circle cx="60" cy="200" r="10" /><circle cx="290" cy="200" r="10" />
       <circle cx="170" cy="30" r="10" /><circle cx="170" cy="230" r="10" />
-      <line x1="70" y1="64" x2="155" y2="118" /><line x1="280" y1="64" x2="195" y2="118" />
-      <line x1="70" y1="196" x2="155" y2="142" /><line x1="280" y1="196" x2="195" y2="142" />
-      <line x1="170" y1="40" x2="170" y2="70" /><line x1="170" y1="220" x2="170" y2="190" />
+      <line x1="70" y1="64" x2="155" y2="118" strokeDasharray="4 2" className="tech-dash-flow" />
+      <line x1="280" y1="64" x2="195" y2="118" strokeDasharray="4 2" className="tech-dash-flow" style={{ animationDelay: "0.3s" }} />
+      <line x1="70" y1="196" x2="155" y2="142" strokeDasharray="4 2" className="tech-dash-flow" style={{ animationDelay: "0.6s" }} />
+      <line x1="280" y1="196" x2="195" y2="142" strokeDasharray="4 2" className="tech-dash-flow" style={{ animationDelay: "0.9s" }} />
+      <line x1="170" y1="40" x2="170" y2="70" strokeDasharray="4 2" className="tech-dash-flow" style={{ animationDelay: "0.2s" }} />
+      <line x1="170" y1="220" x2="170" y2="190" strokeDasharray="4 2" className="tech-dash-flow" style={{ animationDelay: "0.5s" }} />
       <circle cx="290" cy="60" r="18" strokeDasharray="4 3" opacity="0.5" style={{ animation: "techPulseOpacity 2s ease-in-out infinite" }} />
       <circle cx="60" cy="200" r="18" strokeDasharray="4 3" opacity="0.4" style={{ animation: "techPulseOpacity 2s 0.7s ease-in-out infinite" }} />
       <text x="252" y="44" fontSize="9" fill="#A85252" fontFamily="JetBrains Mono" letterSpacing="1">THREAT</text>
       <text x="18" y="185" fontSize="9" fill="#A85252" fontFamily="JetBrains Mono" letterSpacing="1">THREAT</text>
+      <circle cx="170" cy="130" r="14" strokeDasharray="3 3" className="diag-pulse-ring" />
       <circle cx="170" cy="130" r="8" fill="#D4AF6E" fillOpacity="0.2" stroke="#D4AF6E" />
       <text x="152" y="134" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono">AI</text>
     </svg>
@@ -85,21 +93,23 @@ function Panel02SVG() {
       {/* AI INPUT */}
       <rect x="120" y="10" width="100" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
       <text x="170" y="30" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">AI INPUT</text>
-      <line x1="170" y1="40" x2="170" y2="70" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" />
+      <line x1="170" y1="40" x2="170" y2="70" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" className="tech-dash-flow" />
       {/* Middle row */}
       <rect x="10" y="70" width="75" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
       <text x="47" y="90" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">PASS</text>
-      <rect x="120" y="70" width="100" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
-      <text x="170" y="90" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">DECISION</text>
+      <g style={{ animation: "techPulseOpacity 2.4s ease-in-out infinite" }}>
+        <rect x="120" y="70" width="100" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
+        <text x="170" y="90" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">DECISION</text>
+      </g>
       <rect x="255" y="70" width="75" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
       <text x="292" y="90" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">HOLD</text>
       {/* Horizontal connectors */}
       <line x1="120" y1="85" x2="85" y2="85" stroke="#D4AF6E" strokeWidth="1" />
       <line x1="220" y1="85" x2="255" y2="85" stroke="#D4AF6E" strokeWidth="1" />
       {/* Drop lines */}
-      <line x1="47" y1="100" x2="47" y2="155" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" />
-      <line x1="170" y1="100" x2="170" y2="155" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" />
-      <line x1="292" y1="100" x2="292" y2="155" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" />
+      <line x1="47" y1="100" x2="47" y2="155" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" className="tech-dash-flow" style={{ animationDelay: "0.2s" }} />
+      <line x1="170" y1="100" x2="170" y2="155" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" className="tech-dash-flow" style={{ animationDelay: "0.4s" }} />
+      <line x1="292" y1="100" x2="292" y2="155" stroke="#D4AF6E" strokeWidth="1" strokeDasharray="4 3" className="tech-dash-flow" style={{ animationDelay: "0.6s" }} />
       {/* Bottom row */}
       <rect x="10" y="155" width="75" height="30" rx="2" stroke="#D4AF6E" strokeWidth="1" />
       <text x="47" y="175" fontSize="9" fill="#D4AF6E" fontFamily="JetBrains Mono,monospace" textAnchor="middle" letterSpacing="0.8">SETTLE</text>
@@ -143,9 +153,10 @@ function Panel03SVG() {
             />
             {row.highlight && (
               <>
+                <circle cx="172" cy={y} r="10" stroke="#D4AF6E" strokeWidth="1" fill="none" className="diag-pulse-ring" />
                 <circle cx="172" cy={y} r="6" stroke="#D4AF6E" strokeWidth="1" fill="rgba(212,175,110,0.15)" />
                 <circle cx="172" cy={y} r="2" fill="#D4AF6E" />
-                <line x1="178" y1={y} x2={row.lineEnd} y2={y} stroke="#D4AF6E" strokeWidth="0.8" />
+                <line x1="178" y1={y} x2={row.lineEnd} y2={y} stroke="#D4AF6E" strokeWidth="0.8" strokeDasharray="4 2" className="tech-dash-flow" />
               </>
             )}
             <line x1="268" y1={y} x2={rX2} y2={y} stroke="rgba(212,175,110,0.18)" strokeWidth="0.6" />
@@ -169,14 +180,18 @@ function Panel04SVG() {
       >
         <path d="M90 12L162 48V112Q162 172 90 208Q18 172 18 112V48Z" />
         <path d="M90 28L146 58V110Q146 160 90 190Q34 160 34 110V58Z" strokeWidth="0.6" opacity="0.6" />
-        <circle cx="90" cy="90" r="5" fill="#D4AF6E" fillOpacity="0.3" />
-        <circle cx="62" cy="122" r="3.5" fill="#D4AF6E" fillOpacity="0.3" />
-        <circle cx="118" cy="122" r="3.5" fill="#D4AF6E" fillOpacity="0.3" />
-        <circle cx="90" cy="152" r="3" fill="#D4AF6E" fillOpacity="0.3" />
         <line x1="90" y1="90" x2="62" y2="122" strokeWidth="0.6" />
         <line x1="90" y1="90" x2="118" y2="122" strokeWidth="0.6" />
         <line x1="62" y1="122" x2="90" y2="152" strokeWidth="0.6" />
         <line x1="118" y1="122" x2="90" y2="152" strokeWidth="0.6" />
+        <circle cx="90" cy="90" r="9" stroke="#D4AF6E" strokeWidth="0.6" fill="none" className="diag-pulse-ring" />
+        <circle cx="62" cy="122" r="7" stroke="#D4AF6E" strokeWidth="0.6" fill="none" className="diag-pulse-ring" style={{ animationDelay: "0.6s" }} />
+        <circle cx="118" cy="122" r="7" stroke="#D4AF6E" strokeWidth="0.6" fill="none" className="diag-pulse-ring" style={{ animationDelay: "1.2s" }} />
+        <circle cx="90" cy="152" r="6" stroke="#D4AF6E" strokeWidth="0.6" fill="none" className="diag-pulse-ring" style={{ animationDelay: "1.8s" }} />
+        <circle cx="90" cy="90" r="5" fill="#D4AF6E" fillOpacity="0.3" />
+        <circle cx="62" cy="122" r="3.5" fill="#D4AF6E" fillOpacity="0.3" />
+        <circle cx="118" cy="122" r="3.5" fill="#D4AF6E" fillOpacity="0.3" />
+        <circle cx="90" cy="152" r="3" fill="#D4AF6E" fillOpacity="0.3" />
       </svg>
       {/* Globe */}
       <svg
@@ -187,13 +202,15 @@ function Panel04SVG() {
         strokeWidth="1"
       >
         <circle cx="110" cy="110" r="95" />
-        <ellipse cx="110" cy="110" rx="95" ry="30" strokeWidth="0.8" />
-        <ellipse cx="110" cy="110" rx="57" ry="95" strokeWidth="0.8" />
-        <line x1="15" y1="110" x2="205" y2="110" strokeWidth="0.8" />
-        <line x1="110" y1="15" x2="110" y2="205" strokeWidth="0.8" />
-        {[[40,60],[180,60],[40,160],[180,160]].map(([cx,cy],i) => (
-          <circle key={i} cx={cx} cy={cy} r="4" fill="#D4AF6E" fillOpacity="0.4" />
-        ))}
+        <g className="tech-rotate-slow">
+          <ellipse cx="110" cy="110" rx="95" ry="30" strokeWidth="0.8" />
+          <ellipse cx="110" cy="110" rx="57" ry="95" strokeWidth="0.8" />
+          <line x1="15" y1="110" x2="205" y2="110" strokeWidth="0.8" />
+          <line x1="110" y1="15" x2="110" y2="205" strokeWidth="0.8" />
+          {[[40,60],[180,60],[40,160],[180,160]].map(([cx,cy],i) => (
+            <circle key={i} cx={cx} cy={cy} r="4" fill="#D4AF6E" fillOpacity="0.4" />
+          ))}
+        </g>
       </svg>
     </div>
   );
@@ -243,6 +260,7 @@ export default function TechScroll() {
   return (
     <div
       ref={outerRef}
+      className="tech-outer"
       style={{
         height: "600vh",
         background: "var(--bg-secondary)",
@@ -264,6 +282,7 @@ export default function TechScroll() {
       >
         {/* Section label */}
         <div
+          className="tech-label"
           style={{
             position: "absolute",
             top: "clamp(20px,3vw,36px)",
@@ -285,6 +304,7 @@ export default function TechScroll() {
 
         {/* Dot navigation */}
         <div
+          className="tech-dots"
           style={{
             position: "absolute",
             top: "clamp(20px,3vw,36px)",
@@ -313,6 +333,7 @@ export default function TechScroll() {
         {/* Horizontal track */}
         <div
           ref={trackRef}
+          className="tech-track"
           style={{
             display: "flex",
             width: `${PANELS.length * 100}vw`,

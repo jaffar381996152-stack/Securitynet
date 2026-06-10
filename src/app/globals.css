@@ -126,6 +126,12 @@
   body.mobile-nav-open { overflow: hidden; }
   body.preloading      { overflow: hidden; }
 
+  /* Mobile nav overlay sits in a stacking context capped below these
+     fixed widgets — hide them while the nav is open so they don't
+     cover the bottom of the menu. */
+  body.mobile-nav-open .sticky-presale-widget,
+  body.mobile-nav-open .mobile-bottom-bar { display: none; }
+
   a      { color: inherit; text-decoration: none; }
   button { background: none; border: none; cursor: pointer; font-family: inherit; color: inherit; }
   img    { display: block; max-width: 100%; }
@@ -574,6 +580,13 @@ w3m-account-button, appkit-account-button {
 /* techPulse targets SVG circle r attribute — CSS animation on SVG presentation attributes */
 @keyframes techPulseOpacity { 0%,100% { opacity:0.5 } 50% { opacity:0.2 } }
 
+/* Tech diagram animations — flowing connector dashes & slow rotation */
+@keyframes techDashFlow   { to { stroke-dashoffset: -42; } }
+.tech-dash-flow { animation: techDashFlow 1.4s linear infinite; }
+
+@keyframes techRotateSlow { to { transform: rotate(360deg); } }
+.tech-rotate-slow { transform-box: fill-box; transform-origin: center; animation: techRotateSlow 50s linear infinite; }
+
 /* =====================================================
    NAV CTA (ghost outlined button for header nav)
    ===================================================== */
@@ -672,18 +685,50 @@ w3m-account-button, appkit-account-button {
   gap: 8px;
 }
 @media (max-width: 1023px) {
-  .tech-panel-left  { padding-left: var(--gut); padding-right: 10px; }
-  .tech-panel-right { padding-right: var(--gut); padding-left: 10px; }
-  .tech-panel-num   { font-size: 50px; }
-  .tech-svg         { max-width: 170px; }
-}
-@media (max-width: 767px) {
-  /* Correct sticky top for 32px urgency bar on mobile */
-  .tech-sticky { top: calc(32px + 72px) !important; height: calc(100vh - 104px) !important; }
+  /* Scroll-jacked horizontal track is unreliable on touch devices —
+     drop it and stack the panels vertically in normal flow instead. */
+  .tech-outer { height: auto !important; }
+  .tech-sticky {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .tech-label,
+  .tech-dots { display: none !important; }
+  .tech-track {
+    display: block !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+  .tech-panel-0 {
+    width: 100% !important;
+    height: auto !important;
+    padding: 60px var(--gut) !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-sub);
+  }
+  .tech-panel-single {
+    width: 100% !important;
+    height: auto !important;
+    flex-direction: column;
+    padding: 60px 0 !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-sub);
+  }
+  .tech-panel-left {
+    width: 100% !important;
+    padding: 0 var(--gut) !important;
+  }
+  .tech-panel-right {
+    width: 100% !important;
+    padding: 32px var(--gut) 0 !important;
+    display: flex !important;
+  }
+  .tech-panel-num { font-size: 50px; }
+  .tech-svg       { max-width: 240px; }
 }
 @media (max-width: 479px) {
-  .tech-panel-right { display: none; }
-  .tech-panel-left  { width: 100%; padding-right: var(--gut); }
+  .tech-svg { max-width: 200px; }
 }
 
 /* =====================================================
@@ -897,6 +942,14 @@ w3m-account-button, appkit-account-button {
 }
 .value-body { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
 
+/* Home — tokenomics preview (allocation structure) split layout */
+.tnp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: center;
+}
+
 /* Shared 4-col stat strips (services stats / tokenomics overview / about company stats) */
 .strip-grid,
 .stats-row,
@@ -1031,7 +1084,7 @@ w3m-account-button, appkit-account-button {
     align-items: baseline;
     justify-content: space-between;
   }
-  .vest-track-outer { width: 100%; }
+  .vest-track-outer { width: 100%; flex: none; height: 32px; }
 }
 
 /* Services — XN diagram pulse ring */
@@ -1357,6 +1410,17 @@ w3m-account-button, appkit-account-button {
   .stats-row,
   .stats-4 { grid-template-columns: repeat(2, 1fr) !important; }
   .mobile-br { display: block; }
+  .tnp-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+  .hero-trust-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px;
+  }
+  .hero-trust-item {
+    border-right: none !important;
+    padding: 0 !important;
+  }
+  .hero-scroll-indicator { display: none !important; }
 }
 @media (max-width: 767px) {
   .contract-meta-grid { grid-template-columns: repeat(2, 1fr) !important; }
