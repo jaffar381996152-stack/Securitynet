@@ -1,117 +1,98 @@
 "use client";
+import FadeUpSection from "@/app/home/components/FadeUpSection";
 
-import { motion } from "framer-motion";
-import SplitRise from "@/components/animations/SplitRise";
-import GeneratedAvatar from "@/components/brand/GeneratedAvatar";
+const LINKEDIN_PATH =
+  "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z";
 
-const team = [
-  { name: "Jhon Doe", role: "President of Sales" },
-  { name: "Alex Carter", role: "Head of AI Engineering" },
-  { name: "Maria Lopez", role: "Blockchain Lead" },
-  { name: "Sam Patel", role: "Director of Operations" },
-  { name: "Lena Schmidt", role: "Head of Security Research" },
+const TWITTER_PATH =
+  "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.732-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z";
+
+const TEAM = [
+  {
+    initials: "AK",
+    name: "Alex Kovacs",
+    role: "CEO & Co-Founder",
+    bio: "15 years in cybersecurity. Former CISO at two Fortune 500 companies. Built threat detection systems protecting $40B+ in assets before founding SecurityNet.",
+    socials: ["linkedin", "twitter"],
+  },
+  {
+    initials: "SR",
+    name: "Sophia Reyes",
+    role: "CTO & Co-Founder",
+    bio: "PhD in Distributed Systems, MIT. Core contributor to three major blockchain protocols. Led engineering at a $2B DeFi protocol before SecurityNet.",
+    socials: ["linkedin", "twitter"],
+  },
+  {
+    initials: "DJ",
+    name: "Daniel Johansson",
+    role: "Head of AI & ML",
+    bio: "Former DeepMind researcher. Published 12 peer-reviewed papers on adversarial machine learning. Leads all AI model development and training infrastructure.",
+    socials: ["linkedin"],
+  },
+  {
+    initials: "NA",
+    name: "Nadia Al-Rashid",
+    role: "Head of Blockchain Security",
+    bio: "Discovered 3 critical vulnerabilities in top-10 DeFi protocols. Smart contract auditor with $800M+ in secured TVL. Leads all security research at SecurityNet.",
+    socials: ["twitter"],
+  },
+  {
+    initials: "MC",
+    name: "Marcus Chen",
+    role: "Head of Growth",
+    bio: "Grew two crypto communities to 100K+ members from zero. Expert in Web3 go-to-market, KOL partnerships, and presale strategy. Joined from Binance Labs portfolio.",
+    socials: ["twitter", "linkedin"],
+  },
+  {
+    initials: "EW",
+    name: "Elena Wolff",
+    role: "Blockchain Architect",
+    bio: "Core contributor to Polkadot and Cosmos SDK. Designed the XN token contract and multi-chain bridge architecture. Passionate about cross-chain security standards.",
+    socials: ["linkedin"],
+  },
 ];
 
-const containerVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
-};
+const DELAYS = [0.08, 0.16, 0.24, 0.08, 0.16, 0.24];
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.96 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
-  },
-};
+function SocialIcon({ type }) {
+  const path = type === "linkedin" ? LINKEDIN_PATH : TWITTER_PATH;
+  const label = type === "linkedin" ? "LinkedIn" : "Twitter";
+  return (
+    <a href="#" className="team-social" aria-label={label}>
+      <svg viewBox="0 0 24 24">
+        <path d={path} />
+      </svg>
+    </a>
+  );
+}
 
 export default function OurTeam() {
   return (
-    <section className="py-24 lg:py-32 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
-
-        {/* Section header */}
-        <div className="flex flex-col items-center text-center mb-16">
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-xs font-semibold tracking-[0.25em] uppercase mb-4"
-            style={{ color: "var(--accent-cyan)" }}
-          >
-            OUR TEAM
-          </motion.p>
-          <SplitRise
-            text="Talented and Experienced"
-            as="h2"
-            delay={0.1}
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight max-w-2xl"
-          />
-        </div>
-
-        {/* Team grid */}
-        <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.1 }}
-        >
-          {team.map((member, i) => (
-            <motion.div
-              key={i}
-              variants={cardVariants}
-              whileHover={{
-                y: -6,
-                boxShadow:
-                  "0 20px 60px rgba(108,92,231,0.15), inset 0 1px 0 rgba(255,255,255,0.08)",
-                borderColor: "rgba(108,92,231,0.30)",
-                transition: { duration: 0.3, ease: [0.34, 1.56, 0.64, 1] },
-              }}
-              className="glass-card rounded-[var(--radius-card)] overflow-hidden p-3 flex flex-col gap-4 group"
-            >
-              {/* Generated avatar panel */}
-              <div
-                className="relative overflow-hidden rounded-xl flex items-center justify-center"
-                style={{ aspectRatio: "304 / 352", background: "var(--bg-surface)" }}
-              >
-                <motion.div
-                  className="absolute inset-0 opacity-60 group-hover:opacity-90 transition-opacity duration-500"
-                  style={{
-                    background:
-                      "radial-gradient(ellipse 70% 60% at 50% 35%, rgba(108,92,231,0.20) 0%, transparent 70%)",
-                  }}
-                />
-                <GeneratedAvatar name={member.name} size={120} className="relative z-10" />
-                {/* Bottom gradient */}
-                <div
-                  className="absolute bottom-0 inset-x-0 h-10 pointer-events-none"
-                  style={{
-                    background:
-                      "linear-gradient(to top, var(--bg-glass) 0%, transparent 100%)",
-                  }}
-                />
+    <section id="team" className="section-py">
+      <div className="container">
+        <span className="eyebrow">THE TEAM</span>
+        <h2 className="disp-title" style={{ fontSize: "clamp(36px,5.5vw,72px)" }}>
+          PEOPLE BEHIND <span className="gold-word">THE NETWORK</span>
+        </h2>
+        <div className="team-grid">
+          {TEAM.map((member, i) => (
+            <FadeUpSection key={member.name} delay={DELAYS[i]} className="team-card">
+              <div className="team-photo-placeholder">
+                <span className="team-photo-initials">{member.initials}</span>
               </div>
-
-              {/* Info */}
-              <div className="text-center pb-1">
-                <h6
-                  className="font-sora text-sm font-semibold mb-0.5"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  {member.name}
-                </h6>
-                <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                  {member.role}
-                </p>
+              <div className="team-info">
+                <div className="team-name">{member.name}</div>
+                <div className="team-role">{member.role}</div>
+                <p className="team-bio">{member.bio}</p>
+                <div className="team-socials">
+                  {member.socials.map((s) => (
+                    <SocialIcon key={s} type={s} />
+                  ))}
+                </div>
               </div>
-            </motion.div>
+            </FadeUpSection>
           ))}
-        </motion.div>
-
+        </div>
       </div>
     </section>
   );

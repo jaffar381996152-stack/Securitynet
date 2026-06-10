@@ -691,3 +691,345 @@ w3m-account-button, appkit-account-button {
   /* Presale inline widget stacks */
   .presale-inline-grid { grid-template-columns: 1fr !important; }
 }
+
+/* =====================================================
+   SERVICES / TOKENOMICS / ABOUT — SHARED GRIDS & CARDS
+   ===================================================== */
+
+/* Services — 6-card grid */
+.svc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border-sub);
+}
+.svc-card {
+  position: relative;
+  background: var(--bg-secondary);
+  padding: clamp(28px, 3vw, 40px);
+  overflow: hidden;
+  transition: background 0.25s var(--ease-quart);
+}
+.svc-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: var(--gold);
+  transition: width 0.35s var(--ease-quart);
+}
+.svc-card:hover { background: var(--bg-tertiary); }
+.svc-card:hover::before { width: 100%; }
+
+.svc-link { display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s var(--ease-quart); }
+.svc-link:hover { gap: 9px; }
+.svc-num {
+  font-family: var(--font-mono);
+  font-size: 60px;
+  color: rgba(212,175,110,0.07);
+  font-weight: 500;
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  line-height: 1;
+  pointer-events: none;
+}
+.svc-icon { width: 44px; height: 44px; stroke: var(--gold); fill: none; stroke-width: 1.5; margin-bottom: 22px; }
+.svc-title {
+  font-family: var(--font-disp);
+  font-weight: 700;
+  font-size: clamp(18px, 2vw, 24px);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.svc-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; }
+.svc-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.svc-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--border-gold);
+  padding: 3px 8px;
+}
+
+/* Services — XN diagram */
+.xn-diagram-wrap { margin-top: 48px; display: flex; justify-content: center; }
+.xn-diagram-svg { max-width: 700px; width: 100%; overflow: visible; }
+.flow-line { stroke-dasharray: 120; stroke-dashoffset: 120; transition: stroke-dashoffset 1s var(--ease-expo); }
+.flow-line.drawn { stroke-dashoffset: 0; }
+.diagram-label { font-family: var(--font-mono); font-size: 9.5px; fill: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; text-anchor: middle; }
+.diagram-sub { font-family: var(--font-mono); font-size: 8px; fill: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; text-anchor: middle; }
+
+/* Services — stats strip */
+.strip-num { font-family: var(--font-mono); font-size: clamp(28px, 3.5vw, 48px); color: var(--gold); font-weight: 500; margin-bottom: 8px; }
+.strip-lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; }
+
+/* Tokenomics — token utility 5-card grid */
+.utility-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border-sub);
+}
+.utility-card {
+  background: var(--bg-secondary);
+  padding: clamp(22px, 2.5vw, 32px);
+  transition: background 0.25s var(--ease-quart);
+}
+.utility-card:hover { background: var(--bg-tertiary); }
+.utility-icon { width: 40px; height: 40px; margin-bottom: 20px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+
+/* About — team grid */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border-sub);
+  margin-top: 52px;
+}
+.team-card {
+  background: var(--bg-secondary);
+  overflow: hidden;
+  transition: background 0.25s var(--ease-quart);
+}
+.team-card:hover { background: var(--bg-tertiary); }
+.team-photo-placeholder {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--bg-tertiary);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.team-photo-placeholder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(212,175,110,0.04) 0, rgba(212,175,110,0.04) 1px, transparent 1px, transparent 12px);
+}
+.team-photo-initials {
+  font-family: var(--font-disp);
+  font-weight: 700;
+  font-size: clamp(40px, 6vw, 72px);
+  color: rgba(212,175,110,0.25);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+.team-info { padding: 20px 22px; }
+.team-name {
+  font-family: var(--font-disp);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.team-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.team-bio { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 14px; }
+.team-socials { display: flex; gap: 10px; }
+.team-social svg { width: 16px; height: 16px; fill: var(--text-muted); transition: fill 0.2s; }
+.team-social:hover svg { fill: var(--gold); }
+
+/* About — mission values grid */
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border-sub);
+  margin-top: 40px;
+}
+.value-cell { background: var(--bg-primary); padding: 24px 20px; }
+.value-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.value-title {
+  font-family: var(--font-disp);
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.value-body { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+
+/* Shared 4-col stat strips (services stats / tokenomics overview / about company stats) */
+.strip-grid,
+.stats-row,
+.stats-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border-sub);
+}
+.stats-row > * {
+  background: var(--bg-secondary);
+  padding: clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 36px);
+}
+.stats-4 > *,
+.strip-grid > * {
+  background: var(--bg-secondary);
+  padding: clamp(24px, 3vw, 44px);
+  text-align: center;
+}
+.stat-c-num {
+  font-family: var(--font-mono);
+  font-size: clamp(28px, 4vw, 52px);
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.stat-c-lbl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* Tokenomics — allocation donut + table */
+.alloc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+
+/* Tokenomics — smart contract metadata grid */
+.contract-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border-sub);
+}
+.contract-meta-grid > * {
+  background: var(--bg-primary);
+  padding: 18px 20px;
+}
+
+/* Tokenomics — vesting schedule */
+.vest-chart { margin-top: 40px; overflow-x: auto; }
+.vest-inner { min-width: 560px; }
+.vest-axis {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0 12px 180px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.vest-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-sub);
+}
+.vest-row:last-child { border-bottom: none; }
+.vest-name { width: 180px; flex-shrink: 0; padding-right: 20px; }
+.vest-name-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 2px;
+}
+.vest-name-pct { font-family: var(--font-mono); font-size: 10px; color: var(--gold); }
+.vest-track-outer { flex: 1; height: 32px; position: relative; background: var(--border-sub); }
+.vest-bar {
+  position: absolute;
+  top: 4px;
+  height: 24px;
+  width: 0;
+  transition: width 1.2s var(--ease-expo);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.vest-bar-inner { height: 100%; width: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; }
+.vest-bar-lbl {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-inv);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s 0.8s;
+}
+.vest-bar.animated .vest-bar-lbl { opacity: 1; }
+.vest-cliff { position: absolute; top: 4px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.vest-cliff-lbl { font-family: var(--font-mono); font-size: 8px; color: var(--text-muted); text-transform: uppercase; }
+.vest-tge { position: absolute; top: 0; bottom: 0; left: 0; width: 1px; background: var(--gold-dim); }
+.vest-tge-lbl {
+  position: absolute;
+  top: -18px;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--gold);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+@media (max-width: 767px) {
+  .vest-axis { padding-left: 140px; }
+  .vest-name { width: 140px; padding-right: 12px; }
+  .vest-name-title { font-size: 10px; }
+}
+
+/* Services — XN diagram pulse ring */
+@keyframes diagPulse {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50%      { transform: scale(1.18); opacity: 0.15; }
+}
+.diag-pulse-ring { transform-box: fill-box; transform-origin: center; animation: diagPulse 2.6s ease-in-out infinite; }
+
+/* =====================================================
+   SERVICES / TOKENOMICS / ABOUT — RESPONSIVE OVERRIDES
+   ===================================================== */
+@media (max-width: 1023px) {
+  .svc-grid           { grid-template-columns: repeat(2, 1fr) !important; }
+  .utility-grid       { grid-template-columns: repeat(3, 1fr) !important; }
+  .team-grid          { grid-template-columns: repeat(2, 1fr) !important; }
+  .alloc-grid         { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 768px) {
+  .strip-grid,
+  .stats-row,
+  .stats-4 { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 767px) {
+  .contract-meta-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .values-grid        { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 600px) {
+  .svc-grid   { grid-template-columns: 1fr !important; }
+  .team-grid  { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 479px) {
+  .utility-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .stats-row    { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 359px) {
+  .utility-grid { grid-template-columns: 1fr !important; }
+}

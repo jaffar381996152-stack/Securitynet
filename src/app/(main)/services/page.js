@@ -5,9 +5,9 @@ import Services from "./components/Services";
 import { pageMetadata } from "@/app/libs/seo";
 
 export const metadata = pageMetadata({
-  title: "Our Services",
+  title: "Services — AI-Powered Blockchain Security",
   description:
-    "SecurityNet AI provides a fully integrated suite of intelligent security services — custom AI models, secure platforms, and remote monitoring.",
+    "SecurityNet.ai delivers AI-driven security monitoring, on-chain threat detection, smart contract auditing, and decentralized intelligence services powered by XN.",
   path: "/services",
 });
 

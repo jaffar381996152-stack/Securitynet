@@ -1,13 +1,14 @@
 import AboutHero from "./components/AboutHero";
-import AboutSecuritynet from "./components/AboutSecuritynet";
 import OurMission from "./components/OurMission";
 import OurTeam from "./components/OurTeam";
+import CompanyStats from "./components/CompanyStats";
+import AboutCTA from "./components/AboutCTA";
 import { pageMetadata } from "@/app/libs/seo";
 
 export const metadata = pageMetadata({
-  title: "About Us",
+  title: "About — The Team Behind the Intelligence",
   description:
-    "Securitynet AI transforms ordinary camera networks into intelligent security systems — designed to detect, analyze, and respond to threats with unmatched precision and scalability.",
+    "Meet the team building SecurityNet.ai — the AI-powered blockchain security platform fueled by the XN token.",
   path: "/about",
 });
 
@@ -15,9 +16,10 @@ const page = () => {
   return (
     <>
       <AboutHero />
-      <AboutSecuritynet />
       <OurMission />
       <OurTeam />
+      <CompanyStats />
+      <AboutCTA />
     </>
   );
 };
