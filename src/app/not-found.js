@@ -42,7 +42,7 @@ export default function NotFound() {
           have moved, or never existed. Let&apos;s get you back in frame.
         </p>
         <div className="mt-9 flex justify-center">
-          <MagneticButton href="/home" variant="primary" size="md">
+          <MagneticButton href="/" variant="primary" size="md">
             Back to Home
           </MagneticButton>
         </div>

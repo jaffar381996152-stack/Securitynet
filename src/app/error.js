@@ -46,7 +46,7 @@ export default function Error({ error, reset }) {
           <MagneticButton onClick={() => reset()} variant="primary" size="md">
             Try Again
           </MagneticButton>
-          <MagneticButton href="/home" variant="ghost" size="md">
+          <MagneticButton href="/" variant="ghost" size="md">
             Back to Home
           </MagneticButton>
         </div>

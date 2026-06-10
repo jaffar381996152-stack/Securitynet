@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ethers } from "ethers";
 import toast from "react-hot-toast";
 import { useAppKit, useAppKitAccount, useDisconnect } from "@reown/appkit/react";
+import useWalletConnectGate from "@/hooks/useWalletConnectGate";
 import settings from "../../../data/settings";
 
 const CONTRACT_ADDRESS =
@@ -30,6 +31,7 @@ export default function DigitalGold() {
   const { address, isConnected } = useAppKitAccount();
   const { open } = useAppKit();
   const { disconnect } = useDisconnect();
+  const { connectWallet } = useWalletConnectGate();
 
   const [selectedNetwork, setSelectedNetwork] = useState("BSC");
   const [usdtAmount, setUsdtAmount]           = useState(15);
@@ -42,10 +44,12 @@ export default function DigitalGold() {
   const [copied, setCopied]           = useState(false);
   const [scanning, setScanning]       = useState(false);
   const [importOpen, setImportOpen]   = useState(false);
+  const [checkingPayment, setCheckingPayment] = useState(false);
 
   const pollIntervalRef = useRef(null);
   const scannerRef      = useRef(null);
   const scannerDivRef   = useRef(null);
+  const importSectionRef = useRef(null);
 
   // ── Handlers ─────────────────────────────────────────────────────────────
 
@@ -109,39 +113,66 @@ export default function DigitalGold() {
     fetchBalance();
   }, [isConnected, address]);
 
-  // ── Payment poll ──────────────────────────────────────────────────────────
+  // ── Payment check ─────────────────────────────────────────────────────────
 
+  const checkPayment = useCallback(async () => {
+    if (!usdtAmount || parseFloat(usdtAmount) < 10) return false;
+    if (selectedNetwork === "TRON" && !tronAddress) return false;
+    try {
+      const res = await fetch("/api/check-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          network: selectedNetwork,
+          senderAddress: selectedNetwork === "TRON" ? tronAddress : address,
+          connectedWallet: address,
+          usdtAmount: parseFloat(usdtAmount),
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setVerified(data.data);
+        setBurstKey((k) => k + 1);
+        toast.success(
+          `Payment Confirmed! We received ${data.data.usdtAmount} USDT. ${data.data.xnTokens} XN tokens are being sent to your wallet.`,
+          { duration: 8000 }
+        );
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }, [selectedNetwork, tronAddress, address, usdtAmount]);
+
+  // Background poll — auto-detects payment every 15s
   useEffect(() => {
     if (!isConnected || !address || verified) { clearInterval(pollIntervalRef.current); return; }
-    const checkPayment = async () => {
-      if (!usdtAmount || parseFloat(usdtAmount) < 10) return;
-      if (selectedNetwork === "TRON" && !tronAddress) return;
-      try {
-        const res = await fetch("/api/check-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            network: selectedNetwork,
-            senderAddress: selectedNetwork === "TRON" ? tronAddress : address,
-            connectedWallet: address,
-            usdtAmount: parseFloat(usdtAmount),
-          }),
-        });
-        const data = await res.json();
-        if (data.success) {
-          clearInterval(pollIntervalRef.current);
-          setVerified(data.data);
-          setBurstKey((k) => k + 1);
-          toast.success(
-            `Payment Confirmed! We received ${data.data.usdtAmount} USDT. ${data.data.xnTokens} XN tokens are being sent to your wallet.`,
-            { duration: 8000 }
-          );
-        }
-      } catch {}
-    };
     pollIntervalRef.current = setInterval(checkPayment, 15000);
     return () => clearInterval(pollIntervalRef.current);
-  }, [isConnected, address, selectedNetwork, usdtAmount, verified, tronAddress]);
+  }, [isConnected, address, verified, checkPayment]);
+
+  // Manual "I've sent the payment" check
+  const handleManualPaymentCheck = async () => {
+    if (!isConnected) {
+      toast.error("Connect your wallet first.");
+      return;
+    }
+    if (!usdtAmount || parseFloat(usdtAmount) < 10) {
+      toast.error("Enter an amount of at least 10 USDT.");
+      return;
+    }
+    if (selectedNetwork === "TRON" && !tronAddress) {
+      toast.error("Enter your TRON sender address first.");
+      return;
+    }
+    setCheckingPayment(true);
+    const found = await checkPayment();
+    setCheckingPayment(false);
+    if (!found) {
+      toast("Payment not detected yet — we'll keep checking automatically every 15 seconds.", { icon: "⏳" });
+    }
+  };
 
   const currentNetwork = USDT_NETWORKS[selectedNetwork];
   const networkLabel   = { BSC: "BEP-20", ETH: "ERC-20", TRON: "TRC-20" }[selectedNetwork];
@@ -195,9 +226,17 @@ export default function DigitalGold() {
             <p style={{ fontFamily: "var(--font-disp)", fontSize: 14, color: "var(--text-muted)", marginBottom: 20 }}>
               Sending: <strong style={{ color: "var(--gold)" }}>{verified.xnTokens} XN</strong>
             </p>
-            <a href="/news/how-to-add-a-xn-token" target="_blank" rel="noopener noreferrer" className="btn-link" style={{ justifyContent: "center" }}>
+            <button
+              type="button"
+              className="btn-link"
+              style={{ justifyContent: "center", margin: "0 auto", background: "none", border: "none", cursor: "pointer" }}
+              onClick={() => {
+                setImportOpen(true);
+                importSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            >
               HOW TO IMPORT XN TOKENS →
-            </a>
+            </button>
             {verified.txHash && (
               <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", marginTop: 16, wordBreak: "break-all", letterSpacing: "0.06em" }}>
                 TX: {verified.txHash}
@@ -244,7 +283,7 @@ export default function DigitalGold() {
               {!isConnected ? (
                 <div>
                   <button
-                    onClick={() => open()}
+                    onClick={connectWallet}
                     className="btn-ghost"
                     style={{ width: "100%", height: 52, justifyContent: "center", marginBottom: 10 }}
                   >
@@ -451,14 +490,15 @@ export default function DigitalGold() {
                     </p>
                   </div>
 
-                  {/* Authorize button */}
+                  {/* Manual payment check */}
                   <button
                     className="btn-primary authorize-btn"
                     style={{ width: "100%", justifyContent: "center" }}
-                    onClick={() => copyToClipboard(currentNetwork.depositAddress)}
+                    onClick={handleManualPaymentCheck}
+                    disabled={checkingPayment}
                     data-cursor="cta"
                   >
-                    AUTHORIZE TRANSFER
+                    {checkingPayment ? "CHECKING…" : "I'VE SENT THE PAYMENT"}
                   </button>
 
                   {/* Payment listener indicator */}
@@ -488,7 +528,7 @@ export default function DigitalGold() {
       </div>
 
       {/* Import collapsible */}
-      <div style={{ borderTop: "1px solid var(--border-sub)" }}>
+      <div ref={importSectionRef} style={{ borderTop: "1px solid var(--border-sub)" }}>
         <button
           className="import-toggle"
           onClick={() => setImportOpen(!importOpen)}
