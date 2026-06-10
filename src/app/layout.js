@@ -14,6 +14,11 @@ import AuthProvider from "@/components/session/providers";
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://securitynet.ai";
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {

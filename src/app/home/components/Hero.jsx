@@ -69,7 +69,8 @@ export default function Hero() {
             textAlign: "center",
           }}
         >
-          <DeclassifyText text="AI EYES," delay={0.2} />{" "}
+          <DeclassifyText text="AI EYES," delay={0.2} />
+          <br className="mobile-br" />{" "}
           <DeclassifyText
             text="SAFE SKIES."
             delay={0.2}

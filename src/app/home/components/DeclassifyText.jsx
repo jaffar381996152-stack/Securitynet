@@ -39,7 +39,7 @@ export default function DeclassifyText({ text, tag: Tag = "span", style = {}, cl
   return (
     <Tag ref={ref} className={className} style={{ display: "inline", ...style }} aria-label={text}>
       {chars.map((char, i) => (
-        <span key={i} aria-hidden="true" style={{ display: char === " " ? "inline" : "inline-block" }}>
+        <span key={i} aria-hidden="true" style={{ display: "inline" }}>
           {char}
         </span>
       ))}

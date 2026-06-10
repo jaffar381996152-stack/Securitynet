@@ -8,12 +8,6 @@ export default function TopographicCanvas() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Skip animation on mobile (< 768px)
-    if (window.innerWidth < 768) {
-      canvas.style.opacity = "0";
-      return;
-    }
-
     const ctx = canvas.getContext("2d");
     let rafId;
     let lastTs = 0;

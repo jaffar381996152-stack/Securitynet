@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { name: "SERVICES",   path: "/services" },
   { name: "ABOUT",      path: "/about" },
   { name: "NEWS",       path: "/news" },
+  { name: "PRESALE",    path: "/presale" },
 ];
 
 export default function Header() {
@@ -344,6 +345,40 @@ export default function Header() {
                 </Link>
               );
             })}
+
+            {status !== "authenticated" && (
+              <Link
+                href="/signin"
+                onClick={() => setOpen(false)}
+                style={{
+                  fontFamily: "var(--font-disp)",
+                  fontWeight: 700,
+                  fontSize: 28,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: pathname === "/signin" ? "var(--gold)" : "var(--text-sec)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                  opacity: open ? 1 : 0,
+                  transform: open ? "translateY(0)" : "translateY(16px)",
+                  transition: `opacity 0.35s ease ${NAV_LINKS.length * 0.06}s, transform 0.35s ease ${NAV_LINKS.length * 0.06}s`,
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 10,
+                    color: "var(--gold-dim)",
+                    letterSpacing: "0.1em",
+                    minWidth: 24,
+                  }}
+                >
+                  {String(NAV_LINKS.length + 1).padStart(2, "0")}
+                </span>
+                SIGN IN
+              </Link>
+            )}
           </nav>
 
           {/* Account */}

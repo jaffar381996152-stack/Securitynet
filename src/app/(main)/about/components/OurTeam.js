@@ -9,50 +9,22 @@ const TWITTER_PATH =
 
 const TEAM = [
   {
-    initials: "AK",
-    name: "Alex Kovacs",
-    role: "CEO & Co-Founder",
-    bio: "15 years in cybersecurity. Former CISO at two Fortune 500 companies. Built threat detection systems protecting $40B+ in assets before founding SecurityNet.",
+    initials: "AZ",
+    name: "Azeem",
+    role: "Founder & CEO",
+    bio: "Drives the vision behind SecurityNet's AI-powered blockchain security platform, leading product strategy, partnerships, and the XN token presale.",
     socials: ["linkedin", "twitter"],
   },
   {
-    initials: "SR",
-    name: "Sophia Reyes",
-    role: "CTO & Co-Founder",
-    bio: "PhD in Distributed Systems, MIT. Core contributor to three major blockchain protocols. Led engineering at a $2B DeFi protocol before SecurityNet.",
+    initials: "AO",
+    name: "Amir Omer",
+    role: "Co-Founder & CTO",
+    bio: "Leads engineering for SecurityNet, overseeing the AI threat detection engine, on-chain infrastructure, and the XN token smart contract architecture.",
     socials: ["linkedin", "twitter"],
-  },
-  {
-    initials: "DJ",
-    name: "Daniel Johansson",
-    role: "Head of AI & ML",
-    bio: "Former DeepMind researcher. Published 12 peer-reviewed papers on adversarial machine learning. Leads all AI model development and training infrastructure.",
-    socials: ["linkedin"],
-  },
-  {
-    initials: "NA",
-    name: "Nadia Al-Rashid",
-    role: "Head of Blockchain Security",
-    bio: "Discovered 3 critical vulnerabilities in top-10 DeFi protocols. Smart contract auditor with $800M+ in secured TVL. Leads all security research at SecurityNet.",
-    socials: ["twitter"],
-  },
-  {
-    initials: "MC",
-    name: "Marcus Chen",
-    role: "Head of Growth",
-    bio: "Grew two crypto communities to 100K+ members from zero. Expert in Web3 go-to-market, KOL partnerships, and presale strategy. Joined from Binance Labs portfolio.",
-    socials: ["twitter", "linkedin"],
-  },
-  {
-    initials: "EW",
-    name: "Elena Wolff",
-    role: "Blockchain Architect",
-    bio: "Core contributor to Polkadot and Cosmos SDK. Designed the XN token contract and multi-chain bridge architecture. Passionate about cross-chain security standards.",
-    socials: ["linkedin"],
   },
 ];
 
-const DELAYS = [0.08, 0.16, 0.24, 0.08, 0.16, 0.24];
+const DELAYS = [0.08, 0.16];
 
 function SocialIcon({ type }) {
   const path = type === "linkedin" ? LINKEDIN_PATH : TWITTER_PATH;

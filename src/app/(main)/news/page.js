@@ -2,9 +2,9 @@ import NewsClient from "./NewsClient";
 import { pageMetadata } from "@/app/libs/seo";
 
 export const metadata = pageMetadata({
-  title: "News & Guides",
+  title: "Intelligence Feeds — News & Updates",
   description:
-    "Stay updated with the latest developments in AI security, blockchain, and smart surveillance technology.",
+    "Latest news, security research, guides, and announcements from SecurityNet.ai — the AI-powered blockchain security platform.",
   path: "/news",
 });
 

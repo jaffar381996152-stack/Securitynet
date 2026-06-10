@@ -17,7 +17,7 @@ export default function ServicesHero() {
     >
       <div className="container">
         <span className="eyebrow">SERVICES</span>
-        <h1 className="disp-title" style={{ fontSize: "clamp(48px,9vw,116px)", maxWidth: 900, marginBottom: 24 }}>
+        <h1 className="disp-title" style={{ fontSize: "clamp(48px,9vw,116px)", marginBottom: 24 }}>
           <DeclassifyText text="AI-POWERED " delay={0.1} />
           <DeclassifyText text="SECURITY." delay={0.48} style={{ color: "var(--gold)" }} />
           <br />
