@@ -44,7 +44,6 @@ const UploadEvent = () => {
                     var percentCompleted = Math.round(
                         (progressEvent.loaded * 100) / progressEvent.total
                     );
-                    console.log(percentCompleted)
                     setProgress(percentCompleted);
                 },
             };
@@ -67,7 +66,6 @@ const UploadEvent = () => {
 
     };
     const removeimage = () => {
-        console.log(formData.event_image)
         setProgress(0)
         setFormData({
             ...formData,
@@ -76,7 +74,6 @@ const UploadEvent = () => {
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData)
         fetch('/api/uploadevent', {
             method: 'POST',
             headers: {

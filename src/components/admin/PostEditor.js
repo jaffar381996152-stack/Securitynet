@@ -23,7 +23,7 @@ function renderMarkdownPreview(text) {
       return `<h3 class="text-xl font-bold mt-4 mb-2">${content}</h3>`;
     })
     .replace(/\*\*(.*?)\*\*/gm, '<strong>$1</strong>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/gm, '<a href="$2" class="text-blue-600 underline" target="_blank">$1</a>');
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/gm, '<a href="$2" class="text-[var(--gold)] underline" target="_blank">$1</a>');
   return { __html: html };
 }
 
@@ -73,13 +73,13 @@ function BlockEditor({ block, index, onChange, onDelete, onMoveUp, onMoveDown, i
   };
 
   return (
-    <div className="border border-gray-200 rounded-xl p-4 bg-white group">
+    <div className="border border-[var(--border-sub)] rounded-xl p-4 bg-[var(--bg-tertiary)] group">
       <div className="flex items-center gap-2 mb-3">
         {/* Type selector */}
         <select
           value={block.type}
           onChange={(e) => onChange(index, { ...block, type: e.target.value, value: "", caption: "" })}
-          className="text-xs border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:border-[#483AA0]"
+          className="text-xs border border-[var(--border-sub)] rounded-lg px-2 py-1 bg-[var(--bg-secondary)] text-[var(--text-sec)] focus:outline-none focus:border-[var(--gold)]"
         >
           <option value="text">Paragraph</option>
           <option value="heading">Heading</option>
@@ -87,9 +87,9 @@ function BlockEditor({ block, index, onChange, onDelete, onMoveUp, onMoveDown, i
           <option value="raw">Large Text Box</option>
         </select>
         <div className="flex gap-1 ml-auto">
-          <button onClick={() => onMoveUp(index)} disabled={isFirst} className="w-6 h-6 text-gray-400 hover:text-gray-700 disabled:opacity-30 text-xs">↑</button>
-          <button onClick={() => onMoveDown(index)} disabled={isLast} className="w-6 h-6 text-gray-400 hover:text-gray-700 disabled:opacity-30 text-xs">↓</button>
-          <button onClick={() => onDelete(index)} className="w-6 h-6 text-red-400 hover:text-red-600 text-xs">✕</button>
+          <button onClick={() => onMoveUp(index)} disabled={isFirst} className="w-6 h-6 text-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:opacity-30 text-xs">↑</button>
+          <button onClick={() => onMoveDown(index)} disabled={isLast} className="w-6 h-6 text-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:opacity-30 text-xs">↓</button>
+          <button onClick={() => onDelete(index)} className="w-6 h-6 text-[var(--c-danger)] hover:opacity-80 text-xs">✕</button>
         </div>
       </div>
 
@@ -100,20 +100,20 @@ function BlockEditor({ block, index, onChange, onDelete, onMoveUp, onMoveDown, i
               <img src={block.value} alt="" className="w-full max-h-60 object-cover rounded-lg" />
               <button
                 onClick={() => onChange(index, { ...block, value: "" })}
-                className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 text-red-500 shadow text-xs"
+                className="absolute top-2 right-2 bg-[var(--bg-tertiary)] rounded-full w-6 h-6 text-[var(--c-danger)] shadow text-xs"
               >✕</button>
             </div>
           ) : (
             <div
               onClick={() => fileRef.current?.click()}
-              className="border-2 border-dashed border-gray-200 rounded-xl h-32 flex flex-col items-center justify-center cursor-pointer hover:border-[#483AA0] transition-colors"
+              className="border-2 border-dashed border-[var(--border-sub)] rounded-xl h-32 flex flex-col items-center justify-center cursor-pointer hover:border-[var(--gold)] transition-colors"
             >
               {uploading ? (
-                <span className="text-sm text-gray-400">Uploading...</span>
+                <span className="text-sm text-[var(--text-muted)]">Uploading...</span>
               ) : (
                 <>
                   <span className="text-2xl mb-1">📷</span>
-                  <span className="text-xs text-gray-400">Click to upload image</span>
+                  <span className="text-xs text-[var(--text-muted)]">Click to upload image</span>
                 </>
               )}
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
@@ -124,7 +124,7 @@ function BlockEditor({ block, index, onChange, onDelete, onMoveUp, onMoveDown, i
             placeholder="Caption (optional)"
             value={block.caption || ""}
             onChange={(e) => onChange(index, { ...block, caption: e.target.value })}
-            className="w-full mt-2 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-600 focus:outline-none focus:border-[#483AA0]"
+            className="w-full mt-2 border border-[var(--border-sub)] rounded-lg px-3 py-2 text-xs text-[var(--text-sec)] bg-[var(--bg-secondary)] focus:outline-none focus:border-[var(--gold)]"
           />
         </div>
       ) : block.type === "heading" ? (
@@ -133,7 +133,7 @@ function BlockEditor({ block, index, onChange, onDelete, onMoveUp, onMoveDown, i
           placeholder="Heading text..."
           value={block.value}
           onChange={(e) => onChange(index, { ...block, value: e.target.value })}
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-lg font-bold text-gray-900 focus:outline-none focus:border-[#483AA0]"
+          className="w-full border border-[var(--border-sub)] rounded-xl px-4 py-3 text-lg font-bold text-[var(--text-primary)] bg-[var(--bg-secondary)] focus:outline-none focus:border-[var(--gold)]"
         />
       ) : block.type === "raw" ? (
         <div className="w-full">
@@ -142,14 +142,14 @@ function BlockEditor({ block, index, onChange, onDelete, onMoveUp, onMoveDown, i
             value={block.value}
             onChange={(e) => onChange(index, { ...block, value: e.target.value })}
             rows={15}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 bg-gray-50/50 focus:outline-none focus:border-[#483AA0] resize-y"
+            className="w-full border border-[var(--border-sub)] rounded-xl px-4 py-3 text-sm text-[var(--text-sec)] bg-[var(--bg-secondary)] focus:outline-none focus:border-[var(--gold)] resize-y"
           />
           {block.value && (
-            <div className="mt-4 border-t border-gray-100 pt-4">
-              <span className="text-xs font-semibold text-gray-400 uppercase mb-2 block">Live Public Preview</span>
-              <div 
-                className="prose prose-gray max-w-none text-gray-700 text-sm leading-relaxed whitespace-pre-wrap bg-white border border-gray-100 p-4 rounded-xl"
-                dangerouslySetInnerHTML={renderMarkdownPreview(block.value)} 
+            <div className="mt-4 border-t border-[var(--border-sub)] pt-4">
+              <span className="text-xs font-semibold text-[var(--text-muted)] uppercase mb-2 block">Live Public Preview</span>
+              <div
+                className="prose prose-invert max-w-none text-[var(--text-sec)] text-sm leading-relaxed whitespace-pre-wrap bg-[var(--bg-secondary)] border border-[var(--border-sub)] p-4 rounded-xl"
+                dangerouslySetInnerHTML={renderMarkdownPreview(block.value)}
               />
             </div>
           )}
@@ -160,14 +160,14 @@ function BlockEditor({ block, index, onChange, onDelete, onMoveUp, onMoveDown, i
           value={block.value}
           onChange={(e) => onChange(index, { ...block, value: e.target.value })}
           rows={4}
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 focus:outline-none focus:border-[#483AA0] resize-y"
+          className="w-full border border-[var(--border-sub)] rounded-xl px-4 py-3 text-sm text-[var(--text-sec)] bg-[var(--bg-secondary)] focus:outline-none focus:border-[var(--gold)] resize-y"
         />
       )}
     </div>
   );
 }
 
-export default function PostEditor({ initialData = null, postId = null }) {
+export default function PostEditor({ initialData = null, postId = null, onCancel = null, onSaved = null }) {
   const router = useRouter();
   const coverRef = useRef(null);
 
@@ -264,8 +264,10 @@ export default function PostEditor({ initialData = null, postId = null }) {
       const data = await res.json();
       if (!data.success) {
         setError(data.error || "Save failed.");
+      } else if (onSaved) {
+        onSaved();
       } else {
-        router.push("/dashboard/posts");
+        router.push("/dashboard");
       }
     } catch (err) {
       setError(err.message);
@@ -277,18 +279,23 @@ export default function PostEditor({ initialData = null, postId = null }) {
   return (
     <div className="py-8 max-w-3xl mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">{postId ? "Edit Post" : "New Post"}</h1>
+        <h1
+          className="text-2xl font-bold text-[var(--text-primary)] uppercase"
+          style={{ fontFamily: "var(--font-disp)", letterSpacing: "0.04em" }}
+        >
+          {postId ? "Edit Post" : "New Post"}
+        </h1>
         <div className="flex gap-3">
           <button
-            onClick={() => router.push("/dashboard/posts")}
-            className="px-4 py-2 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+            onClick={() => (onCancel ? onCancel() : router.push("/dashboard"))}
+            className="px-4 py-2 rounded-xl border border-[var(--border-sub)] text-sm text-[var(--text-sec)] hover:bg-[var(--bg-secondary)] transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-5 py-2 rounded-xl bg-[#483AA0] text-white text-sm font-medium hover:bg-[#372d80] transition-colors disabled:opacity-60"
+            className="px-5 py-2 rounded-xl bg-[var(--gold)] text-[var(--text-inv)] text-sm font-medium hover:bg-[var(--gold-bright)] transition-colors disabled:opacity-60"
           >
             {saving ? "Saving..." : postId ? "Update Post" : "Publish Post"}
           </button>
@@ -296,29 +303,29 @@ export default function PostEditor({ initialData = null, postId = null }) {
       </div>
 
       {error && (
-        <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+        <div className="mb-4 px-4 py-3 bg-[rgba(168,82,82,0.08)] border border-[rgba(168,82,82,0.3)] rounded-xl text-sm text-[var(--c-danger)]">
           {error}
         </div>
       )}
 
       <div className="space-y-5">
         {/* Title */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Title *</label>
+        <div className="bg-[var(--bg-tertiary)] rounded-2xl border border-[var(--border-sub)] p-5">
+          <label className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide block mb-2">Title *</label>
           <input
             type="text"
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
             placeholder="Post title..."
-            className="w-full text-xl font-semibold text-gray-900 border-none outline-none placeholder:text-gray-300"
+            className="w-full text-xl font-semibold text-[var(--text-primary)] bg-transparent border-none outline-none placeholder:text-[var(--text-muted)]"
           />
-          <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-            <span className="text-xs text-gray-400">Slug:</span>
+          <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[var(--border-sub)]">
+            <span className="text-xs text-[var(--text-muted)]">Slug:</span>
             <input
               type="text"
               value={slug}
               onChange={(e) => setSlug(slugify(e.target.value))}
-              className="flex-1 text-xs font-mono text-[#483AA0] border-none outline-none"
+              className="flex-1 text-xs font-mono text-[var(--gold)] bg-transparent border-none outline-none"
             />
           </div>
         </div>
@@ -326,8 +333,8 @@ export default function PostEditor({ initialData = null, postId = null }) {
         {/* Meta row */}
         <div className="grid md:grid-cols-3 gap-4">
           {/* Category */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Category</label>
+          <div className="bg-[var(--bg-tertiary)] rounded-2xl border border-[var(--border-sub)] p-4">
+            <label className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide block mb-2">Category</label>
             <select
               value={CATEGORIES.includes(category) ? category : "__custom__"}
               onChange={(e) => {
@@ -338,7 +345,7 @@ export default function PostEditor({ initialData = null, postId = null }) {
                   setCustomCategory("");
                 }
               }}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#483AA0]"
+              className="w-full border border-[var(--border-sub)] rounded-lg px-3 py-2 text-sm bg-[var(--bg-secondary)] text-[var(--text-sec)] focus:outline-none focus:border-[var(--gold)]"
             >
               {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               <option value="__custom__">Custom...</option>
@@ -349,18 +356,18 @@ export default function PostEditor({ initialData = null, postId = null }) {
                 placeholder="Category name"
                 value={customCategory}
                 onChange={(e) => { setCustomCategory(e.target.value); setCategory("__custom__"); }}
-                className="w-full mt-2 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#483AA0]"
+                className="w-full mt-2 border border-[var(--border-sub)] rounded-lg px-3 py-2 text-sm bg-[var(--bg-secondary)] text-[var(--text-sec)] focus:outline-none focus:border-[var(--gold)]"
               />
             )}
           </div>
 
           {/* Status */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Status</label>
+          <div className="bg-[var(--bg-tertiary)] rounded-2xl border border-[var(--border-sub)] p-4">
+            <label className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide block mb-2">Status</label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#483AA0]"
+              className="w-full border border-[var(--border-sub)] rounded-lg px-3 py-2 text-sm bg-[var(--bg-secondary)] text-[var(--text-sec)] focus:outline-none focus:border-[var(--gold)]"
             >
               <option value="published">Published</option>
               <option value="draft">Draft</option>
@@ -368,26 +375,26 @@ export default function PostEditor({ initialData = null, postId = null }) {
           </div>
 
           {/* Publish date */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Publish Date</label>
+          <div className="bg-[var(--bg-tertiary)] rounded-2xl border border-[var(--border-sub)] p-4">
+            <label className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide block mb-2">Publish Date</label>
             <input
               type="datetime-local"
               value={publishedAt}
               onChange={(e) => setPublishedAt(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#483AA0]"
+              className="w-full border border-[var(--border-sub)] rounded-lg px-3 py-2 text-sm bg-[var(--bg-secondary)] text-[var(--text-sec)] focus:outline-none focus:border-[var(--gold)]"
             />
           </div>
         </div>
 
         {/* Cover image */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-3">Cover Image</label>
+        <div className="bg-[var(--bg-tertiary)] rounded-2xl border border-[var(--border-sub)] p-5">
+          <label className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide block mb-3">Cover Image</label>
           {coverImage ? (
             <div className="relative">
               <img src={coverImage} alt="Cover" className="w-full max-h-60 object-cover rounded-xl" />
               <button
                 onClick={() => setCoverImage("")}
-                className="absolute top-2 right-2 bg-white rounded-full px-3 py-1 text-red-500 shadow text-xs font-medium"
+                className="absolute top-2 right-2 bg-[var(--bg-tertiary)] rounded-full px-3 py-1 text-[var(--c-danger)] shadow text-xs font-medium"
               >
                 Remove
               </button>
@@ -395,15 +402,15 @@ export default function PostEditor({ initialData = null, postId = null }) {
           ) : (
             <div
               onClick={() => coverRef.current?.click()}
-              className="border-2 border-dashed border-gray-200 rounded-xl h-40 flex flex-col items-center justify-center cursor-pointer hover:border-[#483AA0] transition-colors"
+              className="border-2 border-dashed border-[var(--border-sub)] rounded-xl h-40 flex flex-col items-center justify-center cursor-pointer hover:border-[var(--gold)] transition-colors"
             >
               {coverUploading ? (
-                <span className="text-sm text-gray-400">Uploading...</span>
+                <span className="text-sm text-[var(--text-muted)]">Uploading...</span>
               ) : (
                 <>
                   <span className="text-3xl mb-2">🖼️</span>
-                  <span className="text-sm text-gray-400">Click to upload cover image</span>
-                  <span className="text-xs text-gray-300 mt-1">JPG, PNG, WebP</span>
+                  <span className="text-sm text-[var(--text-muted)]">Click to upload cover image</span>
+                  <span className="text-xs text-[var(--text-muted)] mt-1">JPG, PNG, WebP</span>
                 </>
               )}
               <input ref={coverRef} type="file" accept="image/*" className="hidden" onChange={handleCoverUpload} />
@@ -412,20 +419,20 @@ export default function PostEditor({ initialData = null, postId = null }) {
         </div>
 
         {/* Excerpt */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Excerpt</label>
+        <div className="bg-[var(--bg-tertiary)] rounded-2xl border border-[var(--border-sub)] p-5">
+          <label className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide block mb-2">Excerpt</label>
           <textarea
             value={excerpt}
             onChange={(e) => setExcerpt(e.target.value)}
             placeholder="Short description shown in post cards..."
             rows={2}
-            className="w-full text-sm text-gray-700 border-none outline-none resize-none placeholder:text-gray-300"
+            className="w-full text-sm text-[var(--text-sec)] bg-transparent border-none outline-none resize-none placeholder:text-[var(--text-muted)]"
           />
         </div>
 
         {/* Content blocks */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-4">Content</label>
+        <div className="bg-[var(--bg-tertiary)] rounded-2xl border border-[var(--border-sub)] p-5">
+          <label className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide block mb-4">Content</label>
           <div className="space-y-3">
             {content.map((block, i) => (
               <BlockEditor
@@ -446,25 +453,25 @@ export default function PostEditor({ initialData = null, postId = null }) {
           <div className="flex gap-2 mt-4">
             <button
               onClick={() => addBlock("text")}
-              className="flex-1 py-2 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-400 hover:border-[#483AA0] hover:text-[#483AA0] transition-colors"
+              className="flex-1 py-2 border-2 border-dashed border-[var(--border-sub)] rounded-xl text-sm text-[var(--text-muted)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors"
             >
               + Paragraph
             </button>
             <button
               onClick={() => addBlock("heading")}
-              className="flex-1 py-2 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-400 hover:border-[#483AA0] hover:text-[#483AA0] transition-colors font-bold"
+              className="flex-1 py-2 border-2 border-dashed border-[var(--border-sub)] rounded-xl text-sm text-[var(--text-muted)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors font-bold"
             >
               + Heading
             </button>
             <button
               onClick={() => addBlock("image")}
-              className="flex-1 py-2 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-400 hover:border-[#483AA0] hover:text-[#483AA0] transition-colors"
+              className="flex-1 py-2 border-2 border-dashed border-[var(--border-sub)] rounded-xl text-sm text-[var(--text-muted)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors"
             >
               + Image
             </button>
             <button
               onClick={() => addBlock("raw")}
-              className="flex-1 py-2 border-2 border-dashed border-[#483AA0]/20 rounded-xl text-sm text-[#483AA0] hover:border-[#483AA0] hover:bg-[#483AA0]/5 transition-colors font-medium"
+              className="flex-1 py-2 border-2 border-dashed border-[var(--border-gold)] rounded-xl text-sm text-[var(--gold)] hover:border-[var(--gold)] hover:bg-[var(--gold-ghost)] transition-colors font-medium"
             >
               + Large Box
             </button>

@@ -2,12 +2,10 @@
 import React, { Fragment } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { DashboardIcon, Logo, UserIcon } from "../../../public/icons/icons";
+import { DashboardIcon, Logo } from "../../../public/icons/icons";
 
 const NAV = [
-  { href: "/dashboard",        label: "Dashboard",      Icon: DashboardIcon, exact: true },
-  { href: "/dashboard/event",  label: "Upcoming Events", Icon: UserIcon,      exact: true },
-  { href: "/dashboard/posts",  label: "Posts",           Icon: UserIcon,      exact: false },
+  { href: "/dashboard", label: "Dashboard", Icon: DashboardIcon, exact: false },
 ];
 
 const Sidebar = ({ isSidebarOpen }) => {
