@@ -1,10 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePurchaseModal } from "@/context/PurchaseModalContext";
 
 const XN_PRICE = 0.20;
 
 export default function StickyPresaleWidget() {
+  const { openPurchaseModal } = usePurchaseModal();
   const [minimized, setMinimized] = useState(false);
   const [visible]                  = useState(true);
   const [usdtAmt, setUsdtAmt]     = useState("");
@@ -138,8 +140,8 @@ export default function StickyPresaleWidget() {
             You receive: <span style={{ color: "var(--gold)" }}>{xnAmt ? `${xnAmt} XN` : "— XN"}</span>
           </p>
 
-          <Link
-            href="/presale"
+          <button
+            onClick={() => openPurchaseModal(usdtAmt)}
             style={{
               display: "flex",
               alignItems: "center",
@@ -153,7 +155,8 @@ export default function StickyPresaleWidget() {
               fontSize: 13,
               letterSpacing: "0.16em",
               textTransform: "uppercase",
-              textDecoration: "none",
+              border: "none",
+              cursor: "pointer",
               marginBottom: 10,
               transition: "background 0.2s",
             }}
@@ -161,7 +164,7 @@ export default function StickyPresaleWidget() {
             onMouseLeave={(e) => (e.currentTarget.style.background = "var(--gold)")}
           >
             BUY XN
-          </Link>
+          </button>
 
           <Link
             href="/presale"

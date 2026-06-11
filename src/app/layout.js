@@ -9,8 +9,10 @@ import CustomCursor from "@/components/shell/CustomCursor";
 import UrgencyBar from "@/components/shell/UrgencyBar";
 import StickyPresaleWidget from "@/components/shell/StickyPresaleWidget";
 import MobileBottomBar from "@/components/shell/MobileBottomBar";
+import PurchaseXnModal from "@/components/shell/PurchaseXnModal";
 import PresaleCanvas from "@/app/presale/components/PresaleCanvas";
 import AuthProvider from "@/components/session/providers";
+import { PurchaseModalProvider } from "@/context/PurchaseModalContext";
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://securitynet.ai";
 
@@ -71,6 +73,7 @@ export default function RootLayout({ children }) {
       <body>
         <AuthProvider>
         <AppKit>
+        <PurchaseModalProvider>
           {/* Background canvas — direct body child at z:0, below all z:1 content */}
           <PresaleCanvas />
           <Preloader />
@@ -78,6 +81,7 @@ export default function RootLayout({ children }) {
           <UrgencyBar />
           <StickyPresaleWidget />
           <MobileBottomBar />
+          <PurchaseXnModal />
           {/* z:1 wrapper ensures all page content paints above canvas */}
           <div style={{ position: "relative", zIndex: 1 }}>
             <SmoothScrollProvider>
@@ -104,6 +108,7 @@ export default function RootLayout({ children }) {
               </Suspense>
             </SmoothScrollProvider>
           </div>
+        </PurchaseModalProvider>
         </AppKit>
         </AuthProvider>
       </body>

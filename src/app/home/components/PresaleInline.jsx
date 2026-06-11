@@ -5,12 +5,14 @@ import FadeUpSection from "./FadeUpSection";
 import DeclassifyText from "./DeclassifyText";
 import { useAppKitAccount } from "@reown/appkit/react";
 import useWalletConnectGate from "@/hooks/useWalletConnectGate";
+import settings from "../../../../data/settings";
 
 const XN_PRICE   = 0.20;
 const SOLD_PCT   = 78;
 const RAISED     = "$847,230";
 const XN_SOLD    = "4,236,150";
-const CONTRACT   = "0x917D93261B6b232F6b8b643d65b48928D1c85FFc";
+const USDT_NETWORKS = settings.USDT_NETWORKS;
+const NETWORK_LABEL = { BSC: "BEP-20", ETH: "ERC-20", TRON: "TRC-20" };
 
 const PROOF_ITEMS = [
   "0x3f…2a bought 2,500 XN · 5 min ago",
@@ -42,8 +44,8 @@ export default function PresaleInline() {
   const { connectWallet } = useWalletConnectGate();
 
   const [network, setNetwork]     = useState("BSC");
-  const [usdtAmt, setUsdtAmt]     = useState(100);
-  const [xnAmt, setXnAmt]         = useState((100 / XN_PRICE).toFixed(2));
+  const [usdtAmt, setUsdtAmt]     = useState("");
+  const [xnAmt, setXnAmt]         = useState("");
   const [copied, setCopied]       = useState(false);
   const [inView, setInView]       = useState(false);
 
@@ -59,19 +61,25 @@ export default function PresaleInline() {
     return () => obs.disconnect();
   }, []);
 
-  const handleUsdt = (v) => { setUsdtAmt(v); setXnAmt((parseFloat(v) / XN_PRICE).toFixed(2)); };
-  const handleXn   = (v) => { setXnAmt(v);   setUsdtAmt((parseFloat(v) * XN_PRICE).toFixed(2)); };
-
-  const copyAddr = () => {
-    navigator.clipboard.writeText(CONTRACT);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleUsdt = (v) => {
+    setUsdtAmt(v);
+    const num = parseFloat(v);
+    setXnAmt(!isNaN(num) && num > 0 ? (num / XN_PRICE).toFixed(2) : "");
+  };
+  const handleXn = (v) => {
+    setXnAmt(v);
+    const num = parseFloat(v);
+    setUsdtAmt(!isNaN(num) && num > 0 ? (num * XN_PRICE).toFixed(2) : "");
   };
 
-  const DEPOSIT_ADDRESS = {
-    BSC:  CONTRACT,
-    ETH:  "0x917D93261B6b232F6b8b643d65b48928D1c85FFc",
-    TRON: "TPresaleAddressTRC20xxxxxxxxxx",
+  const depositAddress = USDT_NETWORKS?.[network]?.depositAddress;
+  const networkLabel   = NETWORK_LABEL[network];
+
+  const copyAddr = () => {
+    if (!depositAddress) return;
+    navigator.clipboard.writeText(depositAddress);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -270,6 +278,7 @@ export default function PresaleInline() {
                       type="number"
                       value={usdtAmt}
                       min={10}
+                      placeholder="Enter USDT amount"
                       onChange={(e) => handleUsdt(e.target.value)}
                       style={{
                         width: "100%",
@@ -306,6 +315,7 @@ export default function PresaleInline() {
                     <input
                       type="number"
                       value={xnAmt}
+                      placeholder="0.00"
                       onChange={(e) => handleXn(e.target.value)}
                       style={{
                         width: "100%",
@@ -380,39 +390,52 @@ export default function PresaleInline() {
                 )}
 
                 {/* Send address box */}
-                <div style={{ background: "var(--bg-primary)", border: "1px solid var(--border-gold)", padding: "12px 14px", position: "relative" }}>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 6 }}>
-                    SEND {network === "BSC" ? "BEP-20" : network === "ETH" ? "ERC-20" : "TRC-20"} USDT TO:
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-sec)", flex: 1, wordBreak: "break-all", letterSpacing: "0.04em" }}>
-                      {DEPOSIT_ADDRESS[network]}
-                    </span>
-                    <button
-                      onClick={copyAddr}
-                      style={{
-                        padding: "6px 12px",
-                        background: copied ? "rgba(74,140,111,0.15)" : "var(--gold)",
-                        border: "none",
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 9,
-                        letterSpacing: "0.12em",
-                        textTransform: "uppercase",
-                        color: copied ? "var(--c-success)" : "var(--text-inv)",
-                        cursor: "pointer",
-                        flexShrink: 0,
-                        transition: "all 0.2s",
-                      }}
-                    >
-                      {copied ? "✓" : "COPY"}
-                    </button>
-                  </div>
-                </div>
+                {depositAddress ? (
+                  <>
+                    <div style={{ background: "var(--bg-primary)", border: "1px solid var(--border-gold)", padding: "12px 14px", position: "relative" }}>
+                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 6 }}>
+                        SEND {networkLabel} USDT TO:
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-sec)", flex: 1, wordBreak: "break-all", letterSpacing: "0.04em" }}>
+                          {depositAddress}
+                        </span>
+                        <button
+                          onClick={copyAddr}
+                          style={{
+                            padding: "6px 12px",
+                            background: copied ? "rgba(74,140,111,0.15)" : "var(--gold)",
+                            border: "none",
+                            fontFamily: "var(--font-mono)",
+                            fontSize: 9,
+                            letterSpacing: "0.12em",
+                            textTransform: "uppercase",
+                            color: copied ? "var(--c-success)" : "var(--text-inv)",
+                            cursor: "pointer",
+                            flexShrink: 0,
+                            transition: "all 0.2s",
+                          }}
+                        >
+                          {copied ? "✓" : "COPY"}
+                        </button>
+                      </div>
+                    </div>
 
-                {/* Warning */}
-                <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--c-danger)", padding: "8px 12px", background: "rgba(168,82,82,0.06)", border: "1px solid rgba(168,82,82,0.2)" }}>
-                  ⚠ Only send BEP-20 USDT to this address. Other tokens will be lost.
-                </p>
+                    {/* Warning */}
+                    <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--c-danger)", padding: "8px 12px", background: "rgba(168,82,82,0.06)", border: "1px solid rgba(168,82,82,0.2)" }}>
+                      ⚠ Only send {networkLabel} USDT to this address. Other tokens will be lost.
+                    </p>
+                  </>
+                ) : (
+                  <div style={{ border: "1px solid var(--border-gold)", background: "var(--gold-ghost)", padding: "12px 14px" }}>
+                    <p style={{ fontFamily: "var(--font-disp)", fontWeight: 600, fontSize: 13, color: "var(--text-primary)", marginBottom: 4 }}>
+                      Deposit address not configured
+                    </p>
+                    <p style={{ fontFamily: "var(--font-disp)", fontSize: 12, color: "var(--text-muted)" }}>
+                      The {network} deposit wallet has not been set up yet. Please check back soon or contact support.
+                    </p>
+                  </div>
+                )}
 
                 {/* Full presale link */}
                 <Link href="/presale" className="btn-primary" style={{ width: "100%", justifyContent: "center" }}>

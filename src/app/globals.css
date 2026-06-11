@@ -384,6 +384,82 @@
 @keyframes meshGradient  { 0%,100% { background-position:0% 0% } 50% { background-position:100% 100% } }
 
 /* =====================================================
+   PURCHASE XN MODAL
+   ===================================================== */
+.purchase-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(10,10,14,0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-quart);
+}
+.purchase-modal-backdrop.open {
+  opacity: 1;
+}
+.purchase-modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  opacity: 0;
+  transform: translateY(24px) scale(0.97);
+  transition: opacity 0.4s var(--ease-quart), transform 0.45s var(--ease-expo);
+}
+.purchase-modal-backdrop.open .purchase-modal-panel {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.purchase-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-gold);
+  color: var(--gold);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s var(--ease-quart), color 0.2s var(--ease-quart);
+}
+.purchase-modal-close:hover {
+  background: var(--gold);
+  color: var(--text-inv);
+}
+
+@media (max-width: 640px) {
+  .purchase-modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .purchase-modal-panel {
+    max-width: 100%;
+    max-height: 90vh;
+    transform: translateY(100%);
+  }
+  .purchase-modal-backdrop.open .purchase-modal-panel {
+    transform: translateY(0);
+  }
+}
+
+/* =====================================================
    REDUCED MOTION
    ===================================================== */
 @media (prefers-reduced-motion: reduce) {

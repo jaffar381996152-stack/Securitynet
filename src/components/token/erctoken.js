@@ -27,15 +27,18 @@ const NETWORK_CARDS = [
   { key: "TRON", name: "TRC-20", desc: "Tron — fast & low cost",                     recommended: false },
 ];
 
-export default function DigitalGold() {
+export default function DigitalGold({ initialUsdtAmount = "" }) {
   const { address, isConnected } = useAppKitAccount();
   const { open } = useAppKit();
   const { disconnect } = useDisconnect();
   const { connectWallet } = useWalletConnectGate();
 
   const [selectedNetwork, setSelectedNetwork] = useState("BSC");
-  const [usdtAmount, setUsdtAmount]           = useState(15);
-  const [xnAmount, setXnAmount]               = useState((15 / XN_PRICE).toFixed(2));
+  const [usdtAmount, setUsdtAmount]           = useState(initialUsdtAmount ? String(initialUsdtAmount) : "");
+  const [xnAmount, setXnAmount]               = useState(() => {
+    const num = parseFloat(initialUsdtAmount);
+    return !isNaN(num) && num > 0 ? (num / XN_PRICE).toFixed(2) : "";
+  });
   const [userTokenBalance, setUserTokenBalance] = useState(null);
 
   const [verified, setVerified]       = useState(null);
@@ -85,8 +88,18 @@ export default function DigitalGold() {
     } catch {}
   };
 
-  const handleUsdtChange = (value) => { setUsdtAmount(value); setXnAmount((parseFloat(value) / XN_PRICE).toFixed(2)); setVerified(null); };
-  const handleXnChange   = (value) => { setXnAmount(value);   setUsdtAmount((parseFloat(value) * XN_PRICE).toFixed(2)); setVerified(null); };
+  const handleUsdtChange = (value) => {
+    setUsdtAmount(value);
+    const num = parseFloat(value);
+    setXnAmount(!isNaN(num) && num > 0 ? (num / XN_PRICE).toFixed(2) : "");
+    setVerified(null);
+  };
+  const handleXnChange = (value) => {
+    setXnAmount(value);
+    const num = parseFloat(value);
+    setUsdtAmount(!isNaN(num) && num > 0 ? (num * XN_PRICE).toFixed(2) : "");
+    setVerified(null);
+  };
   const handleNetworkChange = (key) => { setSelectedNetwork(key); setVerified(null); };
 
   const copyToClipboard = (text) => {
@@ -398,6 +411,7 @@ export default function DigitalGold() {
                   value={usdtAmount}
                   min={10}
                   max={10000}
+                  placeholder="Enter USDT amount"
                   onChange={(e) => handleUsdtChange(e.target.value)}
                   style={{
                     width: "100%", height: 64,
@@ -433,6 +447,7 @@ export default function DigitalGold() {
                 <input
                   type="number"
                   value={xnAmount}
+                  placeholder="0.00"
                   onChange={(e) => handleXnChange(e.target.value)}
                   style={{
                     width: "100%", height: 64,
