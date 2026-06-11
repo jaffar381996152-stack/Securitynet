@@ -61,7 +61,12 @@ export async function POST(req: NextRequest) {
 
   const signature = req.headers.get("x-signature") || "";
   if (!verifyMoralisSignature(rawBody, signature)) {
-    return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+    // Respond 200 (without processing) instead of 401 — Moralis sends an
+    // unsigned connectivity test when a stream is first created, before its
+    // signing secret can be configured here. A 401 fails that test and
+    // blocks stream creation. Unverified payloads are still dropped, just
+    // with the same response shape as a normal accepted request.
+    return NextResponse.json({ received: true });
   }
 
   let payload: any;
