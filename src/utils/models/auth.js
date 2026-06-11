@@ -17,11 +17,10 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.pre("validate", function (next) {
+userSchema.pre("validate", function () {
   if (this.isGoogleUser) {
-    this.password = undefined; 
+    this.password = undefined;
   }
-  next();
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
