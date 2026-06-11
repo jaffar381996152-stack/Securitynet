@@ -1,189 +1,228 @@
 "use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
-import NeuralOrb from "@/components/animations/NeuralOrb";
-import XNCoin from "@/components/brand/XNCoin";
-import SplitRise from "@/components/animations/SplitRise";
-import ParticleField from "@/components/animations/ParticleField";
-import MagneticButton from "@/components/animations/MagneticButton";
-
-const stats = [
-  { label: "$0.20 / XN", pulse: true, accent: false },
-  { label: "BSC Network", pulse: false, accent: false },
-  { label: "Live Presale", pulse: true, accent: true },
-];
+import DeclassifyText from "./DeclassifyText";
+import FadeUpSection from "./FadeUpSection";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen overflow-hidden flex items-center">
-      {/* Particle field */}
-      <ParticleField count={40} connect />
-
-      {/* Radial glow behind orb (desktop right, mobile center-top) */}
+    <section
+      id="hero"
+      style={{
+        position: "relative",
+        minHeight: "100svh",
+        display: "flex",
+        alignItems: "center",
+        overflow: "hidden",
+      }}
+    >
+      {/* Radial gold glow */}
       <div
-        className="absolute top-0 right-0 w-[600px] h-[600px] pointer-events-none"
         style={{
-          background:
-            "radial-gradient(ellipse at 70% 40%, rgba(108,92,231,0.12) 0%, transparent 70%)",
+          position: "absolute",
+          top: "30%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "70vw",
+          height: "70vw",
+          maxWidth: 900,
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse,rgba(212,175,110,0.06) 0%,transparent 65%)",
+          pointerEvents: "none",
+          zIndex: 0,
         }}
       />
+
       <div
-        className="absolute bottom-0 left-0 w-[400px] h-[400px] pointer-events-none"
         style={{
-          background:
-            "radial-gradient(ellipse at 30% 70%, rgba(0,212,255,0.06) 0%, transparent 70%)",
+          maxWidth: "var(--max-w)",
+          margin: "0 auto",
+          padding: "clamp(60px,10vw,120px) var(--gut)",
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
         }}
-      />
+      >
+        {/* Classification badge */}
+        <FadeUpSection>
+          <div className="badge" style={{ marginBottom: 28 }}>
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--c-success)", display: "inline-block", animation: "ubPulse 1.8s ease-in-out infinite" }} />
+            XN TOKEN PRESALE · STAGE 3 ACTIVE
+          </div>
+        </FadeUpSection>
 
-      {/* Main layout */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-12 lg:gap-8 pt-24 pb-16 lg:pt-0 lg:pb-0 lg:min-h-screen">
-
-        {/* ── Content column ─────────────────────────────────────── */}
-        <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
-
-          {/* Overline */}
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-xs font-semibold tracking-[0.25em] uppercase mb-5"
-            style={{ color: "var(--accent-cyan)" }}
-          >
-            AI-Powered Security
-          </motion.p>
-
-          {/* H1 — SplitRise word-by-word */}
-          <SplitRise
-            text="AI Security will be Faster than Human Capabilities"
-            as="h1"
-            delay={0.15}
-            className="text-4xl sm:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-bold leading-[1.1] tracking-tight mb-7 max-w-[640px]"
+        {/* Headline */}
+        <h1
+          style={{
+            fontFamily: "var(--font-disp)",
+            fontWeight: 900,
+            textTransform: "uppercase",
+            lineHeight: 0.92,
+            letterSpacing: "-0.02em",
+            fontSize: "var(--hero-size)",
+            color: "var(--text-primary)",
+            maxWidth: 1100,
+            marginBottom: 28,
+            textAlign: "center",
+          }}
+        >
+          <DeclassifyText text="AI EYES," delay={0.2} />
+          <br className="mobile-br" />{" "}
+          <DeclassifyText
+            text="SAFE SKIES."
+            delay={0.2}
+            style={{ color: "var(--gold)" }}
           />
+        </h1>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.55 }}
-            className="text-base lg:text-lg leading-relaxed mb-10 max-w-[500px]"
-            style={{ color: "var(--text-secondary)" }}
+        {/* Subheading */}
+        <FadeUpSection delay={1.0}>
+          <p
+            style={{
+              fontFamily: "var(--font-ed)",
+              fontStyle: "italic",
+              fontSize: "clamp(17px,2vw,22px)",
+              fontWeight: 400,
+              color: "var(--text-sec)",
+              maxWidth: 520,
+              lineHeight: 1.65,
+              marginBottom: 44,
+              textAlign: "center",
+            }}
           >
-            Securitynet leverages cutting-edge AI for facial recognition,
-            real-time alerts, and comprehensive monitoring — now fuelled
-            by blockchain technology.
-          </motion.p>
+            Fueled by blockchain. Powered by AI. Secured by design.
+          </p>
+        </FadeUpSection>
 
-          {/* CTA row */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.7 }}
-            className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-10"
+        {/* CTAs */}
+        <FadeUpSection delay={1.1} style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", justifyContent: "center", marginBottom: 60 }}>
+          <Link href="/presale" className="btn-primary" data-cursor="cta">
+            AUTHORIZE PURCHASE — BUY XN
+          </Link>
+          <Link
+            href="/whitepaper"
+            style={{
+              fontFamily: "var(--font-disp)",
+              fontWeight: 600,
+              fontSize: 13,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: "var(--text-sec)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "color 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-sec)")}
           >
-            <MagneticButton
-              variant="primary"
-              size="lg"
-              href="/presale"
-            >
-              Buy XN Tokens
-            </MagneticButton>
-            <MagneticButton
-              variant="ghost"
-              size="lg"
-              href="https://securitynets.s3.amazonaws.com/securitynetai.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              White Paper
-            </MagneticButton>
-          </motion.div>
+            Read Whitepaper
+            <span style={{ color: "var(--gold)" }}>→</span>
+          </Link>
+        </FadeUpSection>
 
-          {/* Stats pills */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.85 }}
-            className="flex flex-wrap items-center justify-center lg:justify-start gap-3"
+        {/* Trust row */}
+        <FadeUpSection delay={1.25}>
+          <div
+            className="hero-trust-row"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
           >
-            {stats.map((s, i) => (
-              <div
+            {[
+              {
+                label: "Smart Contract Audited",
+                svg: (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    <path d="M9 12l2 2 4-4" />
+                  </svg>
+                ),
+              },
+              {
+                label: "Non-Custodial Wallet",
+                svg: (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                ),
+              },
+              {
+                label: "BEP-20 · ERC-20 · TRC-20",
+                svg: (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                ),
+              },
+            ].map((item, i) => (
+              <span
                 key={i}
-                className="flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium"
+                className="hero-trust-item"
                 style={{
-                  color: s.accent ? "var(--accent-cyan)" : "var(--text-secondary)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "0 24px",
+                  borderRight: i < 2 ? "1px solid var(--border-sub)" : "none",
+                  paddingLeft: i === 0 ? 0 : 24,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 10,
+                  letterSpacing: "0.16em",
+                  textTransform: "uppercase",
+                  color: "var(--text-muted)",
                 }}
               >
-                {s.pulse && (
-                  <span
-                    className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
-                    style={{
-                      background: s.accent
-                        ? "var(--accent-cyan)"
-                        : "var(--text-muted)",
-                      boxShadow: s.accent
-                        ? "0 0 6px var(--accent-cyan)"
-                        : "none",
-                      animation: s.accent
-                        ? "orb-pulse 2s ease-in-out infinite"
-                        : "none",
-                    }}
-                  />
-                )}
-                {s.label}
-              </div>
+                <span style={{ color: "var(--gold)", flexShrink: 0 }}>{item.svg}</span>
+                {item.label}
+              </span>
             ))}
-          </motion.div>
-        </div>
-
-        {/* ── Orb column ─────────────────────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="flex items-center justify-center order-1 lg:order-2 shrink-0"
-        >
-          {/* Mobile orb + signature coin */}
-          <div className="relative lg:hidden">
-            <NeuralOrb size={240} />
-            <div className="absolute -bottom-3 -right-3">
-              <XNCoin size={64} spinDuration={11} />
-            </div>
           </div>
-          {/* Desktop orb + signature coin */}
-          <div className="relative hidden lg:block">
-            <NeuralOrb size={420} />
-            <div className="absolute bottom-2 -right-6">
-              <XNCoin size={108} float spinDuration={10} />
-            </div>
-          </div>
-        </motion.div>
+        </FadeUpSection>
       </div>
 
-      {/* Scroll hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        aria-hidden="true"
+      {/* Scroll indicator */}
+      <div
+        className="hero-scroll-indicator"
+        style={{
+          position: "absolute",
+          bottom: 32,
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 8,
+          zIndex: 1,
+        }}
       >
         <span
-          className="text-[10px] uppercase tracking-[0.2em]"
-          style={{ color: "var(--text-muted)" }}
-        >
-          Scroll
-        </span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="w-px h-8 rounded-full"
           style={{
-            background:
-              "linear-gradient(to bottom, var(--brand-mid), transparent)",
+            fontFamily: "var(--font-mono)",
+            fontSize: 9,
+            letterSpacing: "0.24em",
+            textTransform: "uppercase",
+            color: "var(--text-muted)",
+          }}
+        >
+          SCROLL
+        </span>
+        <div
+          style={{
+            width: 1,
+            height: 56,
+            background: "linear-gradient(to bottom, var(--gold), transparent)",
+            animation: "scrollPulse 2s ease-in-out infinite",
           }}
         />
-      </motion.div>
+      </div>
     </section>
   );
 }
