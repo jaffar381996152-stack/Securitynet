@@ -3,6 +3,7 @@ frontend:
   phases:
     preBuild:
       commands:
+        - env | cut -d= -f1 | sort
         - npm ci
     build:
       commands:
