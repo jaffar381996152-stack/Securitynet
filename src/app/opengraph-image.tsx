@@ -1,12 +1,12 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Securitynet — AI Eyes, Safe Skies Fueled By Blockchain Technology";
+export const alt = "Securitynet — AI-Powered Security, Fueled By The XN Token";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Code-generated share-preview card — drawn entirely from the same brand
-// gradient/colors as the rest of the UI (see globals.css --brand-*), echoing
-// the eye/lens motif of src/app/icon.svg. No raster assets involved.
+// Code-generated share-preview card — drawn in the Ghost Protocol gold theme
+// (see globals.css --gold/--bg-primary), echoing the shield/"XN" mark of
+// src/app/icon.svg. No raster assets involved.
 export default async function Image() {
   return new ImageResponse(
     (
@@ -18,9 +18,9 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#05060C",
+          backgroundColor: "#0A0A0E",
           backgroundImage:
-            "radial-gradient(circle at 50% 32%, rgba(108,92,231,0.35) 0%, rgba(5,6,12,0) 62%)",
+            "radial-gradient(circle at 50% 30%, rgba(212,175,110,0.16) 0%, rgba(10,10,14,0) 62%)",
         }}
       >
         <div
@@ -30,51 +30,60 @@ export default async function Image() {
             justifyContent: "center",
             width: 136,
             height: 136,
-            borderRadius: 30,
-            border: "3px solid #6C5CE7",
-            backgroundColor: "rgba(0,212,255,0.06)",
+            borderRadius: 16,
+            border: "2px solid #D4AF6E",
+            backgroundColor: "rgba(212,175,110,0.06)",
             marginBottom: 44,
+            fontSize: 48,
+            fontWeight: 800,
+            letterSpacing: 2,
+            color: "#D4AF6E",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              width: 54,
-              height: 54,
-              borderRadius: 9999,
-              backgroundImage:
-                "linear-gradient(135deg, #00D4FF 0%, #6C5CE7 55%, #A78BFA 100%)",
-            }}
-          />
+          XN
         </div>
 
         <div
           style={{
             display: "flex",
-            fontSize: 86,
-            fontWeight: 700,
-            letterSpacing: -2,
-            backgroundImage:
-              "linear-gradient(90deg, #00D4FF 0%, #6C5CE7 50%, #A78BFA 100%)",
-            backgroundClip: "text",
-            color: "transparent",
+            fontSize: 84,
+            fontWeight: 800,
+            letterSpacing: 6,
+            textTransform: "uppercase",
+            color: "#F0EDE8",
           }}
         >
-          Securitynet
+          Security<span style={{ color: "#D4AF6E" }}>net</span>
         </div>
 
         <div
           style={{
             display: "flex",
-            marginTop: 24,
+            marginTop: 26,
             padding: "0 100px",
             fontSize: 30,
-            color: "#8892A4",
+            color: "#B8B5AE",
             letterSpacing: 0.5,
             textAlign: "center",
           }}
         >
-          AI Eyes, Safe Skies — Fueled By Blockchain Technology
+          AI-Powered Security, Fueled By The XN Token
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginTop: 40,
+            padding: "12px 32px",
+            border: "1px solid rgba(212,175,110,0.35)",
+            color: "#D4AF6E",
+            fontSize: 24,
+            letterSpacing: 6,
+            textTransform: "uppercase",
+          }}
+        >
+          XN Presale Live · $0.20 USDT
         </div>
       </div>
     ),

@@ -12,7 +12,6 @@ export default function robots() {
         "/register",
         "/forget",
         "/verify",
-        "/presale",
       ],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,

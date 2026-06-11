@@ -5,10 +5,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://securitynet.ai";
 
 const STATIC_ROUTES = [
   { path: "/", changeFrequency: "daily", priority: 1.0 },
-  { path: "/home", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/presale", changeFrequency: "daily", priority: 0.9 },
   { path: "/about", changeFrequency: "monthly", priority: 0.6 },
   { path: "/services", changeFrequency: "monthly", priority: 0.6 },
   { path: "/tokenomics", changeFrequency: "monthly", priority: 0.7 },
+  { path: "/whitepaper", changeFrequency: "monthly", priority: 0.5 },
   { path: "/blog", changeFrequency: "weekly", priority: 0.6 },
   { path: "/news", changeFrequency: "daily", priority: 0.7 },
   { path: "/contact-us", changeFrequency: "yearly", priority: 0.4 },
