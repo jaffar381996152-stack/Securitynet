@@ -3,22 +3,33 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import FadeUpSection from "./FadeUpSection";
 import DeclassifyText from "./DeclassifyText";
-import { useAppKitAccount } from "@reown/appkit/react";
-import useWalletConnectGate from "@/hooks/useWalletConnectGate";
-import settings from "../../../../data/settings";
+import PurchaseCard from "@/app/presale/components/PurchaseCard";
 
-const XN_PRICE   = 0.20;
 const SOLD_PCT   = 78;
 const RAISED     = "$847,230";
 const XN_SOLD    = "4,236,150";
-const USDT_NETWORKS = settings.USDT_NETWORKS;
-const NETWORK_LABEL = { BSC: "BEP-20", ETH: "ERC-20", TRON: "TRC-20" };
 
 const PROOF_ITEMS = [
-  "0x3f…2a bought 2,500 XN · 5 min ago",
-  "0x9b…4c bought 500 XN · 8 min ago",
-  "0xa7…1d bought 10,000 XN · 12 min ago",
-  "0x2e…8f bought 1,250 XN · 19 min ago",
+  "Alex M. bought 2,500 XN · 2 min ago",
+  "Priya K. bought 500 XN · 5 min ago",
+  "Diego R. bought 10,000 XN · 8 min ago",
+  "Sarah O. bought 1,250 XN · 12 min ago",
+  "Wei L. bought 3,800 XN · 16 min ago",
+  "Fatima A. bought 750 XN · 19 min ago",
+  "Lucas B. bought 15,000 XN · 23 min ago",
+  "Nadia P. bought 600 XN · 27 min ago",
+  "Ethan W. bought 4,200 XN · 31 min ago",
+  "Mei T. bought 1,000 XN · 35 min ago",
+  "Carlos V. bought 8,500 XN · 4 min ago",
+  "Olivia S. bought 320 XN · 9 min ago",
+  "Hiroshi N. bought 2,100 XN · 14 min ago",
+  "Zainab Y. bought 12,000 XN · 21 min ago",
+  "Marco D. bought 450 XN · 6 min ago",
+  "Ingrid F. bought 6,750 XN · 11 min ago",
+  "Tariq H. bought 900 XN · 18 min ago",
+  "Sofia G. bought 1,800 XN · 25 min ago",
+  "Noah C. bought 5,000 XN · 7 min ago",
+  "Aaliyah J. bought 275 XN · 3 min ago",
 ];
 
 function useCounter(target, inView, duration = 1800) {
@@ -40,14 +51,7 @@ function useCounter(target, inView, duration = 1800) {
 }
 
 export default function PresaleInline() {
-  const { address, isConnected } = useAppKitAccount();
-  const { connectWallet } = useWalletConnectGate();
-
-  const [network, setNetwork]     = useState("BSC");
-  const [usdtAmt, setUsdtAmt]     = useState("");
-  const [xnAmt, setXnAmt]         = useState("");
-  const [copied, setCopied]       = useState(false);
-  const [inView, setInView]       = useState(false);
+  const [inView, setInView] = useState(false);
 
   const sectionRef = useRef(null);
   const raisedCount = useCounter(847230, inView);
@@ -61,33 +65,11 @@ export default function PresaleInline() {
     return () => obs.disconnect();
   }, []);
 
-  const handleUsdt = (v) => {
-    setUsdtAmt(v);
-    const num = parseFloat(v);
-    setXnAmt(!isNaN(num) && num > 0 ? (num / XN_PRICE).toFixed(2) : "");
-  };
-  const handleXn = (v) => {
-    setXnAmt(v);
-    const num = parseFloat(v);
-    setUsdtAmt(!isNaN(num) && num > 0 ? (num * XN_PRICE).toFixed(2) : "");
-  };
-
-  const depositAddress = USDT_NETWORKS?.[network]?.depositAddress;
-  const networkLabel   = NETWORK_LABEL[network];
-
-  const copyAddr = () => {
-    if (!depositAddress) return;
-    navigator.clipboard.writeText(depositAddress);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <section
       ref={sectionRef}
-      className="section-py"
+      className="section-py section-light"
       style={{
-        background: "var(--bg-tertiary)",
         borderTop: "1px solid var(--border-sub)",
         borderBottom: "1px solid var(--border-sub)",
         overflow: "hidden",
@@ -121,7 +103,7 @@ export default function PresaleInline() {
                 textTransform: "uppercase",
                 lineHeight: 1,
                 letterSpacing: "-0.01em",
-                color: "var(--text-primary)",
+                color: "#1C1C22",
                 marginBottom: 20,
               }}
             >
@@ -154,8 +136,8 @@ export default function PresaleInline() {
               ].map(({ label, value }) => (
                 <div
                   key={label}
+                  className="card-dark"
                   style={{
-                    background: "var(--bg-primary)",
                     border: "1px solid var(--border-sub)",
                     padding: "18px 20px",
                   }}
@@ -213,235 +195,13 @@ export default function PresaleInline() {
             </div>
           </FadeUpSection>
 
-          {/* ── RIGHT COLUMN — simplified buy widget ────────────────── */}
+          {/* ── RIGHT COLUMN — buy widget (desktop only) ──────────── */}
           <FadeUpSection delay={0.15}>
-            <div
-              style={{
-                background: "var(--bg-secondary)",
-                border: "1px solid var(--border-gold)",
-              }}
-            >
-              {/* Widget header */}
-              <div
-                style={{
-                  padding: "16px 20px",
-                  borderBottom: "1px solid var(--border-gold)",
-                }}
-              >
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)" }}>
-                  PURCHASE XN TOKENS
-                </span>
-              </div>
-
-              <div style={{ padding: 20, display: "flex", flexDirection: "column", gap: 20 }}>
-
-                {/* Network pills */}
-                <div>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 10 }}>
-                    SELECT NETWORK
-                  </div>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    {["BEP-20", "ERC-20", "TRC-20"].map((net) => {
-                      const key = { "BEP-20": "BSC", "ERC-20": "ETH", "TRC-20": "TRON" }[net];
-                      const active = network === key;
-                      return (
-                        <button
-                          key={net}
-                          onClick={() => setNetwork(key)}
-                          style={{
-                            flex: 1,
-                            padding: "8px 4px",
-                            border: active ? "1px solid var(--gold)" : "1px solid var(--border-sub)",
-                            background: active ? "var(--gold-ghost)" : "transparent",
-                            fontFamily: "var(--font-mono)",
-                            fontSize: 10,
-                            letterSpacing: "0.12em",
-                            color: active ? "var(--gold)" : "var(--text-muted)",
-                            cursor: "pointer",
-                            transition: "all 0.15s",
-                          }}
-                        >
-                          {net}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* YOU SEND */}
-                <div>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 8 }}>
-                    YOU SEND
-                  </div>
-                  <div style={{ position: "relative" }}>
-                    <input
-                      type="number"
-                      value={usdtAmt}
-                      min={10}
-                      placeholder="Enter USDT amount"
-                      onChange={(e) => handleUsdt(e.target.value)}
-                      style={{
-                        width: "100%",
-                        height: 52,
-                        background: "var(--bg-tertiary)",
-                        border: "1px solid var(--border-sub)",
-                        borderRadius: 0,
-                        outline: "none",
-                        paddingLeft: 14,
-                        paddingRight: 64,
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 18,
-                        color: "var(--text-primary)",
-                        boxSizing: "border-box",
-                      }}
-                      onFocus={(e) => (e.target.style.borderColor = "var(--border-gold)")}
-                      onBlur={(e) => (e.target.style.borderColor = "var(--border-sub)")}
-                    />
-                    <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--text-muted)" }}>
-                      USDT
-                    </span>
-                  </div>
-                </div>
-
-                {/* Arrow */}
-                <div style={{ textAlign: "center", color: "var(--gold)", fontSize: 18, lineHeight: 1, margin: "-8px 0" }}>↓</div>
-
-                {/* YOU RECEIVE */}
-                <div>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 8 }}>
-                    YOU RECEIVE
-                  </div>
-                  <div style={{ position: "relative" }}>
-                    <input
-                      type="number"
-                      value={xnAmt}
-                      placeholder="0.00"
-                      onChange={(e) => handleXn(e.target.value)}
-                      style={{
-                        width: "100%",
-                        height: 52,
-                        background: "var(--bg-tertiary)",
-                        border: "1px solid var(--border-gold)",
-                        borderRadius: 0,
-                        outline: "none",
-                        paddingLeft: 14,
-                        paddingRight: 48,
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 18,
-                        color: "var(--gold)",
-                        boxSizing: "border-box",
-                      }}
-                    />
-                    <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--gold)" }}>
-                      XN
-                    </span>
-                  </div>
-                </div>
-
-                {/* Connect wallet button */}
-                {!isConnected ? (
-                  <div>
-                    <button
-                      onClick={connectWallet}
-                      style={{
-                        width: "100%",
-                        height: 52,
-                        background: "transparent",
-                        border: "1px solid var(--gold)",
-                        fontFamily: "var(--font-disp)",
-                        fontWeight: 700,
-                        fontSize: 13,
-                        letterSpacing: "0.16em",
-                        textTransform: "uppercase",
-                        color: "var(--gold)",
-                        cursor: "pointer",
-                        transition: "background 0.2s",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "var(--gold-ghost)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                    >
-                      CONNECT WALLET
-                    </button>
-                    {/* Wallet logo tags */}
-                    <div style={{ display: "flex", gap: 6, marginTop: 10, flexWrap: "wrap" }}>
-                      {["MetaMask", "Coinbase", "Trust", "WalletConnect"].map((w) => (
-                        <span
-                          key={w}
-                          style={{
-                            fontFamily: "var(--font-mono)",
-                            fontSize: 9,
-                            letterSpacing: "0.1em",
-                            color: "var(--text-muted)",
-                            border: "1px solid var(--border-sub)",
-                            padding: "3px 8px",
-                          }}
-                        >
-                          {w}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div style={{ background: "rgba(74,140,111,0.06)", border: "1px solid rgba(74,140,111,0.3)", padding: "10px 14px" }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--c-success)" }}>
-                      WALLET CONNECTED · {address?.slice(0, 6)}…{address?.slice(-4)}
-                    </span>
-                  </div>
-                )}
-
-                {/* Send address box */}
-                {depositAddress ? (
-                  <>
-                    <div style={{ background: "var(--bg-primary)", border: "1px solid var(--border-gold)", padding: "12px 14px", position: "relative" }}>
-                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 6 }}>
-                        SEND {networkLabel} USDT TO:
-                      </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-sec)", flex: 1, wordBreak: "break-all", letterSpacing: "0.04em" }}>
-                          {depositAddress}
-                        </span>
-                        <button
-                          onClick={copyAddr}
-                          style={{
-                            padding: "6px 12px",
-                            background: copied ? "rgba(74,140,111,0.15)" : "var(--gold)",
-                            border: "none",
-                            fontFamily: "var(--font-mono)",
-                            fontSize: 9,
-                            letterSpacing: "0.12em",
-                            textTransform: "uppercase",
-                            color: copied ? "var(--c-success)" : "var(--text-inv)",
-                            cursor: "pointer",
-                            flexShrink: 0,
-                            transition: "all 0.2s",
-                          }}
-                        >
-                          {copied ? "✓" : "COPY"}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Warning */}
-                    <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--c-danger)", padding: "8px 12px", background: "rgba(168,82,82,0.06)", border: "1px solid rgba(168,82,82,0.2)" }}>
-                      ⚠ Only send {networkLabel} USDT to this address. Other tokens will be lost.
-                    </p>
-                  </>
-                ) : (
-                  <div style={{ border: "1px solid var(--border-gold)", background: "var(--gold-ghost)", padding: "12px 14px" }}>
-                    <p style={{ fontFamily: "var(--font-disp)", fontWeight: 600, fontSize: 13, color: "var(--text-primary)", marginBottom: 4 }}>
-                      Deposit address not configured
-                    </p>
-                    <p style={{ fontFamily: "var(--font-disp)", fontSize: 12, color: "var(--text-muted)" }}>
-                      The {network} deposit wallet has not been set up yet. Please check back soon or contact support.
-                    </p>
-                  </div>
-                )}
-
-                {/* Full presale link */}
-                <Link href="/presale" className="btn-primary" style={{ width: "100%", justifyContent: "center" }}>
-                  VIEW FULL PRESALE PAGE →
-                </Link>
-              </div>
+            <div className="presale-inline-widget">
+              <PurchaseCard showTokenCalculator={false} showContractAddress={false} />
+              <Link href="/presale" className="btn-primary" style={{ width: "100%", justifyContent: "center", marginTop: 16 }}>
+                VIEW FULL PRESALE PAGE →
+              </Link>
             </div>
           </FadeUpSection>
         </div>
@@ -451,7 +211,7 @@ export default function PresaleInline() {
           <div
             style={{
               display: "flex",
-              gap: 48,
+              gap: 56,
               whiteSpace: "nowrap",
               animation: "proofScroll 28s linear infinite",
               willChange: "transform",
@@ -462,19 +222,19 @@ export default function PresaleInline() {
                 key={i}
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: 10,
-                  letterSpacing: "0.14em",
+                  fontSize: 14,
+                  letterSpacing: "0.1em",
                   color: "var(--text-muted)",
                   flexShrink: 0,
                 }}
               >
-                <span style={{ color: "var(--gold)", marginRight: 6 }}>●</span>
+                <span style={{ color: "var(--gold)", marginRight: 8 }}>●</span>
                 {item}
               </span>
             ))}
           </div>
           {/* Edge fades */}
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg,var(--bg-tertiary) 0%,transparent 8%,transparent 92%,var(--bg-tertiary) 100%)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg,#F5F2ED 0%,transparent 8%,transparent 92%,#F5F2ED 100%)", pointerEvents: "none" }} />
         </div>
       </div>
     </section>

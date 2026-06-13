@@ -7,11 +7,11 @@ export default function FeaturedPost({ post }) {
   if (!post) return null;
 
   return (
-    <section id="featured" className="section-py">
+    <section id="featured" className="section-py section-light">
       <div className="container">
         <span className="eyebrow">LATEST BRIEFING</span>
         <FadeUpSection delay={0.1}>
-          <Link href={`/news/${post.slug}`} className="featured-card">
+          <Link href={`/news/${post.slug}`} className="featured-card card-dark">
             <div className="featured-img">
               <div className="featured-img-bg" />
               <div className="featured-img-pattern" />

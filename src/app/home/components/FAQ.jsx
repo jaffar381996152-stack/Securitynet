@@ -112,7 +112,7 @@ function FAQItem({ item }) {
 
 export default function FAQ() {
   return (
-    <section className="section-py" style={{ background: "var(--bg-primary)", borderTop: "1px solid var(--border-sub)" }}>
+    <section className="section-py" style={{ background: "#000000", borderTop: "1px solid var(--border-sub)" }}>
       <div className="container-narrow">
         <FadeUpSection style={{ marginBottom: 48 }}>
           <span className="eyebrow" style={{ marginBottom: 12 }}>CLASSIFIED — FREQUENTLY ASKED</span>

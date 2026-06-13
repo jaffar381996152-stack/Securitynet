@@ -69,7 +69,7 @@ export default function AllocationDonut() {
   const hoveredSeg = hovered !== null ? SEGMENTS[hovered] : null;
 
   return (
-    <section id="allocation" className="section-py" style={{ background: "var(--bg-primary)" }}>
+    <section id="allocation" className="section-py section-light" style={{ borderTop: "1px solid var(--border-sub)", borderBottom: "1px solid var(--border-sub)" }}>
       <div className="container">
         <span className="eyebrow">ALLOCATION BREAKDOWN</span>
         <div className="alloc-grid" style={{ marginTop: 32 }}>
@@ -77,7 +77,7 @@ export default function AllocationDonut() {
             <div ref={wrapRef} style={{ position: "relative", width: 340, height: 340, margin: "0 auto", maxWidth: "100%" }}>
               <svg width={340} height={340} viewBox="0 0 340 340" style={{ overflow: "visible", width: "100%", height: "auto" }} aria-label="Token allocation chart" role="img">
                 <title>XN Token Allocation</title>
-                <circle cx={CX} cy={CY} r={R} fill="none" stroke="rgba(240,237,232,0.04)" strokeWidth={34} />
+                <circle cx={CX} cy={CY} r={R} fill="none" stroke="rgba(20,20,24,0.06)" strokeWidth={34} />
                 {arcs.map((seg, i) => (
                   <circle
                     key={seg.key}

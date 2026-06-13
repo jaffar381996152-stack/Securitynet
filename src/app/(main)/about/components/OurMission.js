@@ -21,7 +21,7 @@ const VALUES = [
 
 export default function OurMission() {
   return (
-    <section id="mission" className="section-py" style={{ background: "var(--bg-secondary)", borderTop: "1px solid var(--border-gold)" }}>
+    <section id="mission" className="section-py section-light" style={{ borderTop: "1px solid var(--border-gold)", borderBottom: "1px solid var(--border-sub)" }}>
       <div className="container-narrow">
         <span className="eyebrow">OUR MISSION</span>
 
@@ -53,7 +53,7 @@ export default function OurMission() {
           <div style={{ width: 80, height: 1, background: "var(--gold-dim)", margin: "32px 0" }} />
           <div className="values-grid">
             {VALUES.map((v) => (
-              <div key={v.num} className="value-cell">
+              <div key={v.num} className="value-cell card-dark">
                 <div className="value-num">{v.num}</div>
                 <div className="value-title">{v.title}</div>
                 <p className="value-body">{v.body}</p>

@@ -2,7 +2,6 @@ import AboutHero from "./components/AboutHero";
 import OurMission from "./components/OurMission";
 import OurTeam from "./components/OurTeam";
 import CompanyStats from "./components/CompanyStats";
-import AboutCTA from "./components/AboutCTA";
 import { pageMetadata } from "@/app/libs/seo";
 
 export const metadata = pageMetadata({
@@ -19,7 +18,6 @@ const page = () => {
       <OurMission />
       <OurTeam />
       <CompanyStats />
-      <AboutCTA />
     </>
   );
 };

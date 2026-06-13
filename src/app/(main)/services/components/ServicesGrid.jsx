@@ -90,11 +90,11 @@ const DELAYS = [0.08, 0.16, 0.24, 0.08, 0.16, 0.24];
 
 export default function ServicesGrid() {
   return (
-    <section id="services-grid" className="section-py" style={{ background: "var(--bg-primary)", borderTop: "1px solid var(--border-sub)" }}>
+    <section id="services-grid" className="section-py section-light" style={{ borderTop: "1px solid var(--border-sub)" }}>
       <div className="container">
         <div className="svc-grid">
           {SERVICES.map((s, i) => (
-            <FadeUpSection key={s.num} delay={DELAYS[i]} className="svc-card">
+            <FadeUpSection key={s.num} delay={DELAYS[i]} className="svc-card card-dark">
               <span className="svc-num" aria-hidden="true">{s.num}</span>
               <svg className="svc-icon" viewBox="0 0 24 24" aria-hidden="true">
                 {s.icon}

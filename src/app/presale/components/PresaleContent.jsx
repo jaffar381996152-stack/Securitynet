@@ -1,6 +1,6 @@
 "use client";
-import DigitalGold from "@/components/token/erctoken";
 import SaleTimer from "./SaleTimer";
+import PurchaseCard from "./PurchaseCard";
 import DeclassifyText from "@/app/home/components/DeclassifyText";
 import { useState } from "react";
 
@@ -95,190 +95,169 @@ function FAQItem({ q, a }) {
 
 export default function PresaleContent() {
   return (
-    <section style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
-      <div
-        className="container"
-        style={{
-          paddingTop: "clamp(48px,6vw,80px)",
-          paddingBottom: "clamp(64px,8vw,120px)",
-        }}
-      >
-        {/* Two-column layout */}
+    <>
+      {/* ════════════════════════════════════════════════════════════
+          SECTION 1 — HERO (animated background shows through)
+          ════════════════════════════════════════════════════════════ */}
+      <section id="hero" style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", justifyContent: "center", padding: "clamp(32px,6vh,64px) var(--gut)" }}>
         <div
-          className="grid grid-cols-1 lg:grid-cols-2"
-          style={{ gap: "clamp(32px,5vw,64px)", alignItems: "start" }}
+          className="container"
+          style={{
+            textAlign: "center",
+          }}
         >
-          {/* ── LEFT COLUMN ─────────────────────────────────────────── */}
-          <div>
-            {/* Stage badge */}
-            <div className="badge" style={{ marginBottom: 24 }}>
-              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--c-success)", display: "inline-block", animation: "ubPulse 1.8s ease-in-out infinite" }} />
-              STAGE {STAGE} · LIVE NOW
-            </div>
-
-            {/* Headline */}
-            <h1
-              style={{
-                fontFamily: "var(--font-disp)",
-                fontWeight: 800,
-                fontSize: "var(--lg-size)",
-                textTransform: "uppercase",
-                lineHeight: 1,
-                letterSpacing: "-0.01em",
-                color: "var(--text-primary)",
-                marginBottom: 32,
-              }}
-            >
-              <DeclassifyText text="AUTHORIZE YOUR XN" delay={0.1} />
-              <br />
-              <DeclassifyText text="ACQUISITION." delay={0.3} style={{ color: "var(--gold)" }} />
-            </h1>
-
-            {/* Price block — 3 rows */}
-            <div style={{ marginBottom: 32, border: "1px solid var(--border-sub)" }}>
-              {[
-                {
-                  label: "Current Presale Price",
-                  value: <span style={{ fontFamily: "var(--font-mono)", fontSize: 24, color: "var(--gold)" }}>{PRICE} USDT</span>,
-                },
-                {
-                  label: "Listing Price",
-                  value: (
-                    <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 24, color: "var(--gold)", textDecoration: "line-through", textDecorationColor: "rgba(212,175,110,0.5)" }}>{LISTING} USDT</span>
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--gold)" }}>→ TARGET</span>
-                    </span>
-                  ),
-                },
-                {
-                  label: "Potential ROI",
-                  value: <span style={{ fontFamily: "var(--font-mono)", fontSize: 24, color: "var(--gold)" }}>4× AT LISTING</span>,
-                },
-              ].map(({ label, value }, i, arr) => (
-                <div
-                  key={label}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "12px 18px",
-                    borderBottom: i < arr.length - 1 ? "1px solid var(--border-sub)" : "none",
-                  }}
-                >
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--text-muted)" }}>
-                    {label}
-                  </span>
-                  {value}
-                </div>
-              ))}
-            </div>
-
-            {/* Stage progress */}
-            <div style={{ marginBottom: 32 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-muted)" }}>STAGE {STAGE} PROGRESS</span>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--gold)" }}>{SOLD_PCT}% FILLED</span>
-              </div>
-              <div style={{ height: 6, background: "var(--border-sub)", position: "relative" }}>
-                <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${SOLD_PCT}%`, background: "linear-gradient(90deg, #A88A52, #E8C882)" }} />
-              </div>
-              <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)", marginTop: 8 }}>
-                78% FILLED · 18,240 XN REMAINING BEFORE STAGE 4
-              </p>
-            </div>
-
-            {/* Stage table */}
-            <div style={{ marginBottom: 40, border: "1px solid var(--border-sub)" }}>
-              {/* Header */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", padding: "10px 18px", background: "var(--bg-secondary)", borderBottom: "1px solid var(--border-sub)" }}>
-                {["STAGE", "PRICE", "STATUS"].map((h) => (
-                  <span key={h} style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-muted)" }}>{h}</span>
-                ))}
-              </div>
-              {STAGES.map((s) => (
-                <div
-                  key={s.num}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr 1fr",
-                    padding: "14px 18px",
-                    borderBottom: "1px solid var(--border-sub)",
-                    background: s.status === "active" ? "var(--gold-ghost)" : "transparent",
-                    borderLeft: s.status === "active" ? "3px solid var(--gold)" : "3px solid transparent",
-                    opacity: s.status === "closed" ? 0.5 : 1,
-                  }}
-                >
-                  <span style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 16, color: s.status === "active" ? "var(--gold)" : "var(--text-muted)" }}>
-                    Stage {s.num}
-                  </span>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: s.status === "active" ? "var(--gold)" : "var(--text-muted)", alignSelf: "center" }}>
-                    {s.price} USDT
-                  </span>
-                  <div style={{ alignSelf: "center" }}>
-                    {s.status === "active" && (
-                      <span className="badge badge-active" style={{ margin: 0 }}>
-                        <span style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--c-success)", display: "inline-block", animation: "ubPulse 1.8s ease-in-out infinite" }} />
-                        ACTIVE
-                      </span>
-                    )}
-                    {s.status === "closed" && (
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)" }}>CLOSED</span>
-                    )}
-                    {s.status === "upcoming" && (
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)" }}>UPCOMING</span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Trust grid — 2×2 with 1px gap */}
-            <div style={{ marginBottom: 40 }}>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 12 }}>TRUST & SECURITY</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, background: "var(--border-sub)" }}>
-                {TRUST_ITEMS.map((item) => (
-                  <div
-                    key={item.title}
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: 12,
-                      padding: "18px 20px",
-                      background: "var(--bg-secondary)",
-                    }}
-                  >
-                    <span style={{ flexShrink: 0, marginTop: 1 }}>{item.icon}</span>
-                    <div>
-                      <div style={{ fontFamily: "var(--font-disp)", fontSize: 13, fontWeight: 600, textTransform: "uppercase", color: "var(--text-primary)", marginBottom: 3 }}>
-                        {item.title}
-                      </div>
-                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-muted)" }}>
-                        {item.sub}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Quick FAQ */}
-            <div>
-              <div style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 4 }}>
-                QUICK ANSWERS
-              </div>
-              {FAQ_ITEMS.map((item, i) => <FAQItem key={i} q={item.q} a={item.a} />)}
-            </div>
+          {/* Stage badge */}
+          <div className="badge" style={{ marginBottom: 12 }}>
+            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--c-success)", display: "inline-block", animation: "ubPulse 1.8s ease-in-out infinite" }} />
+            STAGE {STAGE} · LIVE NOW
           </div>
 
-          {/* ── RIGHT COLUMN (sticky buy widget) ───────────────────── */}
-          <div className="presale-widget-col">
-            <SaleTimer />
-            <div style={{ marginTop: 16 }}>
-              <DigitalGold />
+          {/* Headline */}
+          <h1
+            style={{
+              fontFamily: "var(--font-disp)",
+              fontWeight: 800,
+              fontSize: "var(--lg-size)",
+              textTransform: "uppercase",
+              lineHeight: 1,
+              letterSpacing: "-0.01em",
+              color: "var(--text-primary)",
+              marginBottom: 24,
+            }}
+          >
+            <DeclassifyText text="AUTHORIZE YOUR XN" delay={0.1} />
+            <br />
+            <DeclassifyText text="ACQUISITION." delay={0.3} style={{ color: "var(--gold)" }} />
+          </h1>
+
+          {/* Countdown timer */}
+          <SaleTimer />
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════
+          SECTION 2 — LIGHT BG · INFO CARDS + PURCHASE WIDGET
+          ════════════════════════════════════════════════════════════ */}
+      <section className="section-py section-light" style={{ position: "relative", zIndex: 1, borderTop: "1px solid var(--border-sub)" }}>
+        <div className="container">
+          <div className="presale-info-grid">
+
+            {/* ── Info cards ─────────────────────────────────────────── */}
+            <div className="presale-info-cards">
+
+              {/* Column heading */}
+              <div>
+                <span className="eyebrow" style={{ marginBottom: 12 }}>STAGE {STAGE} OVERVIEW</span>
+                <h2 className="disp-title" style={{ fontSize: "var(--lg-size)", color: "#1C1C22" }}>
+                  PRESALE <span style={{ color: "var(--gold)" }}>DETAILS.</span>
+                </h2>
+              </div>
+
+              {/* Price stats — borderless ledger rows, current price featured */}
+              <div className="price-stats">
+                <div className="price-stat-row price-stat-row--featured">
+                  <div className="price-stat-label">
+                    <span className="ticker-live-dot" />
+                    Current Presale Price
+                  </div>
+                  <div className="price-stat-value price-stat-value--featured">
+                    {PRICE} <span className="price-stat-unit">USDT</span>
+                  </div>
+                </div>
+                <div className="price-stat-row">
+                  <div className="price-stat-label">
+                    Listing Price <span className="price-stat-tag">→ TARGET</span>
+                  </div>
+                  <div className="price-stat-value price-stat-value--strike">
+                    {LISTING} <span className="price-stat-unit">USDT</span>
+                  </div>
+                </div>
+                <div className="price-stat-row">
+                  <div className="price-stat-label">Potential ROI</div>
+                  <div className="price-stat-value price-stat-value--gold">4× AT LISTING</div>
+                </div>
+              </div>
+
+              {/* Stage progress */}
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-muted)" }}>STAGE {STAGE} PROGRESS</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--gold)" }}>{SOLD_PCT}% FILLED</span>
+                </div>
+                <div style={{ height: 6, background: "var(--border-sub)", position: "relative" }}>
+                  <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${SOLD_PCT}%`, background: "linear-gradient(90deg, #A88A52, #E8C882)" }} />
+                </div>
+                <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)", marginTop: 8 }}>
+                  78% FILLED · 18,240 XN REMAINING BEFORE STAGE 4
+                </p>
+              </div>
+
+              {/* Stage rail — borderless stepper */}
+              <div className="stage-rail">
+                <div className="stage-rail-label">PRESALE STAGES</div>
+                <div className="stage-stepper-track">
+                  {STAGES.map((s) => (
+                    <div key={s.num} className="stage-step">
+                      <div className={`stage-step-dot${s.status === "active" ? " is-active" : ""}${s.status === "closed" ? " is-closed" : ""}`}>
+                        {s.status === "closed" ? (
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M5 13l4 4L19 7" />
+                          </svg>
+                        ) : (
+                          s.num
+                        )}
+                      </div>
+                      <div className="stage-step-info">
+                        <div className="stage-step-name">Stage {s.num}</div>
+                        <div className="stage-step-price">{s.price} <span className="stage-step-unit">USDT</span></div>
+                        {s.status === "active" && (
+                          <span className="badge badge-active" style={{ margin: 0 }}>
+                            <span style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--c-success)", display: "inline-block", animation: "ubPulse 1.8s ease-in-out infinite" }} />
+                            ACTIVE
+                          </span>
+                        )}
+                        {s.status === "closed" && <span className="stage-step-status">CLOSED</span>}
+                        {s.status === "upcoming" && <span className="stage-step-status">UPCOMING</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Trust & Security strip */}
+              <div className="trust-strip">
+                <span className="trust-strip-label">TRUST & SECURITY</span>
+                {TRUST_ITEMS.map((item) => (
+                  <span key={item.title} style={{ display: "contents" }}>
+                    <span className="trust-sep">·</span>
+                    <span className="trust-item">{item.icon}{item.title}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Purchase widget ────────────────────────────────────── */}
+            <div className="presale-info-widget presale-widget-col">
+              <PurchaseCard />
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════════
+          SECTION 3 — SOLID DARK BG · FAQ
+          ════════════════════════════════════════════════════════════ */}
+      <section className="section-py" style={{ position: "relative", zIndex: 1, background: "var(--bg-primary)", borderTop: "1px solid var(--border-sub)" }}>
+        <div className="container-narrow">
+          <div style={{ textAlign: "center", marginBottom: 48 }}>
+            <span className="eyebrow" style={{ marginBottom: 12 }}>FAQ</span>
+            <h2 className="disp-title" style={{ fontSize: "var(--lg-size)" }}>
+              QUICK <span style={{ color: "var(--gold)" }}>ANSWERS</span>
+            </h2>
+          </div>
+          {FAQ_ITEMS.map((item, i) => <FAQItem key={i} q={item.q} a={item.a} />)}
+        </div>
+      </section>
+    </>
   );
 }

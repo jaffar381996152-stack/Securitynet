@@ -25,7 +25,7 @@ const RESOURCES = [
 const SOCIALS = [
   {
     label: "X",
-    href: "https://x.com/securitynetAI",
+    href: "https://x.com/Bullss_bears",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.736-8.857L2.25 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -64,8 +64,8 @@ export default function Footer() {
 
   return (
     <footer
+      className="section-light"
       style={{
-        background: "var(--bg-secondary)",
         borderTop: "1px solid var(--border-gold)",
         position: "relative",
       }}
@@ -342,7 +342,7 @@ export default function Footer() {
               textDecoration: "none",
               transition: "background 0.2s",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#E8C882")}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--gold-bright)")}
             onMouseLeave={(e) => (e.currentTarget.style.background = "var(--gold)")}
           >
             BUY XN →

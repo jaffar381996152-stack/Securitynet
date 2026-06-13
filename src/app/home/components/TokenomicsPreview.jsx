@@ -111,13 +111,12 @@ export default function TokenomicsPreview() {
               A transparent, lock-secured token economy designed to align the incentives of early investors, the development team, and the long-term ecosystem.
             </p>
 
-            {/* Stats 2×2 grid */}
+            {/* Stats 2×2 grid — 4 separate cards */}
             <div
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
-                gap: 1,
-                background: "var(--border-sub)",
+                gap: 12,
                 marginBottom: 32,
               }}
             >
@@ -126,6 +125,7 @@ export default function TokenomicsPreview() {
                   key={s.label}
                   style={{
                     background: "var(--bg-secondary)",
+                    border: "1px solid var(--border-sub)",
                     padding: "20px 16px",
                   }}
                 >

@@ -60,7 +60,7 @@ const DELAYS = [0.08, 0.16, 0.24, 0.08, 0.16];
 
 export default function TokenUtility() {
   return (
-    <section id="utility" className="section-py" style={{ background: "var(--bg-primary)", borderTop: "1px solid var(--border-sub)" }}>
+    <section id="utility" className="section-py section-light" style={{ borderTop: "1px solid var(--border-sub)" }}>
       <div className="container">
         <span className="eyebrow">TOKEN UTILITY</span>
         <h2 className="disp-title" style={{ fontSize: "clamp(36px,5vw,64px)", marginBottom: 8 }}>
@@ -71,7 +71,7 @@ export default function TokenUtility() {
         </p>
         <div className="utility-grid" style={{ marginTop: 48 }}>
           {ITEMS.map((item, i) => (
-            <FadeUpSection key={item.title} delay={DELAYS[i]} className="utility-card">
+            <FadeUpSection key={item.title} delay={DELAYS[i]} className="utility-card card-dark">
               <svg className="utility-icon" viewBox="0 0 24 24" aria-hidden="true">
                 {item.icon}
               </svg>

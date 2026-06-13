@@ -76,7 +76,7 @@ const quickActions = [
     icon: "🐦",
     label: "Follow Updates",
     sub: "Twitter / X",
-    href: "https://x.com/securitynetAI",
+    href: "https://x.com/Bullss_bears",
     external: true,
   },
   {

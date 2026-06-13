@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import NewsHero from "./components/NewsHero";
 import FeaturedPost from "./components/FeaturedPost";
 import PostGrid from "./components/PostGrid";
-import Newsletter from "./components/Newsletter";
 
 export default function NewsClient() {
   const [featured, setFeatured] = useState(null);
@@ -84,7 +83,6 @@ export default function NewsClient() {
         loadingMore={loadingMore}
         onLoadMore={handleLoadMore}
       />
-      <Newsletter />
     </>
   );
 }

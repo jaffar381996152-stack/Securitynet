@@ -5,7 +5,7 @@ import FadeUpSection from "./FadeUpSection";
 const SOCIALS = [
   {
     label: "X",
-    href: "https://x.com/securitynetAI",
+    href: "https://x.com/Bullss_bears",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.736-8.857L2.25 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -33,7 +33,7 @@ const SOCIALS = [
   },
   {
     label: "Instagram",
-    href: "https://www.instagram.com/securitynetai",
+    href: "https://www.instagram.com/securitynet.ai_000",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -57,9 +57,8 @@ const SOCIALS = [
 export default function CommunityCTA() {
   return (
     <section
-      className="section-py"
+      className="section-py section-light"
       style={{
-        background: "var(--bg-secondary)",
         position: "relative",
         overflow: "hidden",
         borderTop: "1px solid var(--border-gold)",
@@ -87,7 +86,7 @@ export default function CommunityCTA() {
               textTransform: "uppercase",
               lineHeight: 1,
               letterSpacing: "-0.01em",
-              color: "var(--text-primary)",
+              color: "#1C1C22",
               marginBottom: 20,
             }}
           >
@@ -114,7 +113,7 @@ export default function CommunityCTA() {
             <Link href="https://t.me/securitynetai" target="_blank" rel="noopener noreferrer" className="btn-primary" data-cursor="cta">
               JOIN TELEGRAM →
             </Link>
-            <Link href="https://x.com/securitynetAI" target="_blank" rel="noopener noreferrer" className="btn-ghost">
+            <Link href="https://x.com/Bullss_bears" target="_blank" rel="noopener noreferrer" className="btn-ghost">
               FOLLOW ON X
             </Link>
           </div>

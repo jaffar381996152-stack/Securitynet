@@ -5,10 +5,8 @@ import { Suspense } from "react";
 import { AppKit } from "../context/appkit";
 import SmoothScrollProvider from "@/components/animations/SmoothScrollProvider";
 import Preloader from "@/components/shell/Preloader";
-import CustomCursor from "@/components/shell/CustomCursor";
 import UrgencyBar from "@/components/shell/UrgencyBar";
-import StickyPresaleWidget from "@/components/shell/StickyPresaleWidget";
-import MobileBottomBar from "@/components/shell/MobileBottomBar";
+import AiAgentBot from "@/components/shell/AiAgentBot";
 import PurchaseXnModal from "@/components/shell/PurchaseXnModal";
 import PresaleCanvas from "@/app/presale/components/PresaleCanvas";
 import AuthProvider from "@/components/session/providers";
@@ -77,10 +75,8 @@ export default function RootLayout({ children }) {
           {/* Background canvas — direct body child at z:0, below all z:1 content */}
           <PresaleCanvas />
           <Preloader />
-          <CustomCursor />
           <UrgencyBar />
-          <StickyPresaleWidget />
-          <MobileBottomBar />
+          <AiAgentBot />
           <PurchaseXnModal />
           {/* z:1 wrapper ensures all page content paints above canvas */}
           <div style={{ position: "relative", zIndex: 1 }}>

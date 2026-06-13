@@ -54,14 +54,14 @@ function TimerCard({ value, label }) {
         background:     "var(--bg-glass)",
         backdropFilter: "blur(12px)",
         border:         "1px solid var(--border-glass)",
-        width:          "clamp(68px, 13vw, 116px)",
-        height:         "clamp(80px, 15vw, 130px)",
+        width:          "clamp(54px, 10vw, 90px)",
+        height:         "clamp(60px, 12vw, 100px)",
       }}
     >
       <span
         className="font-sora font-bold leading-none select-none"
         style={{
-          fontSize: "clamp(1.75rem, 5.5vw, 3rem)",
+          fontSize: "clamp(1.35rem, 4.2vw, 2.25rem)",
           color:    "var(--text-primary)",
         }}
       >
@@ -106,7 +106,7 @@ export default function PreSale({ tokensSold, presaleCap }) {
   }, []);
 
   return (
-    <div className="w-full max-w-[600px] mx-auto px-4 py-4">
+    <div className="w-full max-w-[600px] mx-auto px-4 py-2">
       {timeLeft === null ? (
         <motion.p
           initial={{ opacity: 0, y: 8 }}
@@ -117,7 +117,7 @@ export default function PreSale({ tokensSold, presaleCap }) {
           Pre-Sale Has Ended
         </motion.p>
       ) : (
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-2">
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}

@@ -30,8 +30,19 @@ const STEPS = [
   },
   {
     num: "03",
+    title: "Copy Deposit Address",
+    desc: "On the purchase widget, copy the deposit address shown for your selected network. This is where you'll send your USDT.",
+    icon: (
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+      </svg>
+    ),
+  },
+  {
+    num: "04",
     title: "Send USDT",
-    desc: "Enter your USDT amount (minimum $10) and send to the official contract address. Double-check the address before confirming.",
+    desc: "Send USDT from your wallet to the deposit address (minimum $10). Double-check the address and network before confirming.",
     icon: (
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M5 12h14" />
@@ -40,7 +51,7 @@ const STEPS = [
     ),
   },
   {
-    num: "04",
+    num: "05",
     title: "Receive XN Tokens",
     desc: "XN tokens arrive in your wallet within 2 minutes of confirmation. Import the contract address to view your balance immediately.",
     icon: (
@@ -70,8 +81,8 @@ function StepCard({ step, delay }) {
   return (
     <div
       ref={ref}
+      className="card-dark"
       style={{
-        background: "var(--bg-secondary)",
         padding: "28px 24px",
         position: "relative",
         opacity: vis ? 1 : 0,
@@ -130,12 +141,12 @@ function StepCard({ step, delay }) {
 
 export default function HowToBuy() {
   return (
-    <section className="section-py" style={{ background: "var(--bg-secondary)", borderTop: "1px solid var(--border-sub)" }}>
+    <section id="how-to-buy" className="section-py" style={{ background: "#000000", borderTop: "1px solid var(--border-sub)" }}>
       <div className="container">
         <FadeUpSection style={{ textAlign: "center", marginBottom: 56 }}>
           <span className="eyebrow" style={{ marginBottom: 12 }}>HOW TO BUY</span>
-          <h2 className="disp-title" style={{ fontSize: "var(--lg-size)" }}>
-            FOUR STEPS TO <span style={{ color: "var(--gold)" }}>SECURE YOUR XN</span>
+          <h2 className="disp-title" style={{ fontSize: "var(--lg-size)", color: "var(--text-primary)" }}>
+            FIVE STEPS TO <span style={{ color: "var(--gold)" }}>SECURE YOUR XN</span>
           </h2>
         </FadeUpSection>
 
@@ -155,8 +166,8 @@ export default function HowToBuy() {
         </div>
 
         <FadeUpSection delay={0.4} style={{ textAlign: "center" }}>
-          <Link href="/presale" className="btn-ghost" data-cursor="cta">
-            READY TO BEGIN? →
+          <Link href="/how-to-buy" className="btn-ghost" data-cursor="cta" style={{ color: "var(--text-primary)", borderColor: "var(--text-primary)" }}>
+            WATCH VIDEO GUIDE →
           </Link>
         </FadeUpSection>
       </div>

@@ -1,5 +1,5 @@
-import PresaleNav from "./components/PresaleNav";
-import PresaleFooter from "./components/PresaleFooter";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 import PresaleContent from "./components/PresaleContent";
 import { pageMetadata } from "@/app/libs/seo";
 
@@ -13,11 +13,11 @@ export const metadata = pageMetadata({
 export default function PresalePage() {
   return (
     <div style={{ position: "relative", zIndex: 1 }}>
-      <PresaleNav />
+      <Header />
       <main>
         <PresaleContent />
       </main>
-      <PresaleFooter />
+      <Footer />
     </div>
   );
 }

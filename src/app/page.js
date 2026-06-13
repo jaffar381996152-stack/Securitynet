@@ -2,7 +2,6 @@ import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import Hero from "./home/components/Hero";
 import PresaleInline from "./home/components/PresaleInline";
-import Vision from "./home/components/Vision";
 import TechScroll from "./home/components/TechScroll";
 import TokenomicsPreview from "./home/components/TokenomicsPreview";
 import HowToBuy from "./home/components/HowToBuy";
@@ -26,9 +25,8 @@ export default function HomePage() {
       <main>
         <Hero />
         <PresaleInline />
-        <Vision />
-        <TechScroll />
         <TokenomicsPreview />
+        <TechScroll />
         <HowToBuy />
         <Roadmap />
         <LogoTicker />

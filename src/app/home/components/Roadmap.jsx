@@ -85,10 +85,9 @@ function MilestoneCard({ m, s, slideDir }) {
   return (
     <div
       ref={ref}
-      className="rm-card"
+      className="rm-card card-dark"
       style={{
         border: "1px solid var(--border-sub)",
-        background: "var(--bg-primary)",
         padding: "24px 28px",
         maxWidth: 360,
         minHeight: 280,
@@ -176,12 +175,12 @@ function MilestoneCard({ m, s, slideDir }) {
 
 export default function Roadmap() {
   return (
-    <section className="section-py" style={{ background: "var(--bg-secondary)", borderTop: "1px solid var(--border-sub)" }}>
+    <section className="section-py section-light" style={{ borderTop: "1px solid var(--border-sub)" }}>
       <div className="container">
         {/* Section heading */}
         <div style={{ textAlign: "center", marginBottom: 64 }}>
           <span className="eyebrow" style={{ marginBottom: 12 }}>ROADMAP</span>
-          <h2 className="disp-title" style={{ fontSize: "var(--lg-size)" }}>
+          <h2 className="disp-title" style={{ fontSize: "var(--lg-size)", color: "#1C1C22" }}>
             MISSION TIMELINE
           </h2>
         </div>

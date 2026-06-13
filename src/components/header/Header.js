@@ -7,11 +7,11 @@ import { useSession, signOut } from "next-auth/react";
 
 const NAV_LINKS = [
   { name: "HOME",       path: "/" },
+  { name: "PRESALE",    path: "/presale" },
   { name: "TOKENOMICS", path: "/tokenomics" },
   { name: "SERVICES",   path: "/services" },
   { name: "ABOUT",      path: "/about" },
   { name: "NEWS",       path: "/news" },
-  { name: "PRESALE",    path: "/presale" },
 ];
 
 export default function Header() {
@@ -464,7 +464,7 @@ export default function Header() {
             {/* Social icons */}
             <div style={{ display: "flex", gap: 16 }}>
               {/* X icon */}
-              <a href="https://x.com/securitynetAI" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter"
+              <a href="https://x.com/Bullss_bears" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter"
                 style={{ color: "var(--text-muted)", transition: "color 0.2s" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold)")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
