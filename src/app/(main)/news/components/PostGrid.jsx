@@ -30,16 +30,25 @@ export default function PostGrid({ posts, loading, error, hasMore, loadingMore, 
               <FadeUpSection key={post._id} delay={DELAYS[i % 3]}>
                 <Link href={`/news/${post.slug}`} className="post-card">
                   <div className="post-thumb">
-                    <div className="post-thumb-pattern" />
-                    <div className="post-thumb-overlay" />
-                    <div className="post-thumb-label">
-                      {getThumbLabel(post).map((line, idx) => (
-                        <span key={idx}>
-                          {line}
-                          {idx < getThumbLabel(post).length - 1 && <br />}
-                        </span>
-                      ))}
-                    </div>
+                    {post.coverImage ? (
+                      <>
+                        <img className="post-thumb-img" src={post.coverImage} alt={post.title} loading="lazy" />
+                        <div className="post-thumb-overlay" />
+                      </>
+                    ) : (
+                      <>
+                        <div className="post-thumb-pattern" />
+                        <div className="post-thumb-overlay" />
+                        <div className="post-thumb-label">
+                          {getThumbLabel(post).map((line, idx) => (
+                            <span key={idx}>
+                              {line}
+                              {idx < getThumbLabel(post).length - 1 && <br />}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
                   <div className="post-body">
                     <div className="post-meta">

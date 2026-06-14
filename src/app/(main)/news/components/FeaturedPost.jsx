@@ -13,17 +13,26 @@ export default function FeaturedPost({ post }) {
         <FadeUpSection delay={0.1}>
           <Link href={`/news/${post.slug}`} className="featured-card card-dark">
             <div className="featured-img">
-              <div className="featured-img-bg" />
-              <div className="featured-img-pattern" />
-              <div className="featured-img-overlay" />
-              <div className="featured-img-label">
-                {getThumbLabel(post).map((line, i) => (
-                  <span key={i}>
-                    {line}
-                    {i < getThumbLabel(post).length - 1 && <br />}
-                  </span>
-                ))}
-              </div>
+              {post.coverImage ? (
+                <>
+                  <img className="featured-img-photo" src={post.coverImage} alt={post.title} />
+                  <div className="featured-img-overlay" />
+                </>
+              ) : (
+                <>
+                  <div className="featured-img-bg" />
+                  <div className="featured-img-pattern" />
+                  <div className="featured-img-overlay" />
+                  <div className="featured-img-label">
+                    {getThumbLabel(post).map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        {i < getThumbLabel(post).length - 1 && <br />}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
             <div className="featured-content">
               <div className="featured-meta">
