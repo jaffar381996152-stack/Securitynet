@@ -35,8 +35,16 @@ async function uploadToS3(file) {
   const data = await res.json();
 
   if (!res.ok || !data.success) {
-    alert("S3 Upload Failed: Make sure NEXT_S3_ACCESS_KEY and NEXT_S3_SECRET_KEY are set in your .env.local file! Server said: " + (data.error || "Unknown error"));
-    throw new Error(data.error || "No presigned URL");
+    const serverMsg = data.error || `Unknown error (HTTP ${res.status})`;
+    if (res.status === 401 || res.status === 403) {
+      alert(
+        "Upload not authorized: " + serverMsg +
+        "\n\nYour signed-in account needs admin access. Set role to \"admin\" on your user in the database, then sign out and sign back in."
+      );
+    } else {
+      alert("Image upload failed: " + serverMsg);
+    }
+    throw new Error(serverMsg);
   }
 
   const presignedUrl = data.data.presignedUrl;

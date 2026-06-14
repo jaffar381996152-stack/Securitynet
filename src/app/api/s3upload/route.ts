@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     }
 
     const command = new PutObjectCommand({
-        Bucket: 'securitynets',
+        Bucket: process.env.NEXT_S3_BUCKET || 'securitynet-bucket',
         Key: file,
         ContentType: type,
     });

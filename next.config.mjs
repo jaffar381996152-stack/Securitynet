@@ -27,7 +27,11 @@ const nextConfig = {
         remotePatterns: [
           {
             protocol: 'https',
-            hostname: `securitynets.s3.amazonaws.com`,
+            hostname: 'securitynet-bucket.s3.amazonaws.com',
+          },
+          {
+            protocol: 'https',
+            hostname: 'securitynet-bucket.s3.us-east-1.amazonaws.com',
           },
         ],
       },
