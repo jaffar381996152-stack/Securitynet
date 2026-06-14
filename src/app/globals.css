@@ -126,6 +126,7 @@
      cover the bottom of the menu. */
   body.mobile-nav-open .sticky-presale-widget,
   body.mobile-nav-open .mobile-bottom-bar { display: none; }
+  body.mobile-nav-open .ai-agent-widget { display: none !important; }
 
   a      { color: inherit; text-decoration: none; }
   button { background: none; border: none; cursor: pointer; font-family: inherit; color: inherit; }
@@ -864,6 +865,9 @@ w3m-account-button, appkit-account-button {
   /* Correct sticky top for 32px urgency bar on mobile */
   .tech-sticky { top: calc(32px + 72px) !important; height: calc(100vh - 104px) !important; }
 
+  /* Smooth glide when JS snaps the track to a panel boundary */
+  .tech-track { transition: transform 0.35s ease; }
+
   /* Stack text above its diagram within each card instead of a
      cramped side-by-side split — both become legible at full width. */
   .tech-panel-single {
@@ -918,6 +922,7 @@ w3m-account-button, appkit-account-button {
    ===================================================== */
 .presale-info-grid {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(32px,5vw,64px);
   align-items: start;
   grid-template-areas:
@@ -926,12 +931,12 @@ w3m-account-button, appkit-account-button {
 }
 @media (min-width: 900px) {
   .presale-info-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas: "cards widget";
   }
 }
-.presale-info-cards  { grid-area: cards; display: flex; flex-direction: column; gap: clamp(24px,3vw,32px); }
-.presale-info-widget { grid-area: widget; }
+.presale-info-cards  { grid-area: cards; display: flex; flex-direction: column; gap: clamp(24px,3vw,32px); min-width: 0; }
+.presale-info-widget { grid-area: widget; min-width: 0; }
 
 /* =====================================================
    PRESALE PRICE STATS — borderless ledger rows sitting
@@ -1566,6 +1571,11 @@ w3m-account-button, appkit-account-button {
   .hero-headline {
     font-size: clamp(40px, 5.5vw, 96px);
     white-space: nowrap;
+  }
+}
+@media (max-width: 599px) {
+  .hero-headline {
+    font-size: clamp(34px, 10vw, 60px);
   }
 }
 .hero-inner { max-width: var(--max-w); margin: 0 auto; width: 100%; }

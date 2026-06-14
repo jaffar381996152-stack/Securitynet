@@ -306,11 +306,17 @@ export default function TechScroll() {
       const scrollable = sectionH - windowH;
       const scrolled  = Math.max(0, -rect.top);
       const progress  = scrollable > 0 ? Math.min(scrolled / scrollable, 1) : 0;
+      const panelIdx  = Math.round(progress * (PANELS.length - 1));
 
-      const translateX = -progress * (PANELS.length - 1) * 100;
+      // On mobile, panels stack text above the diagram (full-width) rather
+      // than side-by-side, so a continuous slide crops two panels' text+
+      // diagrams into view at once. Snap to the nearest full panel instead.
+      const isMobile = window.innerWidth <= 767;
+      const translateX = isMobile
+        ? -panelIdx * 100
+        : -progress * (PANELS.length - 1) * 100;
       track.style.transform = `translateX(${translateX}vw)`;
 
-      const panelIdx = Math.round(progress * (PANELS.length - 1));
       dotsRef.current.forEach((dot, i) => {
         if (!dot) return;
         dot.style.background = i === panelIdx ? "var(--gold)" : "var(--border-gold)";
@@ -401,6 +407,7 @@ export default function TechScroll() {
         {/* Horizontal track */}
         <div
           ref={trackRef}
+          className="tech-track"
           style={{
             display: "flex",
             width: `${PANELS.length * 100}vw`,
@@ -425,7 +432,6 @@ export default function TechScroll() {
                     justifyContent: "center",
                     padding: "0 var(--gut)",
                     position: "relative",
-                    borderRight: "1px solid var(--border-sub)",
                   }}
                 >
                   <div style={{ maxWidth: "var(--max-w)", margin: "0 auto", width: "100%", position: "relative" }}>
@@ -462,7 +468,7 @@ export default function TechScroll() {
               <div
                 key={i}
                 className="tech-panel-single"
-                style={{ width: "100vw", flexShrink: 0, height: "100%", borderRight: "1px solid var(--border-sub)" }}
+                style={{ width: "100vw", flexShrink: 0, height: "100%" }}
               >
                 <div className="tech-panel-left">
                   <span className="tech-panel-num" aria-hidden="true">{panel.num}</span>

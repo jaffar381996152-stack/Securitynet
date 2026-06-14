@@ -198,7 +198,7 @@ export default function PresaleInline() {
           {/* ── RIGHT COLUMN — buy widget (desktop only) ──────────── */}
           <FadeUpSection delay={0.15}>
             <div className="presale-inline-widget">
-              <PurchaseCard showTokenCalculator={false} showContractAddress={false} />
+              <PurchaseCard />
               <Link href="/presale" className="btn-primary" style={{ width: "100%", justifyContent: "center", marginTop: 16 }}>
                 VIEW FULL PRESALE PAGE →
               </Link>

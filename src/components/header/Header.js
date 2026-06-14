@@ -281,7 +281,7 @@ export default function Header() {
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            padding: "80px var(--gut) 32px",
+            padding: "80px var(--gut) 120px",
             overflowY: "auto",
             WebkitOverflowScrolling: "touch",
           }}
@@ -348,44 +348,11 @@ export default function Header() {
               );
             })}
 
-            {status !== "authenticated" && (
-              <Link
-                href="/signin"
-                onClick={() => setOpen(false)}
-                style={{
-                  fontFamily: "var(--font-disp)",
-                  fontWeight: 700,
-                  fontSize: 28,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: pathname === "/signin" ? "var(--gold)" : "var(--text-sec)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 16,
-                  opacity: open ? 1 : 0,
-                  transform: open ? "translateY(0)" : "translateY(16px)",
-                  transition: `opacity 0.35s ease ${NAV_LINKS.length * 0.06}s, transform 0.35s ease ${NAV_LINKS.length * 0.06}s`,
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 10,
-                    color: "var(--gold-dim)",
-                    letterSpacing: "0.1em",
-                    minWidth: 24,
-                  }}
-                >
-                  {String(NAV_LINKS.length + 1).padStart(2, "0")}
-                </span>
-                SIGN IN
-              </Link>
-            )}
           </nav>
 
           {/* Account */}
-          <div style={{ paddingTop: 32, borderTop: "1px solid var(--border-sub)", marginTop: 32 }}>
-            {status === "authenticated" ? (
+          {status === "authenticated" && (
+            <div style={{ paddingTop: 32, borderTop: "1px solid var(--border-sub)", marginTop: 32 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <span
                   style={{
@@ -414,22 +381,8 @@ export default function Header() {
                   SIGN OUT
                 </button>
               </div>
-            ) : (
-              <Link
-                href="/signin"
-                onClick={() => setOpen(false)}
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 12,
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase",
-                  color: "var(--gold)",
-                }}
-              >
-                SIGN IN / REGISTER →
-              </Link>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* CTA */}
           <div style={{ paddingTop: 24, marginTop: 24 }}>

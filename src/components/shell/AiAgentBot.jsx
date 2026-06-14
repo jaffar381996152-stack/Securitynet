@@ -147,6 +147,7 @@ export default function AiAgentBot() {
       {!open && (
         <div
           aria-hidden="true"
+          className="ai-agent-widget"
           style={{
             position: "fixed",
             bottom: bottom + 14,
@@ -211,6 +212,7 @@ export default function AiAgentBot() {
         onClick={() => setOpen((v) => !v)}
         aria-label="AI Agent"
         data-cursor="cta"
+        className="ai-agent-widget"
         style={{
           position: "fixed",
           bottom,
@@ -243,6 +245,7 @@ export default function AiAgentBot() {
 
       {open && (
         <div
+          className="ai-agent-widget"
           style={{
             position: "fixed",
             bottom: bottom + 68,
