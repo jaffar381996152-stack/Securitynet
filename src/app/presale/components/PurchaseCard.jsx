@@ -18,28 +18,75 @@ const IMPORT_STEPS = [
   "Tap 'Add Token' — your XN balance will appear",
 ];
 
-const CARD = { border: "1px solid var(--border-gold)", padding: 18 };
-
-function StepHeading({ n, children, color = "var(--text-sec)" }) {
+/* ── Premium corner brackets ─────────────────────────────────── */
+function Brackets() {
+  const A = 18, off = 9, c = "var(--gold)", w = "1.5px";
+  const base = { position: "absolute", width: A, height: A, pointerEvents: "none", zIndex: 4 };
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color }}>
-      {n != null && (
-        <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 18, height: 18, borderRadius: "50%", flexShrink: 0, border: "1px solid var(--border-gold)", color: "var(--gold)", fontSize: 9, fontWeight: 700 }}>
-          {n}
-        </span>
-      )}
-      {children}
-    </div>
+    <>
+      <span style={{ ...base, top: off, left: off, borderTop: `${w} solid ${c}`, borderLeft: `${w} solid ${c}` }} />
+      <span style={{ ...base, top: off, right: off, borderTop: `${w} solid ${c}`, borderRight: `${w} solid ${c}` }} />
+      <span style={{ ...base, bottom: off, left: off, borderBottom: `${w} solid ${c}`, borderLeft: `${w} solid ${c}` }} />
+      <span style={{ ...base, bottom: off, right: off, borderBottom: `${w} solid ${c}`, borderRight: `${w} solid ${c}` }} />
+    </>
   );
 }
 
-function DownArrow() {
+/* ── Spine node ─────────────────────────────────────────────── */
+function Node({ state, n }) {
+  const base = {
+    position: "absolute",
+    left: 8,
+    top: 0,
+    width: 24,
+    height: 24,
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: "var(--font-mono)",
+    fontSize: 10,
+    fontWeight: 700,
+    background: "var(--bg-secondary)",
+    zIndex: 1,
+    transition: "all 0.3s ease",
+  };
+  if (state === "done")
+    return (
+      <span style={{ ...base, border: "1px solid var(--gold)", color: "var(--gold)", boxShadow: "0 0 0 4px rgba(212,175,110,0.10)" }}>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7" /></svg>
+      </span>
+    );
+  if (state === "active")
+    return <span style={{ ...base, border: "1px solid var(--gold)", color: "var(--gold)", boxShadow: "0 0 14px rgba(212,175,110,0.45), 0 0 0 4px rgba(212,175,110,0.10)" }}>{n}</span>;
+  if (state === "live")
+    return (
+      <span style={{ ...base, border: "1px solid var(--gold)", boxShadow: "0 0 0 4px rgba(212,175,110,0.10)" }}>
+        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--gold)", animation: "ubPulse 1.6s ease-in-out infinite" }} />
+      </span>
+    );
+  if (state === "accent")
+    return <span style={{ ...base, border: "1px solid var(--border-gold)", color: "var(--gold)", fontSize: 12 }}>✦</span>;
+  if (state === "blocked")
+    return <span style={{ ...base, border: "1px solid var(--border-sub)", color: "var(--text-muted)" }}>{n}</span>;
+  return <span style={{ ...base, border: "1px solid var(--border-gold)", color: "var(--gold)" }}>{n}</span>;
+}
+
+/* ── Spine step row (rail + connecting line + content) ──────── */
+function Step({ state, n, last, title, children }) {
+  const headingColor = state === "done" || state === "active" ? "var(--gold)" : "var(--text-primary)";
   return (
-    <div style={{ display: "flex", justifyContent: "center", color: "var(--gold)" }} aria-hidden="true">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="12" y1="5" x2="12" y2="19" />
-        <polyline points="19 12 12 19 5 12" />
-      </svg>
+    <div style={{ display: "grid", gridTemplateColumns: "40px 1fr" }}>
+      <div style={{ position: "relative" }}>
+        {!last && <span style={{ position: "absolute", left: 19, top: 24, bottom: 0, width: 2, background: "rgba(212,175,110,0.28)" }} />}
+        <Node state={state} n={n} />
+      </div>
+      <div style={{ paddingBottom: last ? 2 : 26, minWidth: 0 }}>
+        <div style={{ minHeight: 24, display: "flex", alignItems: "center", fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 15, letterSpacing: "0.1em", textTransform: "uppercase", color: headingColor }}>
+          {title}
+        </div>
+        {children && <div style={{ marginTop: 12 }}>{children}</div>}
+      </div>
     </div>
   );
 }
@@ -180,82 +227,73 @@ export default function PurchaseCard({ showTokenCalculator = true }) {
     boxSizing: "border-box",
   };
 
+  const calcShown = showTokenCalculator;
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+    <div className="card-dark" style={{ border: "1px solid var(--border-gold)", position: "relative" }}>
+      <Brackets />
+
+      {/* Status strip */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 20px", borderBottom: "1px solid var(--border-sub)" }}>
+        <span style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--text-sec)" }}>
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--c-success)", display: "inline-block", animation: "ubPulse 1.8s ease-in-out infinite" }} />
+          SECURE CHANNEL
+        </span>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--text-sec)" }}>
+          STAGE 3 · <span style={{ color: "var(--gold)" }}>$0.20</span>
+        </span>
+      </div>
 
       {verified ? (
         /* ── SUCCESS STATE ── */
-        <div className="card-dark" style={{ ...CARD, padding: "32px 20px", textAlign: "center" }}>
-          <div style={{ width: 48, height: 48, border: "2px solid var(--c-success)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px", background: "rgba(74,140,111,0.1)" }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M5 13l4 4L19 7" stroke="var(--c-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+        <div style={{ padding: "40px 24px", textAlign: "center" }}>
+          <div style={{ width: 52, height: 52, border: "2px solid var(--c-success)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px", background: "rgba(74,140,111,0.1)", boxShadow: "0 0 24px rgba(74,140,111,0.25)" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="var(--c-success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </div>
-          <div style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 16, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--c-success)", marginBottom: 10 }}>
+          <div style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 18, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--c-success)", marginBottom: 12 }}>
             TRANSFER INITIATED
           </div>
-          <p style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-muted)", marginBottom: 4 }}>
+          <p style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-sec)", marginBottom: 4 }}>
             Received: <strong style={{ color: "var(--text-primary)" }}>{verified.usdtAmount} USDT</strong>
           </p>
-          <p style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-muted)", marginBottom: 16 }}>
+          <p style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-sec)", marginBottom: 18 }}>
             Sending: <strong style={{ color: "var(--gold)" }}>{verified.xnTokens} XN</strong>
           </p>
-          <button
-            type="button"
-            onClick={() => setImportOpen(true)}
-            style={{ fontFamily: "var(--font-disp)", fontWeight: 600, fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--gold)", background: "none", border: "none", cursor: "pointer" }}
-          >
+          <button type="button" onClick={() => setImportOpen(true)} style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--gold)", background: "none", border: "none", cursor: "pointer" }}>
             HOW TO IMPORT XN TOKENS →
           </button>
           {verified.txHash && (
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", marginTop: 14, wordBreak: "break-all", letterSpacing: "0.06em" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", marginTop: 16, wordBreak: "break-all", letterSpacing: "0.06em" }}>
               TX: {verified.txHash}
             </p>
           )}
         </div>
       ) : (
-        <>
-          {/* ── CARD 1: Connect Wallet ── */}
-          <div className="card-dark" style={CARD}>
+        /* ── VAULT SPINE ── */
+        <div style={{ padding: "24px 20px 16px" }}>
+
+          {/* Step 1 · Connect */}
+          <Step n={1} state={isConnected ? "done" : "active"} title="CONNECT WALLET">
             {!isConnected ? (
-              <>
-                <StepHeading n={1}>CONNECT WALLET</StepHeading>
-                <button
-                  onClick={connectWallet}
-                  style={{
-                    width: "100%",
-                    height: 46,
-                    marginTop: 12,
-                    background: "transparent",
-                    border: "1px solid var(--gold)",
-                    fontFamily: "var(--font-disp)",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    letterSpacing: "0.16em",
-                    textTransform: "uppercase",
-                    color: "var(--gold)",
-                    cursor: "pointer",
-                    transition: "background 0.2s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--gold-ghost)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  CONNECT WALLET
-                </button>
-              </>
+              <button
+                onClick={connectWallet}
+                style={{ width: "100%", height: 46, background: "transparent", border: "1px solid var(--gold)", fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", cursor: "pointer", transition: "background 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--gold-ghost)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+              >
+                CONNECT WALLET
+              </button>
             ) : (
-              <StepHeading n={1} color="var(--c-success)">
-                WALLET CONNECTED · {address?.slice(0, 6)}…{address?.slice(-4)}
-              </StepHeading>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 12px", border: "1px solid var(--border-sub)", background: "var(--bg-tertiary)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.06em", color: "var(--c-success)" }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--c-success)", display: "inline-block" }} />
+                {address?.slice(0, 6)}…{address?.slice(-4)}
+              </div>
             )}
-          </div>
+          </Step>
 
-          <DownArrow />
-
-          {/* ── CARD 2: Choose Network ── */}
-          <div className="card-dark" style={CARD}>
-            <StepHeading n={2}>CHOOSE NETWORK</StepHeading>
-            <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+          {/* Step 2 · Network (+ TRON sender appears here when TRC-20) */}
+          <Step n={2} state={isConnected ? "active" : "default"} title="CHOOSE NETWORK">
+            <div style={{ display: "flex", gap: 8 }}>
               {["BEP-20", "ERC-20", "TRC-20"].map((net) => {
                 const key = { "BEP-20": "BSC", "ERC-20": "ETH", "TRC-20": "TRON" }[net];
                 const active = network === key;
@@ -270,9 +308,10 @@ export default function PurchaseCard({ showTokenCalculator = true }) {
                       background: active ? "var(--gold-ghost)" : "transparent",
                       fontFamily: "var(--font-mono)",
                       fontSize: 10,
-                      letterSpacing: "0.12em",
-                      color: active ? "var(--gold)" : "var(--text-muted)",
+                      letterSpacing: "0.1em",
+                      color: active ? "var(--gold)" : "var(--text-sec)",
                       cursor: "pointer",
+                      boxShadow: active ? "0 0 0 1px var(--gold)" : "none",
                       transition: "all 0.15s",
                     }}
                   >
@@ -281,105 +320,71 @@ export default function PurchaseCard({ showTokenCalculator = true }) {
                 );
               })}
             </div>
-          </div>
 
-          <DownArrow />
+            {network === "TRON" && (
+              <div style={{ marginTop: 14 }}>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 6 }}>
+                  YOUR TRON SENDER ADDRESS
+                </div>
+                <div style={{ display: "flex", gap: 6 }}>
+                  <input
+                    type="text"
+                    placeholder="TYour...TRON...wallet...address"
+                    value={tronAddress}
+                    onChange={(e) => setTronAddress(e.target.value.trim())}
+                    style={{ flex: 1, minWidth: 0, background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)", padding: "10px 12px", fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-primary)", outline: "none", boxSizing: "border-box" }}
+                    onFocus={(e) => (e.target.style.borderColor = "var(--gold)")}
+                    onBlur={(e) => (e.target.style.borderColor = "var(--border-sub)")}
+                  />
+                  <button onClick={pasteFromClipboard} style={{ padding: "0 10px", background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)", fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-sec)", cursor: "pointer", whiteSpace: "nowrap" }}>PASTE</button>
+                  <button onClick={scanning ? stopScanner : startScanner} style={{ padding: "0 10px", background: scanning ? "rgba(168,82,82,0.1)" : "var(--gold-ghost)", border: scanning ? "1px solid var(--c-danger)" : "1px solid var(--border-gold)", fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: scanning ? "var(--c-danger)" : "var(--gold)", cursor: "pointer", whiteSpace: "nowrap" }}>{scanning ? "STOP" : "SCAN"}</button>
+                </div>
+                {scanning && <div style={{ marginTop: 10, border: "1px solid var(--border-sub)" }}><div id="presale-tron-qr-reader" /></div>}
+              </div>
+            )}
+          </Step>
 
-          {/* ── CARD 3: Copy Deposit Address ── */}
-          <div className="card-dark" style={CARD}>
-            <StepHeading n={3}>COPY DEPOSIT ADDRESS</StepHeading>
+          {/* Step 3 · Deposit address */}
+          <Step n={3} state={depositAddress ? "active" : "blocked"} title="DEPOSIT ADDRESS">
             {depositAddress ? (
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12 }}>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-sec)", flex: 1, wordBreak: "break-all", letterSpacing: "0.04em" }}>
-                  {depositAddress}
-                </span>
-                <button
-                  onClick={copyAddr}
-                  style={{
-                    padding: "6px 12px",
-                    background: copied ? "rgba(74,140,111,0.15)" : "var(--gold)",
-                    border: "none",
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 9,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    color: copied ? "var(--c-success)" : "var(--text-inv)",
-                    cursor: "pointer",
-                    flexShrink: 0,
-                    transition: "all 0.2s",
-                  }}
-                >
-                  {copied ? "✓" : "COPY"}
-                </button>
+              <div style={{ background: "var(--bg-primary)", border: "1px solid var(--border-gold)", padding: "12px 12px 12px 14px" }}>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 8, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--gold-dim)", marginBottom: 6 }}>
+                  {networkLabel} · USDT ONLY
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-primary)", flex: 1, wordBreak: "break-all", letterSpacing: "0.02em", lineHeight: 1.4 }}>
+                    {depositAddress}
+                  </span>
+                  <button
+                    onClick={copyAddr}
+                    style={{ alignSelf: "stretch", padding: "0 14px", background: copied ? "rgba(74,140,111,0.15)" : "var(--gold)", border: "none", fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: copied ? "var(--c-success)" : "var(--text-inv)", cursor: "pointer", flexShrink: 0, transition: "all 0.2s" }}
+                  >
+                    {copied ? "✓ COPIED" : "COPY"}
+                  </button>
+                </div>
               </div>
             ) : (
-              <p style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-muted)", marginTop: 12 }}>
+              <div style={{ fontFamily: "var(--font-disp)", fontSize: 12, color: "var(--text-sec)", border: "1px dashed var(--border-sub)", padding: "12px 14px" }}>
                 Deposit address not configured.
-              </p>
+              </div>
             )}
-          </div>
+          </Step>
 
-          <DownArrow />
+          {/* Step 4 · Send */}
+          <Step n={4} last={!calcShown} state={isConnected && depositAddress ? "live" : "default"} title="SEND USDT TO THE ADDRESS">
+            {isConnected && depositAddress ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 12px", background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)", fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-sec)" }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--gold)", display: "inline-block", animation: "ubPulse 1.6s ease-in-out infinite", flexShrink: 0 }} />
+                Awaiting transfer · auto-detecting every 15s
+              </div>
+            ) : null}
+          </Step>
 
-          {/* ── CARD 4: Send USDT ── */}
-          <div className="card-dark" style={CARD}>
-            <StepHeading n={4}>SEND USDT TO THE COPIED ADDRESS</StepHeading>
-          </div>
-
-          {/* ── Token Calculator ── */}
-          {showTokenCalculator && (
-            <div className="card-dark" style={CARD}>
-              <StepHeading>TOKEN CALCULATOR</StepHeading>
-
-              {/* TRON sender address (only for TRON) */}
-              {network === "TRON" && (
-                <div style={{ marginTop: 12 }}>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 6 }}>
-                    YOUR TRON SENDER ADDRESS
-                  </div>
-                  <div style={{ display: "flex", gap: 6 }}>
-                    <input
-                      type="text"
-                      placeholder="TYour...TRON...wallet...address"
-                      value={tronAddress}
-                      onChange={(e) => setTronAddress(e.target.value.trim())}
-                      style={{
-                        flex: 1, minWidth: 0, background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)",
-                        padding: "10px 12px", fontFamily: "var(--font-mono)", fontSize: 11,
-                        color: "var(--text-primary)", outline: "none", boxSizing: "border-box",
-                      }}
-                      onFocus={(e) => (e.target.style.borderColor = "var(--gold)")}
-                      onBlur={(e) => (e.target.style.borderColor = "var(--border-sub)")}
-                    />
-                    <button
-                      onClick={pasteFromClipboard}
-                      style={{ padding: "0 10px", background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)", fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-sec)", cursor: "pointer", whiteSpace: "nowrap" }}
-                    >
-                      PASTE
-                    </button>
-                    <button
-                      onClick={scanning ? stopScanner : startScanner}
-                      style={{
-                        padding: "0 10px",
-                        background: scanning ? "rgba(168,82,82,0.1)" : "var(--gold-ghost)",
-                        border: scanning ? "1px solid var(--c-danger)" : "1px solid var(--border-gold)",
-                        fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase",
-                        color: scanning ? "var(--c-danger)" : "var(--gold)", cursor: "pointer", whiteSpace: "nowrap",
-                      }}
-                    >
-                      {scanning ? "STOP" : "SCAN"}
-                    </button>
-                  </div>
-                  {scanning && (
-                    <div style={{ marginTop: 10, border: "1px solid var(--border-sub)" }}>
-                      <div id="presale-tron-qr-reader" />
-                    </div>
-                  )}
-                </div>
-              )}
-
+          {/* Step ✦ · Calculator (no boxed container) */}
+          {calcShown && (
+            <Step state="accent" last title="TOKEN CALCULATOR">
               {/* USDT input */}
-              <div style={{ position: "relative", marginTop: 12 }}>
+              <div style={{ position: "relative" }}>
                 <input
                   type="number"
                   value={usdtAmt}
@@ -390,18 +395,12 @@ export default function PurchaseCard({ showTokenCalculator = true }) {
                   onFocus={(e) => (e.target.style.borderColor = "var(--border-gold)")}
                   onBlur={(e) => (e.target.style.borderColor = "var(--border-sub)")}
                 />
-                <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--text-muted)" }}>
-                  USDT
-                </span>
+                <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--text-muted)" }}>USDT</span>
               </div>
 
-              {/* Arrow */}
-              <div style={{ textAlign: "center", color: "var(--gold)", fontSize: 16, lineHeight: 1, margin: "4px 0" }}>↓</div>
+              <div style={{ textAlign: "center", color: "var(--gold)", fontSize: 16, lineHeight: 1, margin: "6px 0" }}>↓</div>
 
-              {/* YOU RECEIVE */}
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 8 }}>
-                YOU RECEIVE
-              </div>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--gold)", marginBottom: 8 }}>YOU RECEIVE</div>
               <div style={{ position: "relative" }}>
                 <input
                   type="number"
@@ -410,59 +409,33 @@ export default function PurchaseCard({ showTokenCalculator = true }) {
                   onChange={(e) => handleXn(e.target.value)}
                   style={{ ...inputBase, paddingRight: 48, color: "var(--gold)", border: "1px solid var(--border-gold)" }}
                 />
-                <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--gold)" }}>
-                  XN
-                </span>
+                <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--gold)" }}>XN</span>
               </div>
 
-              {/* Confirm payment */}
+              {/* Confirm */}
               {depositAddress && (
-                <>
-                  <button
-                    className="authorize-btn"
-                    onClick={handleManualPaymentCheck}
-                    disabled={confirmDisabled}
-                    style={{
-                      width: "100%",
-                      height: 48,
-                      marginTop: 12,
-                      background: "var(--gold)",
-                      color: "var(--text-inv)",
-                      border: "none",
-                      fontFamily: "var(--font-disp)",
-                      fontWeight: 700,
-                      fontSize: 13,
-                      letterSpacing: "0.16em",
-                      textTransform: "uppercase",
-                      cursor: confirmDisabled ? "default" : "pointer",
-                      opacity: confirmDisabled ? 0.5 : 1,
-                      transition: "opacity 0.2s",
-                    }}
-                  >
-                    {checkingPayment ? "CHECKING…" : "I'VE SENT THE PAYMENT"}
-                  </button>
-
-                  {isConnected && (
-                    <p style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginTop: 8 }}>
-                      <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--c-success)", display: "inline-block", animation: "ubPulse 1.8s ease-in-out infinite" }} />
-                      AUTO-CHECKING EVERY 15s
-                    </p>
-                  )}
-                </>
+                <button
+                  className="authorize-btn"
+                  onClick={handleManualPaymentCheck}
+                  disabled={confirmDisabled}
+                  style={{ width: "100%", height: 48, marginTop: 14, background: "var(--gold)", color: "var(--text-inv)", border: "none", fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", cursor: confirmDisabled ? "default" : "pointer", opacity: confirmDisabled ? 0.5 : 1, transition: "opacity 0.2s" }}
+                >
+                  {checkingPayment ? "CHECKING…" : "I'VE SENT THE PAYMENT"}
+                </button>
               )}
-            </div>
+            </Step>
           )}
-        </>
+        </div>
       )}
 
-      {/* ── How to add XN (collapsible) ── */}
-      <div className="card-dark" style={{ border: "1px solid var(--border-sub)" }}>
+      {/* How to add XN (collapsible) */}
+      <div style={{ borderTop: "1px solid var(--border-sub)" }}>
         <button className="import-toggle" onClick={() => setImportOpen(!importOpen)}>
           <span>HOW TO ADD XN TO YOUR WALLET</span>
           <span style={{ transform: importOpen ? "rotate(180deg)" : "none", transition: "transform 0.3s" }}>▼</span>
         </button>
         <div style={{ maxHeight: importOpen ? 280 : 0, overflow: "hidden", transition: "max-height 0.35s cubic-bezier(0.16,1,0.3,1)" }}>
-          <div style={{ padding: "0 18px 18px" }}>
+          <div style={{ padding: "0 20px 18px" }}>
             {IMPORT_STEPS.map((step, i) => (
               <div key={i} className="import-step">
                 <span className="import-num">0{i + 1}</span>
