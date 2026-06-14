@@ -6,10 +6,13 @@ import { isValidWalletAddress, isValidAmount } from "@/app/libs/validators";
 
 const XN_PRICE = 0.20;
 
+// Single source of truth for deposit addresses — same NEXT_PUBLIC_ vars the
+// buy page displays (data/settings.js), so the address shown to buyers always
+// matches the one we watch for incoming payments.
 const DEPOSIT_WALLETS: Record<string, string> = {
-  BSC: (process.env.DEPOSIT_WALLET_BSC || "").toLowerCase(),
-  ETH: (process.env.DEPOSIT_WALLET_ETH || "").toLowerCase(),
-  TRON: process.env.DEPOSIT_WALLET_TRON || "",
+  BSC: (process.env.NEXT_PUBLIC_DEPOSIT_WALLET_BSC || "").toLowerCase(),
+  ETH: (process.env.NEXT_PUBLIC_DEPOSIT_WALLET_ETH || "").toLowerCase(),
+  TRON: process.env.NEXT_PUBLIC_DEPOSIT_WALLET_TRON || "",
 };
 
 

@@ -38,9 +38,13 @@ already gitignored).
 
 A few notes worth calling out:
 
-- `OWNER_PRIVATE_KEY` and `DEPOSIT_WALLET_*` are wallet secrets that should
-  **only** ever be set at the production level (e.g. AWS Amplify → Environment
-  variables) — never in a local `.env` file.
+- `OWNER_PRIVATE_KEY` is a wallet secret (it signs XN token transfers) that
+  should **only** ever be set at the production level (e.g. AWS Amplify →
+  Environment variables) — never in a local `.env` file.
+- `NEXT_PUBLIC_DEPOSIT_WALLET_BSC` / `_ETH` / `_TRON` are the public deposit
+  addresses where buyers send USDT. They're a single source of truth — shown on
+  the buy page **and** watched by the server for incoming payments — so set just
+  these three (they are public addresses, not secrets).
 - `MONGODB_URI` / `MONGODB_DB` point at the MongoDB Atlas cluster used for
   blog posts, presale purchase records, and auth.
 - `NEXT_PUBLIC_PRESALE_END_DATE` drives the presale countdown — set it to the

@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
   }
 
   const webhookUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/moralis-webhook`;
-  const bscDeposit = process.env.DEPOSIT_WALLET_BSC || "";
-  const ethDeposit = process.env.DEPOSIT_WALLET_ETH || "";
+  const bscDeposit = process.env.NEXT_PUBLIC_DEPOSIT_WALLET_BSC || "";
+  const ethDeposit = process.env.NEXT_PUBLIC_DEPOSIT_WALLET_ETH || "";
 
   if (!bscDeposit || !ethDeposit) {
     return NextResponse.json({ success: false, error: "Deposit wallets not configured in env" }, { status: 400 });

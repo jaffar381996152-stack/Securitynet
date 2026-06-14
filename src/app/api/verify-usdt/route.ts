@@ -9,11 +9,12 @@ const USDT_CONTRACTS: Record<string, string> = {
   ETH: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
 };
 
-// Your deposit wallet addresses (set in env vars)
+// Deposit wallet addresses — same NEXT_PUBLIC_ vars the buy page displays
+// (data/settings.js), so displayed and watched addresses can never diverge.
 const DEPOSIT_WALLETS: Record<string, string> = {
-  BSC: process.env.DEPOSIT_WALLET_BSC || "",
-  ETH: process.env.DEPOSIT_WALLET_ETH || "",
-  TRON: process.env.DEPOSIT_WALLET_TRON || "",
+  BSC: process.env.NEXT_PUBLIC_DEPOSIT_WALLET_BSC || "",
+  ETH: process.env.NEXT_PUBLIC_DEPOSIT_WALLET_ETH || "",
+  TRON: process.env.NEXT_PUBLIC_DEPOSIT_WALLET_TRON || "",
 };
 
 // Moralis chain IDs

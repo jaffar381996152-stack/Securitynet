@@ -17,9 +17,10 @@ const USDT_DECIMALS: Record<string, number> = {
   "0x1":  6,
 };
 
+// Same NEXT_PUBLIC_ deposit vars the buy page displays (data/settings.js).
 const DEPOSIT_WALLETS: Record<string, string> = {
-  BSC: (process.env.DEPOSIT_WALLET_BSC || "").toLowerCase(),
-  ETH: (process.env.DEPOSIT_WALLET_ETH || "").toLowerCase(),
+  BSC: (process.env.NEXT_PUBLIC_DEPOSIT_WALLET_BSC || "").toLowerCase(),
+  ETH: (process.env.NEXT_PUBLIC_DEPOSIT_WALLET_ETH || "").toLowerCase(),
 };
 
 const XN_PRICE = 0.20;
