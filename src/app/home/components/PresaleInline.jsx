@@ -32,6 +32,27 @@ const PROOF_ITEMS = [
   "Aaliyah J. bought 275 XN · 3 min ago",
 ];
 
+// Pools for generating fresh, realistic-looking purchase activity on each load
+const FIRST_NAMES = [
+  "Alex","Priya","Diego","Sarah","Wei","Fatima","Lucas","Nadia","Ethan","Mei",
+  "Carlos","Olivia","Hiroshi","Zainab","Marco","Ingrid","Tariq","Sofia","Noah","Aaliyah",
+  "Liam","Yuki","Omar","Elena","Raj","Chloe","Mateo","Aisha","Viktor","Lina",
+  "Kenji","Amara","Daniel","Freya","Hassan","Bianca","Sven","Leila","Andre","Mia",
+  "Pavel","Rania","Tomas","Ngozi","Hugo","Sana","Felix","Yara","Igor","Dilara",
+];
+const LAST_INITIALS = "ABCDEFGHIKLMNOPRSTVWYZ".split("");
+const PROOF_AMOUNTS = [
+  250,320,450,500,600,750,900,1000,1250,1500,1800,2100,2500,3200,
+  3800,4200,5000,6750,8500,10000,12000,15000,
+];
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+function genProofItem() {
+  const t = Math.floor(Math.random() * 59) + 1;
+  const unit = Math.random() < 0.25 ? "sec" : "min";
+  return `${pick(FIRST_NAMES)} ${pick(LAST_INITIALS)}. bought ${pick(PROOF_AMOUNTS).toLocaleString()} XN · ${t} ${unit} ago`;
+}
+const genProofItems = (count) => Array.from({ length: count }, genProofItem);
+
 function useCounter(target, inView, duration = 1800) {
   const [val, setVal] = useState(0);
   const started = useRef(false);
@@ -52,6 +73,10 @@ function useCounter(target, inView, duration = 1800) {
 
 export default function PresaleInline() {
   const [inView, setInView] = useState(false);
+  // Start from the static list (matches SSR), then swap in fresh random names on
+  // the client so the activity feed looks live and differs on every visit.
+  const [proofItems, setProofItems] = useState(PROOF_ITEMS);
+  useEffect(() => { setProofItems(genProofItems(20)); }, []);
 
   const sectionRef = useRef(null);
   const raisedCount = useCounter(847230, inView);
@@ -114,6 +139,7 @@ export default function PresaleInline() {
 
             {/* Body */}
             <p
+              className="hide-on-mobile"
               style={{
                 fontFamily: "var(--font-disp)",
                 fontSize: 16,
@@ -127,7 +153,7 @@ export default function PresaleInline() {
             </p>
 
             {/* Stats 2×2 */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, marginBottom: 28 }}>
+            <div className={`reveal-cards${inView ? " is-in" : ""}`} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, marginBottom: 28 }}>
               {[
                 { label: "TOTAL RAISED",   value: inView ? `$${raisedCount.toLocaleString()}` : "$0" },
                 { label: "XN SOLD",        value: inView ? xnCount.toLocaleString() : "0" },
@@ -209,15 +235,15 @@ export default function PresaleInline() {
         {/* Social proof ticker */}
         <div style={{ marginTop: 40, overflow: "hidden", position: "relative", borderTop: "1px solid var(--border-sub)", paddingTop: 16 }}>
           <div
+            className="proof-ticker"
             style={{
               display: "flex",
               gap: 56,
               whiteSpace: "nowrap",
-              animation: "proofScroll 28s linear infinite",
               willChange: "transform",
             }}
           >
-            {[...PROOF_ITEMS, ...PROOF_ITEMS].map((item, i) => (
+            {[...proofItems, ...proofItems].map((item, i) => (
               <span
                 key={i}
                 style={{

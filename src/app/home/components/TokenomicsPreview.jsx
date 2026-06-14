@@ -100,6 +100,7 @@ export default function TokenomicsPreview() {
               STRUCTURE
             </h2>
             <p
+              className="hide-on-mobile"
               style={{
                 fontFamily: "var(--font-disp)",
                 fontSize: 16,
@@ -113,6 +114,7 @@ export default function TokenomicsPreview() {
 
             {/* Stats 2×2 grid — 4 separate cards */}
             <div
+              className={`reveal-cards${animated ? " is-in" : ""}`}
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",

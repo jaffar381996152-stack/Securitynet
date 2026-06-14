@@ -477,7 +477,7 @@ export default function TechScroll() {
                     <br />
                     {panel.titleWhite}
                   </h2>
-                  <p className="tech-panel-body">{panel.desc}</p>
+                  <p className="tech-panel-body hide-on-mobile">{panel.desc}</p>
                   <div className="tech-tags">
                     {panel.tags.map((tag) => (
                       <span key={tag} className="tech-tag">{tag}</span>
