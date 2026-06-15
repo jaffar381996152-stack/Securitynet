@@ -1,6 +1,5 @@
 import AboutHero from "./components/AboutHero";
 import OurMission from "./components/OurMission";
-import OurTeam from "./components/OurTeam";
 import CompanyStats from "./components/CompanyStats";
 import { pageMetadata } from "@/app/libs/seo";
 
@@ -16,7 +15,6 @@ const page = () => {
     <>
       <AboutHero />
       <OurMission />
-      <OurTeam />
       <CompanyStats />
     </>
   );
