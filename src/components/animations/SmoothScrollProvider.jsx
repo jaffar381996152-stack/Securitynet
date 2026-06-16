@@ -31,6 +31,9 @@ export default function SmoothScrollProvider({ children }) {
 
     lenis.on("scroll", ScrollTrigger.update);
 
+    // expose for in-page smooth-scroll (e.g. hero CTAs scrolling to a section)
+    window.__lenis = lenis;
+
     const tick = (time) => {
       lenis.raf(time * 1000);
     };
@@ -40,6 +43,7 @@ export default function SmoothScrollProvider({ children }) {
     return () => {
       gsap.ticker.remove(tick);
       lenis.destroy();
+      if (window.__lenis === lenis) window.__lenis = null;
     };
   }, []);
 

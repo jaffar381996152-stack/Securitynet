@@ -18,15 +18,7 @@ export default function Header() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const [open, setOpen]         = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const accountName = session?.user?.name?.split(" ")[0] || session?.user?.email?.split("@")[0];
-
-  useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", handler, { passive: true });
-    handler();
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
 
   useEffect(() => {
     document.body.classList.toggle("mobile-nav-open", open);
@@ -48,13 +40,10 @@ export default function Header() {
           zIndex: 8000,
           display: "flex",
           alignItems: "center",
-          background: scrolled ? "rgba(10,10,14,0.92)" : "rgba(10,10,14,0)",
-          backdropFilter: scrolled ? "blur(20px)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-          borderBottom: scrolled
-            ? "1px solid rgba(212,175,110,0.12)"
-            : "1px solid transparent",
-          transition: "background 0.35s ease, border-color 0.35s ease",
+          background: "rgba(10,10,14,0.92)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderBottom: "1px solid rgba(212,175,110,0.12)",
         }}
       >
         <div

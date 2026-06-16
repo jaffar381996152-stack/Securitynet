@@ -1,6 +1,6 @@
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
-import Hero from "./home/components/Hero";
+import ParticleCollapseHero from "./home/components/hero5/ParticleCollapseHero";
 import PresaleInline from "./home/components/PresaleInline";
 import TechScroll from "./home/components/TechScroll";
 import TokenomicsPreview from "./home/components/TokenomicsPreview";
@@ -23,7 +23,7 @@ export default function HomePage() {
     <>
       <Header />
       <main>
-        <Hero />
+        <ParticleCollapseHero />
         <PresaleInline />
         <TokenomicsPreview />
         <TechScroll />

@@ -178,12 +178,13 @@ export default function PresaleInline() {
               ))}
             </div>
 
-            {/* ROI line — Cormorant italic */}
+            {/* ROI line — regular */}
             <p
               style={{
-                fontFamily: "var(--font-ed)",
-                fontStyle: "italic",
+                fontFamily: "var(--font-disp)",
+                fontStyle: "normal",
                 fontSize: 18,
+                letterSpacing: "0.01em",
                 color: "var(--text-sec)",
                 lineHeight: 1.5,
                 marginBottom: 28,

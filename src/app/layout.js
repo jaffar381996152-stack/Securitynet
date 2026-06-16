@@ -8,7 +8,7 @@ import Preloader from "@/components/shell/Preloader";
 import UrgencyBar from "@/components/shell/UrgencyBar";
 import AiAgentBot from "@/components/shell/AiAgentBot";
 import PurchaseXnModal from "@/components/shell/PurchaseXnModal";
-import PresaleCanvas from "@/app/presale/components/PresaleCanvas";
+import GalaxyBackground from "@/components/shell/GalaxyBackground";
 import AuthProvider from "@/components/session/providers";
 import { PurchaseModalProvider } from "@/context/PurchaseModalContext";
 
@@ -72,8 +72,8 @@ export default function RootLayout({ children }) {
         <AuthProvider>
         <AppKit>
         <PurchaseModalProvider>
-          {/* Background canvas — direct body child at z:0, below all z:1 content */}
-          <PresaleCanvas />
+          {/* Site-wide galaxy background — direct body child at z:0, below all z:1 content */}
+          <GalaxyBackground />
           <Preloader />
           <UrgencyBar />
           <AiAgentBot />
