@@ -88,8 +88,11 @@ export function createController(canvas, opts = {}) {
   const particles = createParticles({ count, pixelRatio: renderer.getPixelRatio() });
   scene.add(particles.object);
 
-  // coin — once loaded, retarget the particles onto its real surface
+  // coin — once loaded, retarget the particles onto its real surface.
+  // Slightly smaller on mobile so the (smaller) radial glow shows as a halo
+  // instead of being fully covered by the front-facing coin.
   const coin = createCoin({
+    targetSize: opts.mobile ? 3.2 : 4.0,
     onReady: () => {
       const pts = coin.sampleSurface(count);
       if (!pts) return;

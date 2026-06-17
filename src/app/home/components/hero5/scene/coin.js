@@ -58,7 +58,7 @@ function drawShield(ctx, s) {
   ctx.stroke();
 }
 
-export function createCoin({ onReady } = {}) {
+export function createCoin({ onReady, targetSize = 4.0 } = {}) {
   const group = new THREE.Group();   // spins on Y (after fusion)
   const orient = new THREE.Group();  // upright facing camera
   group.add(orient);
@@ -82,7 +82,7 @@ export function createCoin({ onReady } = {}) {
       box.getCenter(center);
       model.position.sub(center);
       const maxDim = Math.max(size.x, size.y, size.z) || 1;
-      model.scale.setScalar(4.0 / maxDim);
+      model.scale.setScalar(targetSize / maxDim);
 
       model.traverse((o) => {
         if (o.isMesh && o.geometry) {
