@@ -78,8 +78,14 @@ export function createBackdrop({ mobile = false } = {}) {
   group.add(glow);
 
   // --- shining gold star field ----------------------------------------------
-  const N = mobile ? 320 : 680;
-  const BX = 30, BY = 20, ZMIN = -34, ZMAX = -6; // wide, deep volume behind coin
+  const N = mobile ? 480 : 680;
+  // A portrait phone only shows a narrow vertical slice of the scene, so on mobile
+  // we pack the field into a NARROWER (x) / TALLER (y) / SHALLOWER (z) volume — the
+  // galaxy then fills the frame densely instead of looking sparse / zoomed-in.
+  const BX = mobile ? 18 : 30;
+  const BY = mobile ? 28 : 20;
+  const ZMIN = mobile ? -26 : -34;
+  const ZMAX = -6;
   const pos = new Float32Array(N * 3);
   const aSize = new Float32Array(N);
   const aPhase = new Float32Array(N);
@@ -212,7 +218,7 @@ export function createBackdrop({ mobile = false } = {}) {
 
   function update(dt, elapsed) {
     starMat.uniforms.uTime.value = elapsed;
-    group.rotation.z += dt * 0.012; // slow galactic drift
+    group.rotation.z += dt * 0.07; // galactic spin — clearly observable
     updateMeteors(dt);
   }
 

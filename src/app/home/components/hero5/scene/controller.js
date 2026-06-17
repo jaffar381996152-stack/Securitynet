@@ -40,6 +40,26 @@ function buildStudioEnv(renderer) {
   return tex;
 }
 
+// Sharp GOLD spark — a bright radial burst (additive) that masks the dust->coin
+// swap (hides the forming disc rim), then fades to reveal the coin.
+function makeSparkTexture() {
+  if (typeof document === "undefined") return null;
+  const s = 256;
+  const c = document.createElement("canvas");
+  c.width = c.height = s;
+  const ctx = c.getContext("2d");
+  const g = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+  g.addColorStop(0.0, "rgba(255, 208, 124, 1.0)"); // bright gold core (kept gold, not white)
+  g.addColorStop(0.22, "rgba(255, 192, 104, 0.9)");
+  g.addColorStop(0.5, "rgba(230, 162, 78, 0.4)");
+  g.addColorStop(1.0, "rgba(120, 80, 30, 0.0)");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, s, s);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
 export function createController(canvas, opts = {}) {
   const engine = createEngine(canvas, opts);
   const { scene, camera, renderer } = engine;
@@ -92,6 +112,21 @@ export function createController(canvas, opts = {}) {
   scene.add(coin.group);
   coin.setOpacity(0);
 
+  // fuse spark — drawn on top, in front of the coin, hidden until the fusion
+  const sparkTex = makeSparkTexture();
+  const sparkMat = new THREE.MeshBasicMaterial({
+    map: sparkTex,
+    transparent: true,
+    depthWrite: false,
+    depthTest: false,
+    blending: THREE.AdditiveBlending,
+    opacity: 0,
+  });
+  const spark = new THREE.Mesh(new THREE.PlaneGeometry(13, 13), sparkMat);
+  spark.position.set(0, 0, 2);
+  spark.renderOrder = 6;
+  scene.add(spark);
+
   let progress = 0;
   const mouseNdc = new THREE.Vector2(0, 0);
   const worldMouse = new THREE.Vector2(0, 0);
@@ -118,15 +153,23 @@ export function createController(canvas, opts = {}) {
     worldMouse.set(mouseNdc.x * halfW, mouseNdc.y * halfH);
     particles.uniforms.uMouse.value.copy(worldMouse);
 
-    // FUSION (pose-locked) with a gold fuse flash that masks an instant swap, then
-    // the coin spins up. All driven by formP so it finishes by FORM_END.
-    const flash = smoothstep(0.74, 0.84, formP) * (1 - smoothstep(0.84, 0.90, formP));
-    particles.uniforms.uFlash.value = flash;
-    engine.bloom.threshold = baseThreshold - flash * 0.55;
-    engine.bloom.strength = baseBloom + flash * (opts.mobile ? 0.5 : 0.85);
+    // FUSION with a SHARP GOLD SPARK that masks the swap (all driven by formP):
+    //  - the dust packs into a dense ball (~0.66-0.74) -> spark flares & reaches
+    //    FULL right as the ball finishes, so the disc/rim never shows bare
+    //  - UNDER the full spark (0.74->0.80) the dust dissolves + the coin fills in
+    //  - the spark fades (0.80->0.88) -> the solid coin is revealed instantly
+    const spark = smoothstep(0.66, 0.74, formP) * (1 - smoothstep(0.80, 0.88, formP));
+    sparkMat.opacity = spark;
 
-    particles.uniforms.uAlphaMultiplier.value = 1 - smoothstep(0.85, 0.875, formP);
-    coin.setOpacity(smoothstep(0.81, 0.85, formP));
+    // dust glows gold into the spark as it packs
+    const dustFlash = smoothstep(0.64, 0.74, formP) * (1 - smoothstep(0.74, 0.82, formP));
+    particles.uniforms.uFlash.value = dustFlash;
+    engine.bloom.threshold = baseThreshold - spark * 0.5;
+    engine.bloom.strength = baseBloom + spark * (opts.mobile ? 0.5 : 0.85);
+
+    // dust dissolves + coin reaches full UNDER the spark (rim hidden the whole time)
+    particles.uniforms.uAlphaMultiplier.value = 1 - smoothstep(0.76, 0.80, formP);
+    coin.setOpacity(smoothstep(0.75, 0.80, formP));
     const spinFactor = smoothstep(0.93, 1.0, formP);
     coin.update(dt, elapsed, spinFactor);
 
@@ -149,6 +192,10 @@ export function createController(canvas, opts = {}) {
     particles.dispose();
     scene.remove(coin.group);
     coin.dispose();
+    scene.remove(spark);
+    spark.geometry.dispose();
+    sparkMat.dispose();
+    sparkTex && sparkTex.dispose();
     scene.remove(key, rim, ambient);
     scene.environment = null;
     envTex.dispose();

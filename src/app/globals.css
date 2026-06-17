@@ -106,6 +106,8 @@
   html {
     scroll-behavior: smooth;
     color-scheme: dark;
+    overflow-x: clip;            /* clip horizontal overflow (clip, not hidden -> keeps position:sticky working) */
+    overscroll-behavior: none;   /* no rubber-band displacement that breaks scroll-driven animations */
   }
 
   body {
@@ -114,7 +116,8 @@
     font-family: var(--font-disp);
     font-weight: 400;
     line-height: 1.6;
-    overflow-x: hidden;
+    overflow-x: clip;
+    overscroll-behavior: none;
     padding-top: calc(36px + 72px);
   }
 
