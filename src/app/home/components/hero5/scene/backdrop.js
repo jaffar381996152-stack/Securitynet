@@ -72,7 +72,13 @@ export function createBackdrop({ mobile = false } = {}) {
     depthTest: true,
     blending: THREE.AdditiveBlending,
   });
-  const glow = new THREE.Mesh(new THREE.PlaneGeometry(48, 34), glowMat);
+  // The glow is a fixed world-size plane; a portrait phone's narrow FOV makes a
+  // big glow fill the whole screen (hiding the dark galaxy). So keep it small on
+  // mobile -> a contained core with dark space + stars visible around it.
+  const glow = new THREE.Mesh(
+    new THREE.PlaneGeometry(mobile ? 24 : 48, mobile ? 24 : 34),
+    glowMat
+  );
   glow.position.set(0, 0, -16);
   glow.renderOrder = -2;
   group.add(glow);
