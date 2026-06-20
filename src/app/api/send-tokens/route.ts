@@ -12,7 +12,13 @@ const XN_TOKEN_ABI = [
   "function transfer(address to, uint256 value) returns (bool)",
 ];
 
-const XN_TOKEN_ADDRESS = process.env.XN_TOKEN_CONTRACT_ADDRESS || "";
+// Accept either name so a single env var works everywhere — the server var or
+// the public one the client/agent use. The token address is public on-chain, so
+// reading the NEXT_PUBLIC_ value server-side is safe.
+const XN_TOKEN_ADDRESS =
+  process.env.XN_TOKEN_CONTRACT_ADDRESS ||
+  process.env.NEXT_PUBLIC_XN_TOKEN_CONTRACT_ADDRESS ||
+  "";
 
 
 async function isAlreadyProcessed(txHash: string): Promise<boolean> {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
+import Moralis from "moralis";
 import { getCollection } from "@/app/libs/mongodb";
 
 const USDT_CONTRACTS: Record<string, string> = {
@@ -36,14 +36,25 @@ if (!globalThis.__confirmedPayments) {
 export const confirmedPayments = globalThis.__confirmedPayments;
 
 
-function verifyMoralisSignature(body: string, signature: string): boolean {
-  const secret = process.env.MORALIS_STREAM_SECRET || "";
-  // No secret configured means we cannot verify the sender — reject rather
-  // than trust an unauthenticated payload that can trigger token transfers.
-  if (!secret) return false;
+async function initMoralis() {
+  if (!Moralis.Core.isStarted) {
+    await Moralis.start({ apiKey: process.env.MORALIS_API_KEY });
+  }
+}
+
+// Moralis signs each webhook as keccak256(JSON.stringify(body) + apiKey) in the
+// x-signature header. Verify with Moralis's own helper — a hand-rolled HMAC-SHA256
+// never matches, which silently drops every real payment. `body` must be the PARSED
+// payload object, and the helper returns a boolean (it does not throw on mismatch).
+// Returns false for the unsigned connectivity test Moralis sends on stream creation.
+async function verifyMoralisSignature(body: any, signature: string): Promise<boolean> {
   if (!signature) return false;
-  const hash = crypto.createHmac("sha256", secret).update(body).digest("hex");
-  return hash === signature;
+  try {
+    await initMoralis();
+    return Moralis.Streams.verifySignature({ body, signature }) === true;
+  } catch {
+    return false;
+  }
 }
 
 const TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
@@ -60,20 +71,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
-  const signature = req.headers.get("x-signature") || "";
-  if (!verifyMoralisSignature(rawBody, signature)) {
-    // Respond 200 (without processing) instead of 401 — Moralis sends an
-    // unsigned connectivity test when a stream is first created, before its
-    // signing secret can be configured here. A 401 fails that test and
-    // blocks stream creation. Unverified payloads are still dropped, just
-    // with the same response shape as a normal accepted request.
-    return NextResponse.json({ received: true });
-  }
-
   let payload: any;
   try {
     payload = JSON.parse(rawBody);
   } catch {
+    return NextResponse.json({ received: true });
+  }
+
+  const signature = req.headers.get("x-signature") || "";
+  if (!(await verifyMoralisSignature(payload, signature))) {
+    // Respond 200 (without processing) instead of 401 — Moralis sends an
+    // unsigned connectivity test when a stream is first created. Dropping
+    // unverified/spoofed payloads while still returning 200 keeps stream
+    // creation working without ever trusting an unauthenticated payload.
     return NextResponse.json({ received: true });
   }
 

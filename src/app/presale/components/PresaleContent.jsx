@@ -60,14 +60,19 @@ const TRUST_ITEMS = [
   },
 ];
 
+// Real XN BEP-20 token (verified on-chain). Env-overridable.
+const XN_CONTRACT =
+  process.env.NEXT_PUBLIC_XN_TOKEN_CONTRACT_ADDRESS ||
+  "0x01c4D7E3FA846D9Ed293912118AdaC5B654344F0";
+
 const FAQ_ITEMS = [
   {
     q: "When do I receive my XN tokens?",
-    a: "XN tokens are credited to your wallet within 2 minutes of payment confirmation. The process is fully automated. Import the contract address 0x917D93261B6b232F6b8b643d65b48928D1c85FFc to see your balance immediately after receipt.",
+    a: `XN tokens are credited to your wallet within 2 minutes of payment confirmation. The process is fully automated. Import the contract address ${XN_CONTRACT} to see your balance immediately after receipt.`,
   },
   {
     q: "Is my payment secure?",
-    a: "Yes. The XN smart contract has been independently audited by a leading blockchain security firm. All transactions are verified on-chain. Always verify the contract address before sending: 0x917D93261B6b232F6b8b643d65b48928D1c85FFc.",
+    a: "Yes. The XN smart contract has been independently audited by a leading blockchain security firm. All transactions are verified on-chain. Always double-check the deposit address shown on the purchase widget before sending your USDT.",
   },
   {
     q: "What happens if I send the wrong amount?",

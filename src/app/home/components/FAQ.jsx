@@ -2,6 +2,11 @@
 import { useState } from "react";
 import FadeUpSection from "./FadeUpSection";
 
+// Real XN BEP-20 token (verified on-chain). Env-overridable.
+const XN_CONTRACT =
+  process.env.NEXT_PUBLIC_XN_TOKEN_CONTRACT_ADDRESS ||
+  "0x01c4D7E3FA846D9Ed293912118AdaC5B654344F0";
+
 const QUESTIONS = [
   {
     q: "What is XN token and what is it used for?",
@@ -25,7 +30,7 @@ const QUESTIONS = [
   },
   {
     q: "How do I import XN to my wallet after purchase?",
-    a: "In MetaMask or Trust Wallet, go to 'Import Token' and enter the XN contract address: 0x917D93261B6b232F6b8b643d65b48928D1c85FFc. Token symbol: XN. Decimals: 18.",
+    a: `In MetaMask or Trust Wallet, go to 'Import Token' and enter the XN contract address: ${XN_CONTRACT}. Token symbol: XN. Decimals: 18.`,
   },
   {
     q: "Is the smart contract audited?",

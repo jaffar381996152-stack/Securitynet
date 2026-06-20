@@ -3,7 +3,11 @@ import { useState } from "react";
 import Link from "next/link";
 import FadeUpSection from "@/app/home/components/FadeUpSection";
 
-const CONTRACT_ADDRESS = "0x917D93261B6b232F6b8b643d65b48928D1c85FFc";
+// Real XN BEP-20 token (verified on-chain: name/symbol XN, 18 decimals).
+// Env-overridable; was wrongly set to the deposit wallet.
+const CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_XN_TOKEN_CONTRACT_ADDRESS ||
+  "0x01c4D7E3FA846D9Ed293912118AdaC5B654344F0";
 
 const META = [
   { label: "Deployed On", value: "BNB Chain" },

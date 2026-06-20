@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 
-const CONTRACT = "0x917D93261B6b232F6b8b643d65b48928D1c85FFc";
-const CONTRACT_SHORT = "0x917D…85FFc";
+// Real XN BEP-20 token (verified on-chain). Env-overridable; short form derived
+// so it can never drift from the full address.
+const CONTRACT =
+  process.env.NEXT_PUBLIC_XN_TOKEN_CONTRACT_ADDRESS ||
+  "0x01c4D7E3FA846D9Ed293912118AdaC5B654344F0";
+const CONTRACT_SHORT = `${CONTRACT.slice(0, 6)}…${CONTRACT.slice(-4)}`;
 
 const NAVIGATE = [
   { label: "Home",       href: "/" },

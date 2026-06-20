@@ -16,7 +16,10 @@ const QUICK_AMOUNTS = [50, 100, 250, 500, 1000];
 const IMPORT_STEPS = [
   "Open MetaMask or Trust Wallet and tap 'Import Token'",
   "Select 'Custom Token' and paste the contract address",
-  "Contract: 0x917D93261B6b232F6b8b643d65b48928D1c85FFc",
+  // Use the SAME XN token contract the widget reads balances from, so the
+  // address shown here can never drift from the real token (was hardcoded to
+  // the deposit wallet by mistake, which showed users an empty balance).
+  `Contract: ${CONTRACT_ADDRESS}`,
   "Token symbol will auto-fill as XN · Decimals: 18",
   "Tap 'Add Token' — your XN balance will appear",
 ];
