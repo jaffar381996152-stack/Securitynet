@@ -1,9 +1,10 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ethers } from "ethers";
 import toast from "react-hot-toast";
 import { useAppKit, useAppKitAccount, useDisconnect } from "@reown/appkit/react";
 import useWalletConnectGate from "@/hooks/useWalletConnectGate";
+import useXnTokenBalance from "@/hooks/useXnTokenBalance";
+import XnReceipt from "@/components/token/XnReceipt";
 import settings from "../../../data/settings";
 
 const CONTRACT_ADDRESS =
@@ -42,8 +43,6 @@ export default function DigitalGold({ initialUsdtAmount = "" }) {
     const num = parseFloat(initialUsdtAmount);
     return !isNaN(num) && num > 0 ? (num / XN_PRICE).toFixed(2) : "";
   });
-  const [userTokenBalance, setUserTokenBalance] = useState(null);
-
   const [verified, setVerified]       = useState(null);
   const [burstKey, setBurstKey]       = useState(0);
   const [tronAddress, setTronAddress] = useState("");
@@ -56,6 +55,15 @@ export default function DigitalGold({ initialUsdtAmount = "" }) {
   const scannerRef      = useRef(null);
   const scannerDivRef   = useRef(null);
   const importSectionRef = useRef(null);
+
+  // Live XN balance read from BSC. Once payment is verified it polls and flips
+  // `xnReceived` true when the purchased tokens land — on-site proof of receipt.
+  const { balance: userTokenBalance, received: xnReceived } = useXnTokenBalance({
+    address,
+    isConnected,
+    watch: Boolean(verified),
+    expectedXn: verified ? parseFloat(verified.xnTokens) : 0,
+  });
 
   // ── Handlers ─────────────────────────────────────────────────────────────
 
@@ -110,24 +118,6 @@ export default function DigitalGold({ initialUsdtAmount = "" }) {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
-  // ── Balance fetch ─────────────────────────────────────────────────────────
-
-  useEffect(() => {
-    if (!isConnected || !address) return;
-    const fetchBalance = async () => {
-      try {
-        const provider = new ethers.JsonRpcProvider("https://bsc-dataseed1.binance.org/");
-        const contract = new ethers.Contract(CONTRACT_ADDRESS, [
-          "function balanceOf(address account) view returns (uint256)",
-          "function decimals() view returns (uint8)",
-        ], provider);
-        const [balance, decimals] = await Promise.all([contract.balanceOf(address), contract.decimals()]);
-        setUserTokenBalance(ethers.formatUnits(balance, decimals));
-      } catch {}
-    };
-    fetchBalance();
-  }, [isConnected, address]);
 
   // ── Payment check ─────────────────────────────────────────────────────────
 
@@ -242,10 +232,13 @@ export default function DigitalGold({ initialUsdtAmount = "" }) {
             <p style={{ fontFamily: "var(--font-disp)", fontSize: 14, color: "var(--text-muted)", marginBottom: 20 }}>
               Sending: <strong style={{ color: "var(--gold)" }}>{verified.xnTokens} XN</strong>
             </p>
+
+            <XnReceipt balance={userTokenBalance} received={xnReceived} address={address} tokenSent={verified.tokenSent} />
+
             <button
               type="button"
               className="btn-link"
-              style={{ justifyContent: "center", margin: "0 auto", background: "none", border: "none", cursor: "pointer" }}
+              style={{ justifyContent: "center", margin: "20px auto 0", background: "none", border: "none", cursor: "pointer" }}
               onClick={() => {
                 setImportOpen(true);
                 importSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -253,11 +246,6 @@ export default function DigitalGold({ initialUsdtAmount = "" }) {
             >
               HOW TO IMPORT XN TOKENS →
             </button>
-            {verified.txHash && (
-              <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", marginTop: 16, wordBreak: "break-all", letterSpacing: "0.06em" }}>
-                TX: {verified.txHash}
-              </p>
-            )}
           </div>
         )}
 
@@ -329,7 +317,7 @@ export default function DigitalGold({ initialUsdtAmount = "" }) {
                   <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-sec)", wordBreak: "break-all" }}>{address}</p>
                   {userTokenBalance !== null && (
                     <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--c-success)", marginTop: 6 }}>
-                      XN BALANCE: {userTokenBalance} XN
+                      XN BALANCE: {Number(userTokenBalance).toLocaleString("en-US", { maximumFractionDigits: 4 })} XN
                     </p>
                   )}
                 </div>

@@ -3,6 +3,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import toast from "react-hot-toast";
 import { useAppKitAccount } from "@reown/appkit/react";
 import useWalletConnectGate from "@/hooks/useWalletConnectGate";
+import useXnTokenBalance from "@/hooks/useXnTokenBalance";
+import XnReceipt from "@/components/token/XnReceipt";
 import settings from "../../../../data/settings";
 
 const XN_PRICE      = 0.20;
@@ -108,6 +110,15 @@ export default function PurchaseCard({ showTokenCalculator = true }) {
   const pollIntervalRef = useRef(null);
   const scannerRef      = useRef(null);
 
+  // Live XN balance read from BSC; starts watching for the incoming tokens once
+  // payment is verified, so the success screen confirms on-site receipt.
+  const { balance: xnBalance, received: xnReceived } = useXnTokenBalance({
+    address,
+    isConnected,
+    watch: Boolean(verified),
+    expectedXn: verified ? parseFloat(verified.xnTokens) : 0,
+  });
+
   const handleUsdt = (v) => {
     setUsdtAmt(v);
     const num = parseFloat(v);
@@ -212,8 +223,6 @@ export default function PurchaseCard({ showTokenCalculator = true }) {
     }
   };
 
-  const confirmDisabled = checkingPayment || !isConnected || !usdtAmt || parseFloat(usdtAmt) < 10 || (network === "TRON" && !tronAddress);
-
   const inputBase = {
     width: "100%",
     height: 52,
@@ -259,14 +268,12 @@ export default function PurchaseCard({ showTokenCalculator = true }) {
           <p style={{ fontFamily: "var(--font-disp)", fontSize: 13, color: "var(--text-sec)", marginBottom: 18 }}>
             Sending: <strong style={{ color: "var(--gold)" }}>{verified.xnTokens} XN</strong>
           </p>
-          <button type="button" onClick={() => setImportOpen(true)} style={{ fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--gold)", background: "none", border: "none", cursor: "pointer" }}>
+
+          <XnReceipt compact balance={xnBalance} received={xnReceived} address={address} tokenSent={verified.tokenSent} />
+
+          <button type="button" onClick={() => setImportOpen(true)} style={{ display: "inline-block", marginTop: 18, fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--gold)", background: "none", border: "none", cursor: "pointer" }}>
             HOW TO IMPORT XN TOKENS →
           </button>
-          {verified.txHash && (
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--text-muted)", marginTop: 16, wordBreak: "break-all", letterSpacing: "0.06em" }}>
-              TX: {verified.txHash}
-            </p>
-          )}
         </div>
       ) : (
         /* ── VAULT SPINE ── */
@@ -344,45 +351,10 @@ export default function PurchaseCard({ showTokenCalculator = true }) {
             )}
           </Step>
 
-          {/* Step 3 · Deposit address */}
-          <Step n={3} state={depositAddress ? "active" : "blocked"} title="DEPOSIT ADDRESS">
-            {depositAddress ? (
-              <div style={{ background: "var(--bg-primary)", border: "1px solid var(--border-gold)", padding: "12px 12px 12px 14px" }}>
-                <div style={{ fontFamily: "var(--font-mono)", fontSize: 8, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--gold-dim)", marginBottom: 6 }}>
-                  {networkLabel} · USDT ONLY
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-primary)", flex: 1, wordBreak: "break-all", letterSpacing: "0.02em", lineHeight: 1.4 }}>
-                    {depositAddress}
-                  </span>
-                  <button
-                    onClick={copyAddr}
-                    style={{ alignSelf: "stretch", padding: "0 14px", background: copied ? "rgba(74,140,111,0.15)" : "var(--gold)", border: "none", fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: copied ? "var(--c-success)" : "var(--text-inv)", cursor: "pointer", flexShrink: 0, transition: "all 0.2s" }}
-                  >
-                    {copied ? "✓ COPIED" : "COPY"}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div style={{ fontFamily: "var(--font-disp)", fontSize: 12, color: "var(--text-sec)", border: "1px dashed var(--border-sub)", padding: "12px 14px" }}>
-                Deposit address not configured.
-              </div>
-            )}
-          </Step>
-
-          {/* Step 4 · Send */}
-          <Step n={4} last={!calcShown} state={isConnected && depositAddress ? "live" : "default"} title="SEND USDT TO THE ADDRESS">
-            {isConnected && depositAddress ? (
-              <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 12px", background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)", fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-sec)" }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--gold)", display: "inline-block", animation: "ubPulse 1.6s ease-in-out infinite", flexShrink: 0 }} />
-                Awaiting transfer · auto-detecting every 15s
-              </div>
-            ) : null}
-          </Step>
-
-          {/* Step ✦ · Calculator (no boxed container) */}
+          {/* Step 3 · Enter amount — must come before the deposit/send steps so
+              the "I've sent the payment" check always has an amount to verify */}
           {calcShown && (
-            <Step state="accent" last title="TOKEN CALCULATOR">
+            <Step n={3} state={isConnected ? "active" : "default"} title="ENTER AMOUNT">
               {/* USDT input */}
               <div style={{ position: "relative" }}>
                 <input
@@ -411,20 +383,54 @@ export default function PurchaseCard({ showTokenCalculator = true }) {
                 />
                 <span style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--gold)" }}>XN</span>
               </div>
-
-              {/* Confirm */}
-              {depositAddress && (
-                <button
-                  className="authorize-btn"
-                  onClick={handleManualPaymentCheck}
-                  disabled={confirmDisabled}
-                  style={{ width: "100%", height: 48, marginTop: 14, background: "var(--gold)", color: "var(--text-inv)", border: "none", fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", cursor: confirmDisabled ? "default" : "pointer", opacity: confirmDisabled ? 0.5 : 1, transition: "opacity 0.2s" }}
-                >
-                  {checkingPayment ? "CHECKING…" : "I'VE SENT THE PAYMENT"}
-                </button>
-              )}
             </Step>
           )}
+
+          {/* Step 4 · Deposit address */}
+          <Step n={calcShown ? 4 : 3} state={depositAddress ? "active" : "blocked"} title="DEPOSIT ADDRESS">
+            {depositAddress ? (
+              <div style={{ background: "var(--bg-primary)", border: "1px solid var(--border-gold)", padding: "12px 12px 12px 14px" }}>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 8, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--gold-dim)", marginBottom: 6 }}>
+                  {networkLabel} · USDT ONLY
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-primary)", flex: 1, wordBreak: "break-all", letterSpacing: "0.02em", lineHeight: 1.4 }}>
+                    {depositAddress}
+                  </span>
+                  <button
+                    onClick={copyAddr}
+                    style={{ alignSelf: "stretch", padding: "0 14px", background: copied ? "rgba(74,140,111,0.15)" : "var(--gold)", border: "none", fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: copied ? "var(--c-success)" : "var(--text-inv)", cursor: "pointer", flexShrink: 0, transition: "all 0.2s" }}
+                  >
+                    {copied ? "✓ COPIED" : "COPY"}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div style={{ fontFamily: "var(--font-disp)", fontSize: 12, color: "var(--text-sec)", border: "1px dashed var(--border-sub)", padding: "12px 14px" }}>
+                Deposit address not configured.
+              </div>
+            )}
+          </Step>
+
+          {/* Step 5 · Send & confirm */}
+          <Step n={calcShown ? 5 : 4} last state={isConnected && depositAddress ? "live" : "default"} title={calcShown ? "SEND USDT & CONFIRM" : "SEND USDT TO THE ADDRESS"}>
+            {isConnected && depositAddress && (
+              <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 12px", background: "var(--bg-tertiary)", border: "1px solid var(--border-sub)", fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-sec)" }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--gold)", display: "inline-block", animation: "ubPulse 1.6s ease-in-out infinite", flexShrink: 0 }} />
+                Awaiting transfer · auto-detecting every 15s
+              </div>
+            )}
+            {calcShown && depositAddress && (
+              <button
+                className="authorize-btn"
+                onClick={handleManualPaymentCheck}
+                disabled={checkingPayment}
+                style={{ width: "100%", height: 48, marginTop: isConnected ? 12 : 0, background: "var(--gold)", color: "var(--text-inv)", border: "none", fontFamily: "var(--font-disp)", fontWeight: 700, fontSize: 13, letterSpacing: "0.16em", textTransform: "uppercase", cursor: checkingPayment ? "default" : "pointer", opacity: checkingPayment ? 0.6 : 1, transition: "opacity 0.2s" }}
+              >
+                {checkingPayment ? "CHECKING…" : "I'VE SENT THE PAYMENT"}
+              </button>
+            )}
+          </Step>
         </div>
       )}
 
